@@ -1,0 +1,31 @@
+{
+    "name": "revalto/laravel-seeder",
+    "description": "Working Seeds on the principle of Migrations",
+    "keywords": ["laravel", "seeds", "migrations", "database"],
+    "minimum-stability": "dev",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Samuel Revalto",
+            "email": "samuel.nestro@mail.ru",
+            "homepage": "https://github.com/Revalto"
+        }
+    ],
+    "require": {
+        "php": "^8.0|^8.1",
+        "nette/php-generator": "^4.0",
+        "doctrine/dbal": "^3.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "Revalto\\Seeder\\": "src"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Revalto\\Seeder\\Providers\\SeederServiceProvider"
+            ]
+        }
+    }
+}

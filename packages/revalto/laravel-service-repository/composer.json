@@ -1,0 +1,32 @@
+{
+    "name": "revalto/laravel-service-repository",
+    "description": "add dtos, requests, resources,controller, repository and service (interface + class) in your project",
+    "keywords": ["laravel", "file", "dto", "repository", "service", "request", "resource", "controller"],
+    "minimum-stability": "dev",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Samuel Revalto",
+            "email": "samuel.nestro@mail.ru",
+            "homepage": "https://github.com/Revalto"
+        }
+    ],
+    "require": {
+        "php": "^8,0|^8.1",
+        "spatie/data-transfer-object": "^3.7",
+        "nette/php-generator": "^4.0",
+        "doctrine/dbal": "^3.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "Revalto\\ServiceRepository\\": "src"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Revalto\\ServiceRepository\\Providers\\ServiceRepositoryServiceProvider"
+            ]
+        }
+    }
+}
