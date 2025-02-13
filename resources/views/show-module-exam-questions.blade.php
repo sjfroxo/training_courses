@@ -6,7 +6,7 @@
             <div class="col-md-8 offset-md-2">
                 <div class="card">
                     <div class="card-body">
-                        <form action="{{ route('moduleExamUserResponses.store') }}" method="POST">
+                        <form action="{{ route('examUserResponseResult.store') }}" method="POST">
                             @csrf
                             <input type="hidden" name="module_exam_id" value="{{ $moduleExam->id }}">
                             <input type="hidden" name="user_id" value="{{auth()->id() }}">
@@ -71,52 +71,4 @@
             </div>
         </div>
     </div>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const form = document.querySelector('form[action="{{ route('moduleExamUserResponses.store') }}"]');
-
-            form.addEventListener("submit", function (event) {
-                event.preventDefault();
-
-                const formData = new FormData(form);
-
-                fetch(form.action, {
-                    method: "POST",
-                    body: formData,
-                    headers: {
-                        "X-CSRF-TOKEN": document.querySelector('input[name="_token"]').value
-                    }
-                }).then(response => {
-                    if (response.ok) {
-                        return response.json();
-                    }
-                    throw new Error("Ошибка при отправке ответов");
-                }).then(data => {
-                    const resultData = new FormData();
-                    resultData.append("user_id", "{{ auth()->id() }}");
-                    resultData.append("module_exam_id", "{{ $moduleExam->id }}");
-                    resultData.append("mark", data.mark);
-
-                    return fetch("{{ route('examsUsersResults.store') }}", {
-                        method: "POST",
-                        body: resultData,
-                        headers: {
-                            "X-CSRF-TOKEN": document.querySelector('input[name="_token"]').value
-                        }
-                    });
-                }).then(response => {
-                    if (response.ok) {
-                        window.location.href = "{{ route('examsUsersResults.index', ['module_exam_id' => $moduleExam->id]) }}";
-                    } else {
-                        throw new Error("Ошибка при сохранении результата");
-                    }
-                }).catch(error => {
-                    console.error(error);
-                    alert("Произошла ошибка. Попробуйте ещё раз.");
-                });
-
-            });
-        });
-    </script>
-
-@endsection('main')
+@endsection

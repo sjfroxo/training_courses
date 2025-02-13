@@ -1,80 +1,54 @@
 @extends('layouts.app')
 
 @section('main')
-    <section class="vh-100 gradient-custom">
-        <div class="container py-5 h-100 w-100">
-            <div class="row d-flex justify-content-center align-items-center h-100">
-                    <div class="card bg-dark text-white" style="border-radius: 1rem;">
-                        <div class="card-body p-5 text-center">
-                            <form class="mb-md-5 mt-md-4 pb-5" id="login-form" action="{{route('login.store')}}" method="POST">
-                                @method('POST')
-                                @csrf
-                                <div class="mb-md-5 mt-md-4 pb-5">
+    <div class="d-flex justify-content-center align-items-center vh-100">
+        <div class="card shadow-lg p-4 text-white" style="width: 400px; background: rgba(0, 0, 0, 0.8); border-radius: 15px;">
+            <div class="card-body">
+                <h2 class="fw-bold text-center text-uppercase">Вход</h2>
+                <p class="text-center text-white-50 mb-4">Введите свои данные для входа</p>
 
-                                    <h2 class="fw-bold mb-2 text-uppercase">Вход</h2>
-                                    <p class="text-white-50 mb-5"></p>
+                <form id="login-form" action="{{ route('login.store') }}" method="POST">
+                    @csrf
 
-                                    <div class="form-outline form-white mb-4">
-                                        <label class="form-label" for="email">Почта</label>
-                                        <input type="email" id="email" name="email" class="form-control form-control-lg"/>
-                                    </div>
-
-                                    <div class="form-outline form-white mb-4">
-                                        <label class="form-label" for="password">Пароль</label>
-                                        <input type="password"  name="password" id="password" class="form-control form-control-lg"/>
-                                    </div>
-
-                                    <p class="small mb-5 pb-lg-2"><a class="text-white-50" href="#">Забыли пароль?</a>
-                                    </p>
-                                    <button class="btn btn-outline-light btn-lg px-5" type="submit">Войти</button>
-                                    <a href="{{route('google.redirect')}}">
-                                        Войти через гугл
-                                    </a>
-
-                                </div>
-
-                                <div>
-                                    <p class="mb-0">Нет аккаунта? <a href="{{route('register')}}"
-                                                                     class="text-white-50 fw-bold">Зарегистрироваться</a>
-                                    </p>
-                                </div>
-                            </form>
-                            @if ($errors->any())
-                                <div class="alert alert-danger">
-                                    <ul>
-                                        @foreach ($errors->all() as $error)
-                                            <li>{{ $error }}</li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-                            @endif
-                        </div>
+                    <div class="form-group mb-3">
+                        <label for="email" class="form-label">Почта</label>
+                        <input type="email" id="email" name="email" class="form-control" required>
                     </div>
+
+                    <div class="form-group mb-3">
+                        <label for="password" class="form-label">Пароль</label>
+                        <input type="password" id="password" name="password" class="form-control" required>
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <a href="#" class="small text-white-50">Забыли пароль?</a>
+                    </div>
+
+                    <button type="submit" class="btn btn-light w-100 mt-3">Войти</button>
+
+                    <div class="text-center mt-3">
+                        <a href="{{ route('google.redirect') }}" class="btn btn-outline-light w-100">
+                            <i class="fab fa-google"></i> Войти через Google
+                        </a>
+                    </div>
+                </form>
+
+                <div class="text-center mt-4">
+                    <p class="mb-0">Нет аккаунта?
+                        <a href="{{ route('register') }}" class="text-white-50 fw-bold">Зарегистрироваться</a>
+                    </p>
+                </div>
+
+                @if ($errors->any())
+                    <div class="alert alert-danger mt-3">
+                        <ul class="mb-0">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
             </div>
         </div>
-    </section>
-
+    </div>
 @endsection
-
-
-
-{{--<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const form = document.getElementById('login-form');
-        form.addEventListener('submit', async function (event) {
-            event.preventDefault();
-
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-
-            const response = await fetch('{{ route('login') }}', {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ email, password })
-            });
-        });
-    });
-</script>--}}

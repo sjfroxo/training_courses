@@ -28,8 +28,8 @@
                                 <td></td>
                                 <td>{{ $user->role->title }}</td>
                                 <td>
-                                    <a type="button" class="btn btn-success" href="{{ route('users.show', ['user' => $user->id]) }}">info</a>
-                                    <a type="button" class="btn btn-success" href="{{ route('users.edit', ['user' => $user->id]) }}">edit</a>
+                                    <a type="button" class="btn btn-primary" href="{{ route('users.show', ['user' => $user->id]) }}">info</a>
+                                    <a type="button" class="btn btn-primary" href="{{ route('users.edit', ['user' => $user->id]) }}">edit</a>
                                     @can('delete', $user)
                                         <form action="{{ route('users.destroy',['user' => $user->id]) }}" method="POST" style="display: inline;">
                                             @csrf
