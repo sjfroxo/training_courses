@@ -1,1 +1,1 @@
-<a type="button" class="btn btn-success" href="{{ $route }}">Редактировать</a>
+<a type="button" class="btn btn-primary" href="{{ $route }}">Редактировать</a>

@@ -16,6 +16,7 @@
             </form>
         @endcan
 
-        <a type="button" class="btn btn-second" href="{{route('courses.showUsers', ['slug' => $course->slug])}}">Участники</a>
+        <a type="button" class="btn btn-primary" href="{{route('courses.showUsers', ['slug' => $course->slug])}}">Участники</a>
     </div>
 </div>
+

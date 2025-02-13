@@ -1,7 +1,7 @@
 <div class="row">
     @foreach($courses as $course)
         @can('view',$course)
-            <div class="col-md-10" style="margin-bottom: 15px;">
+            <div class="col-md-6" style="margin-bottom: 15px;">
                 @include('components.course-card', [
                     'title' => $course->title,
                     'description' => $course->description,

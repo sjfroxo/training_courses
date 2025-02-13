@@ -1,1 +1,1 @@
-<a type="button" class="btn btn-success" href="{{$route}}">Пройти</a>
+<a type="button" class="btn btn-primary" href="{{$route}}">Пройти</a>

@@ -11,7 +11,7 @@
             @endcan
 
             @can('update',$exam)
-                <a type="button" class="btn btn-success" href="{{  route('moduleExams.edit', ['moduleExam' => $exam->id]) }}">Редактировать</a>
+                <a type="button" class="btn btn-primary" href="{{  route('moduleExams.edit', ['moduleExam' => $exam->id]) }}">Редактировать</a>
             @endcan
 
             @can('delete',$exam)
