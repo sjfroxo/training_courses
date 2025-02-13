@@ -18,7 +18,6 @@ enum UserRoleEnum: int
             self::USER => 'Пользователь',
             self::CURATOR => 'Куратор',
             self::ADMIN => 'Администратор',
-            default => 'Неизвестный статус',
         };
     }
 }
