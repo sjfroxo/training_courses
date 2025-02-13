@@ -4,6 +4,7 @@ namespace App\Traits;
 
 use App\Repositories\ModuleRepository;
 use App\Services\CoreService;
+use Illuminate\Database\Eloquent\Model;
 
 class ModuleService extends CoreService
 {
@@ -17,8 +18,8 @@ class ModuleService extends CoreService
 		parent::__construct($repository);
 	}
 
-//    public function firstWithModule(string $id): Model
-//    {
-//        return $this->repository->firstWithModule($id);
-//    }
+    public function firstWithModule(string $id): Model
+    {
+        return $this->repository->firstWithModule($id);
+    }
 }

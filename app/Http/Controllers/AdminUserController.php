@@ -12,26 +12,24 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Revalto\ServiceRepository\Repository\AbstractRepository;
 
 class AdminUserController extends Controller
 {
     use AuthorizesRequests;
+
     /**
      * @param UserService $service
      * @param UserRoleService $userRoleService
      * @param CourseService $courseService
-     * @param Request $request
      */
     public function __construct(
-        protected UserService     $service,
-        protected UserRoleService $userRoleService,
-        protected CourseService   $courseService,
-        protected Request         $request,
+        protected UserService      $service,
+        protected UserRoleService  $userRoleService,
+        protected CourseService    $courseService,
     )
-    {}
+    {
+    }
 
     /**
      * @return View

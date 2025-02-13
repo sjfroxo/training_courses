@@ -12,7 +12,6 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 
 class ModuleExamController extends Controller
@@ -22,27 +21,13 @@ class ModuleExamController extends Controller
      * @param ModuleExamService $service
      * @param QuestionTypeService $questionTypeService
      * @param ModuleService $moduleService
-     * @param Request $request
      */
 	public function __construct(
 		protected ModuleExamService   $service,
 		protected QuestionTypeService $questionTypeService,
 		protected ModuleService       $moduleService,
-        protected Request $request,
 	)
 	{}
-
-//    public function index()
-//    {
-//        $modules = Module::all();
-//        $exams = ModuleExam::all();
-//
-//        return view('components.exam-list', [
-//            'modules' => $modules,
-//            'exams' => $exams,
-//        ]);
-//    }
-
 
     /**
 	 * @param string $id

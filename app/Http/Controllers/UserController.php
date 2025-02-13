@@ -9,7 +9,6 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 
 class UserController extends Controller
@@ -17,11 +16,9 @@ class UserController extends Controller
     use AuthorizesRequests;
     /**
      * @param UserService $service
-     * @param Request $request
      */
 	public function __construct(
         protected UserService $service,
-        protected Request $request,
     )
 	{}
 

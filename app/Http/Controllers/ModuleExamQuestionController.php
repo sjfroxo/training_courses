@@ -9,7 +9,6 @@ use App\Services\ModuleExamQuestionService;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 
 class ModuleExamQuestionController extends Controller
@@ -17,11 +16,9 @@ class ModuleExamQuestionController extends Controller
     use AuthorizesRequests;
     /**
      * @param ModuleExamQuestionService $service
-     * @param Request $request
      */
     public function __construct(
         protected ModuleExamQuestionService $service,
-        protected Request                   $request,
     )
     {}
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ChatRequest;
 use App\Services\ChatService;
 use App\Services\UserService;
 use Illuminate\Contracts\View\View;
@@ -49,12 +50,12 @@ class ChatController extends Controller
 		]);
 	}
 
-	/**
-	 * @param Request $request
-	 *
-	 * @return JsonResponse
-	 */
-	public function loadMessages(Request $request): JsonResponse
+    /**
+     * @param ChatRequest $request
+     *
+     * @return JsonResponse
+     */
+	public function loadMessages(ChatRequest $request): JsonResponse
 	{
 		$messages = $this->service->getPaginatedMessages($request->slug, $request->last_message_id);
 

@@ -11,7 +11,6 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 
 class CourseController extends Controller
@@ -20,12 +19,10 @@ class CourseController extends Controller
     /**
      * @param CourseService $service
      * @param UserCourseService $userCourseService
-     * @param Request $request
      */
 	public function __construct(
 		protected CourseService $service,
 		protected UserCourseService $userCourseService,
-        protected Request $request,
 	)
     {}
 
@@ -37,7 +34,7 @@ class CourseController extends Controller
 	{
 		$this->authorize('viewAny', Course::class);
 
-		$courses = $this->service->paginate(3);
+		$courses = $this->service->paginate(4);
 
 		return view('courses', ['courses' => $courses]);
 	}

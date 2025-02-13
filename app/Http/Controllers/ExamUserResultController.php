@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\DataTransferObjects\ExamUserResultDTO;
 use App\Http\Requests\ExamUserResultRequest;
 use App\Models\ModuleExam;
 use App\Services\CourseService;
@@ -26,10 +25,10 @@ class ExamUserResultController extends Controller
     ) {}
 
     /**
-     * @param Request $request
+     * @param ExamUserResultRequest $request
      * @return View
      */
-    public function index(Request $request): View
+    public function index(ExamUserResultRequest $request): View
     {
         $moduleExams = ModuleExam::all();
 
@@ -47,24 +46,4 @@ class ExamUserResultController extends Controller
             'examUserResults' => $this->service->all(),
         ]);
     }
-
-    public function store(ExamUserResultRequest $request)
-    {
-        dd($request->all());
-
-        $dto = ExamUserResultDTO::appRequest($request);
-
-        $this->service->createResult($dto);
-
-        $moduleExamId = $request->input('module_exam_id');
-
-        $moduleExam = ModuleExam::query()->findOrFail($moduleExamId);
-
-        $this->authorize('create', [$moduleExam]);
-
-        $results = $this->service->calculateResults($moduleExam->id);
-
-        return redirect()->route('examsUsersResults.index', ['module_exam_id' => $dto->module_exam_id]);
-    }
-
 }

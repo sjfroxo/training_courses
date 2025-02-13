@@ -12,7 +12,6 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 
 class ModuleController extends Controller
@@ -21,12 +20,10 @@ class ModuleController extends Controller
     /**
      * @param ModuleService $service
      * @param CourseService $courseService
-     * @param Request $request
      */
 	public function __construct(
 		protected ModuleService $service,
 		protected CourseService $courseService,
-        protected Request $request,
 	)
 	{}
 

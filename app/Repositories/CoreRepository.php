@@ -35,7 +35,7 @@ abstract class CoreRepository extends Repository implements CoreRepositoryInterf
      */
     public function findById(string|int $id): Model|Collection|Builder|null
     {
-		return $this->getBuilder()->findOrFail($id);
+		return $this->getBuilder()->find($id);
 	}
 
 	/**
@@ -45,7 +45,8 @@ abstract class CoreRepository extends Repository implements CoreRepositoryInterf
 	 */
 	public function save(Model $entity): Model
 	{
-		return tap($entity)->save();
+        $entity->save();
+        return $entity;
 	}
 
 	/**
@@ -66,7 +67,8 @@ abstract class CoreRepository extends Repository implements CoreRepositoryInterf
 	 */
 	public function update(Model $entity, array $data): Model
 	{
-		return tap($entity)->update($data);
+        $entity->update($data);
+        return $entity;
 	}
 
 	/**
@@ -76,7 +78,8 @@ abstract class CoreRepository extends Repository implements CoreRepositoryInterf
 	 */
 	public function destroy(Model $entity): Model
 	{
-		return tap($entity)->delete();
+        $entity->delete();
+        return $entity;
 	}
 
 	/**

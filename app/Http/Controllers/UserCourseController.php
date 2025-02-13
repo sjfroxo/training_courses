@@ -9,7 +9,6 @@ use App\Services\UserCourseService;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 
 class UserCourseController extends Controller
@@ -17,11 +16,9 @@ class UserCourseController extends Controller
     use AuthorizesRequests;
     /**
      * @param UserCourseService $service
-     * @param Request $request
      */
     public function __construct(
         protected UserCourseService $service,
-        protected Request           $request,
     )
     {}
 
