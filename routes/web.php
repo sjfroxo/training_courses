@@ -99,9 +99,14 @@ Route::middleware('auth')->group(function () {
         Route::patch('/{moduleExamAnswer}', [ModuleExamAnswerController::class, 'update'])->name('moduleExamAnswers.update');
     });
 
-    Route::prefix('ExamUserResults')->group(function () {
-        Route::get('/', [ExamUserResultController::class, 'index'])->name('examsUsersResults.index');
-    });
+//    Route::prefix('ExamUserResults')->group(function () {
+//        Route::get('/', [ExamUserResultController::class, 'index'])->name('examsUsersResults.index');
+//        Route::post('/', [ExamUserResultController::class, 'store'])->name('examsUsersResults.store');
+//    });
+
+//    Route::prefix('ModuleExamUserResponse')->group(function () {
+//        Route::post('/', [ModuleExamUserResponseController::class, 'store'])->name('moduleExamUserResponse.store');
+//    });
 
     Route::prefix('ExamUserResponseResult')->group(function () {
         Route::post('/', [ExamUserResponseResultController::class, 'store'])->name('examUserResponseResult.store');
