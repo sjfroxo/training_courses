@@ -62,7 +62,7 @@ class ExamUserResultRepository extends CoreRepository implements ExamUserResultR
         })->count();
 
         $questionsCount = $this->getTotalQuestions($moduleExamId);
-        $percent = $questionsCount ? round(($correctCount / $questionsCount) * 10, 1) : 0;
+        $percent = $questionsCount ? round(($correctCount / $questionsCount) * 10, 0) : 0;
 
         return [
             'correct' => $correctCount,

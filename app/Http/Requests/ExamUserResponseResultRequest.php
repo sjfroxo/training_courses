@@ -9,42 +9,38 @@ use Illuminate\Foundation\Http\FormRequest;
 class ExamUserResponseResultRequest extends FormRequest
 {
     /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
-    {
-        return true;
-    }
-
-    /**
      * Get the validation rules that apply to the request.
      *
      * @return array<string, ValidationRule|array|string>
      */
     public function rules(): array
     {
-        return [
-            'question_id' => ['required', 'array'],
-            'question_id.*' => ['required', 'exists:module_exam_questions,id'],
-            'answer' => ['required', 'array'],
-            'answer.*' => ['nullable', 'string', function($attribute, $value, $fail) {
-                $questionId = str_replace('answer.', '', $attribute);
-                $question = ModuleExamQuestion::query()->find($questionId);
-                if ($question->questionType->id === 3 && !is_numeric($value)) {
-                    $fail('Для вопроса с типом 3 ожидается один выбранный ответ.');
-                } elseif ($question->questionType->id === 2 && !is_array($value)) {
-                    $fail('Для вопроса с типом 2 ожидается массив выбранных ответов.');
-                } elseif ($question->questionType->id === 1 && !is_string($value)) {
-                    $fail('Для вопроса с типом 1 ожидается текстовый ответ.');
-                }
-            }],
+        try {
 
-            'answer.*.*' => ['nullable', 'exists:module_exam_answers,id'],
-            'module_exam_id' => ['required','exists:module_exams,id'],
-            'user_id' => ['required','exists:users,id'],
-            'module_exam_question_id' => ['required','exists:module_exam_questions,id'],
-            'mark' => ['required','integer','between:0,10'],
-        ];
+            return [
+                'question_id' => ['required', 'array'],
+                'question_id.*' => ['required', 'exists:module_exam_questions,id'],
+                'answer' => ['required', 'array'],
+                'answer.*' => ['nullable', function($attribute, $value, $fail) {
+                    $questionId = str_replace('answer.', '', $attribute); // todo переделать чтобы не было answer. а просто число
+                    $question = ModuleExamQuestion::query()->with('questionType')->find($questionId);
+
+                    if ($question->questionType->id === 3 && !is_numeric($value)) {
+                        $fail('Для вопроса с типом 3 ожидается один выбранный ответ.');
+                    } elseif ($question->questionType->id === 2 && !is_array($value)) {
+                        $fail('Для вопроса с типом 2 ожидается массив выбранных ответов.');
+                    } elseif ($question->questionType->id === 1 && !is_string($value)) {
+                        $fail('Для вопроса с типом 1 ожидается текстовый ответ.');
+                    }
+                }],
+//
+//                'answer.*.*' => ['nullable', 'exists:module_exam_answers,id'],
+                'module_exam_id' => ['required', 'numeric', 'exists:module_exams,id'],
+                'user_id' => ['required', 'numeric', 'exists:users,id'],
+//                'module_exam_question_id' => ['required','exists:module_exam_questions,id'],
+                'mark' => ['nullable','integer','between:0,10'],
+            ];
+        } catch (\Exception $e) {dd($e);}
     }
 
     public function messages(): array

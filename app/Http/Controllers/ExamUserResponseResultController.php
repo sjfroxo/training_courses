@@ -12,8 +12,10 @@ use App\Services\CourseService;
 use App\Services\ExamUserResultService;
 use App\Services\ModuleExamQuestionService;
 use App\Services\ModuleExamUserResponseService;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Controller;
 
 class ExamUserResponseResultController extends Controller
@@ -42,13 +44,14 @@ class ExamUserResponseResultController extends Controller
      * Объединённое сохранение ответов и результата теста.
      *
      * @param ExamUserResponseResultRequest $request
-     * @return RedirectResponse
+     * @return Factory|View|Application|\Illuminate\View\View
      */
-    public function store(ExamUserResponseResultRequest $request): RedirectResponse
+    public function store(ExamUserResponseResultRequest $request)
     {
         $moduleExamId = $request->input('module_exam_id');
+        $moduleExams = ModuleExam::all();
         $moduleExam = ModuleExam::query()->findOrFail($moduleExamId);
-        $this->authorize('create', [$moduleExam]);
+
         $userId = auth()->id();
 
         $moduleExamUserResponseRequest = new ModuleExamUserResponseRequest($request->all());
@@ -62,7 +65,12 @@ class ExamUserResponseResultController extends Controller
         $examResultDTO = ExamUserResultDTO::appRequest($examUserResultRequest);
         $this->resultService->createResult($examResultDTO);
 
-        return redirect()->route('examsUsersResults.index', ['module_exam_id' => $moduleExamId]);
+        return view('exams-users-results', [
+            'moduleExams' => $moduleExams,
+            'moduleExam' => $moduleExam,
+            'results' => $results,
+            'courses' => $this->courseService->all(),
+            'examUserResults' => $this->resultService->all(),
+        ]);
     }
-
 }
