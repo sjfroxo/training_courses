@@ -2,13 +2,9 @@
 
 namespace App\Models;
 
-use App\Http\Requests\ModuleExamAnswerRequest;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class ModuleExamUserResponse extends Model
 {
@@ -43,16 +39,6 @@ class ModuleExamUserResponse extends Model
     {
         return $this->belongsTo(ModuleExam::class, 'module_exam_id');
     }
-
-//    public function moduleExamAnswers(): BelongsToMany
-//    {
-//        return $this->belongsToMany(
-//            ModuleExamAnswer::class,
-//            'module_exam_user_responses_module_exam_answers',
-//            'module_exam_user_response_id',
-//            'module_exam_answer_id'
-//        );
-//    }
 
     public function moduleExamAnswer(): BelongsTo
     {
