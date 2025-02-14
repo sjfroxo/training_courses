@@ -8,10 +8,10 @@
                     <div class="card-body">
                         <form action="{{ route('examUserResponseResult.store') }}" method="POST">
                             @csrf
+                            @method('POST')
                             <input type="hidden" name="module_exam_id" value="{{ $moduleExam->id }}">
                             <input type="hidden" name="user_id" value="{{auth()->id() }}">
                             <input type="hidden" name="questionsCount" value="{{ $a = 0 }}">
-
                             @foreach($questions as $question)
                                 <h5 class="card-title">Вопрос {{$loop->iteration}}</h5>
                                 <p class="card-text">{{$question->text}}</p>
