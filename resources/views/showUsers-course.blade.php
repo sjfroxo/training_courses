@@ -18,8 +18,6 @@
                             <th>Тестов пройдено:</th>
                             <th>Тестов не пройдено:</th>
                             <th>Средний балл по тестам</th>
-
-
                         </tr>
                         </thead>
                         <tbody>
@@ -35,7 +33,6 @@
                                 <td>
                                     <a type="button" class="btn btn-success" href="{{ route('users.show', ['user' => $user->id]) }}">Подробнее</a>
                                 </td>
-
                             </tr>
                         @endforeach
                         </tbody>
