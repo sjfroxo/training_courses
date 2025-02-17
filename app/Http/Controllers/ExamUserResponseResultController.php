@@ -3,10 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\DataTransferObjects\ExamUserResultDTO;
-use App\DataTransferObjects\ModuleExamUserResponseDTO;
 use App\Http\Requests\ExamUserResponseResultRequest;
-use App\Http\Requests\ExamUserResultRequest;
-use App\Http\Requests\ModuleExamUserResponseRequest;
 use App\Models\ModuleExam;
 use App\Services\CourseService;
 use App\Services\ExamUserResultService;
@@ -49,25 +46,19 @@ class ExamUserResponseResultController extends Controller
     public function store(ExamUserResponseResultRequest $request)
     {
         $moduleExamId = $request->input('module_exam_id');
-        $moduleExams = ModuleExam::all();
-        $moduleExam = ModuleExam::query()->findOrFail($moduleExamId);
-
         $userId = auth()->id();
 
-        $moduleExamUserResponseRequest = new ModuleExamUserResponseRequest($request->all());
-        $responseDTOs = ModuleExamUserResponseDTO::appRequest($moduleExamUserResponseRequest, $this->questionService);
-        $this->responseService->processUserResponses($moduleExamId, $userId, $responseDTOs);
+        $this->responseService->handleUserResponses($request, $userId);
 
         $results = $this->resultService->calculateResults($moduleExamId);
-        $request->merge(['mark' => (string)$results['percent']]);
+        $mark = (string) $results['percent'];
 
-        $examUserResultRequest = new ExamUserResultRequest($request->all());
-        $examResultDTO = ExamUserResultDTO::appRequest($examUserResultRequest);
-        $this->resultService->createResult($examResultDTO);
+        $dto = new ExamUserResultDTO($userId, $moduleExamId, $mark);
+        $this->resultService->createResult($dto);
 
         return view('exams-users-results', [
-            'moduleExams' => $moduleExams,
-            'moduleExam' => $moduleExam,
+            'moduleExams' => ModuleExam::all(),
+            'moduleExam' => ModuleExam::query()->findOrFail($moduleExamId),
             'results' => $results,
             'courses' => $this->courseService->all(),
             'examUserResults' => $this->resultService->all(),
