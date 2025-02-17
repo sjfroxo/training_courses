@@ -28,7 +28,7 @@ class UserService extends CoreService
 
 	/**
 	 * @param string $id
-	 * 
+	 *
 	 * @return Model
 	 */
 	public function getUserProfile(string $id): Model

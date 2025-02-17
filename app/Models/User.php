@@ -121,7 +121,7 @@ class User extends Authenticatable
 
     public function moduleExams(): BelongsToMany
     {
-        return $$this->belongsToMany(ModuleExam::class, 'exam_user_results', 'user_id', 'module_exam_id')
+        return $this->belongsToMany(ModuleExam::class, 'exam_user_results', 'user_id', 'module_exam_id')
             ->withPivot('mark')
             ->withTimestamps();
     }
