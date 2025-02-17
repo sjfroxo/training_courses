@@ -19,12 +19,11 @@ class ExamUserResponseResultRequest extends FormRequest
 
             return [
                 'question_id' => ['required', 'array'],
-                'question_id.*' => ['required', 'exists:module_exam_questions,id'],
+                'question_id.*' => ['required', 'numeric', 'exists:module_exam_questions,id'],
                 'answer' => ['required', 'array'],
                 'answer.*' => ['nullable', function($attribute, $value, $fail) {
-                    $questionId = str_replace('answer.', '', $attribute); // todo переделать чтобы не было answer. а просто число
+                    $questionId = (int) str_replace('answer.', '', $attribute);
                     $question = ModuleExamQuestion::query()->with('questionType')->find($questionId);
-
                     if ($question->questionType->id === 3 && !is_numeric($value)) {
                         $fail('Для вопроса с типом 3 ожидается один выбранный ответ.');
                     } elseif ($question->questionType->id === 2 && !is_array($value)) {
@@ -33,7 +32,9 @@ class ExamUserResponseResultRequest extends FormRequest
                         $fail('Для вопроса с типом 1 ожидается текстовый ответ.');
                     }
                 }],
-//
+
+
+
 //                'answer.*.*' => ['nullable', 'exists:module_exam_answers,id'],
                 'module_exam_id' => ['required', 'numeric', 'exists:module_exams,id'],
                 'user_id' => ['required', 'numeric', 'exists:users,id'],
@@ -46,6 +47,8 @@ class ExamUserResponseResultRequest extends FormRequest
     public function messages(): array
     {
         return [
+            'module_exam_question_id.required' => 'Поле "Вопрос экзамена модуля" обязательно для заполнения.',
+            'module_exam_question_id.exists' => 'Выбранный вопрос экзамена модуля не существует.',
             'module_exam_answer_id.exists' => 'Выбранный ответ на вопрос экзамена модуля не существует.',
             'module_exam_id.required' => 'Поле "Тест" обязательно для заполнения',
             'module_exam_id.exists' => 'Выбранный тест не существует',
@@ -53,12 +56,10 @@ class ExamUserResponseResultRequest extends FormRequest
             'question_id.exists' => 'Выбранный вопрос не существует.',
             'user_id.required' => 'Поле "Пользователь" обязательно для заполнения.',
             'user_id.exists' => 'Выбранный пользователь не существует.',
-            'text.required' => 'Поле "Текст ответа" обязательно для заполнения.',
-            'text.string' => 'Поле "Текст ответа" должно быть строкой.',
-            'module_exam_question_id.required' => 'Поле "Вопрос экзамена модуля" обязательно для заполнения.',
-            'module_exam_question_id.exists' => 'Выбранный вопрос экзамена модуля не существует.',
             'mark.required' => 'Поле "Оценка" обязательно для заполнения.',
+            'text.required' => 'Поле "Текст ответа" обязательно для заполнения.',
             'mark.integer' => 'Поле "Оценка" должно быть целым числом.',
+            'text.string' => 'Поле "Текст ответа" должно быть строкой.',
             'mark.min' => 'Значение поля "Оценка" должно быть не менее 0.',
             'mark.max' => 'Значение поля "Оценка" должно быть не более 10.',
         ];

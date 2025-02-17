@@ -24,14 +24,6 @@ class ExamUserResultDTO implements ModelDTO
      * @param ExamUserResultRequest $request
      * @return ExamUserResultDTO
      */
-    public static function appRequest(ExamUserResultRequest $request): ExamUserResultDTO
-    {
-        return new ExamUserResultDTO(
-            $request['user_id'],
-            $request['module_exam_id'],
-            $request['mark'],
-        );
-    }
 
     /**
      * @return array

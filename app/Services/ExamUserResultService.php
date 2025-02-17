@@ -17,7 +17,6 @@ class ExamUserResultService extends CoreService
 
     public function createResult(ExamUserResultDTO $dto)
     {
-        \Log::info('ExamUserResultDTO:', $dto->toArray());
         return $this->repository->create($dto->toArray());
 
     }
