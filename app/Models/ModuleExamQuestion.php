@@ -43,7 +43,7 @@ class ModuleExamQuestion extends Model
 
 	/**
 	 * @return BelongsToMany
-	 * Пользователи которые ответили на вопросы
+	 * Пользователи, которые ответили на вопросы
 	 */
 	public function users(): BelongsToMany
 	{

@@ -44,6 +44,4 @@ class ModuleExamUserResponse extends Model
     {
         return $this->belongsTo(ModuleExamAnswer::class, 'module_exam_answer_id');
     }
-
-
 }
