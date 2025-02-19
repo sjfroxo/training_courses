@@ -1,7 +1,7 @@
 <nav class="sidebar position-fixed top-0 start-0 h-100 p-3"
      style="width: 250px; display: flex; flex-direction: column; justify-content: space-between;">
     <div class="top-section">
-        <a class="navbar-brand fs-5 fw-bold text-dark" href="{{ route('courses') }}">.Jarovit</a>
+        <a class="navbar-brand fs-4 text-dark" href="{{ route('courses') }}"><.Jarovit></a>
         <ul class="navbar-nav mt-3" style="list-style: none;">
             @auth
                 @if(auth()->user()->isAdministrator())
