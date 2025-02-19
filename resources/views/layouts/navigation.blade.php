@@ -1,5 +1,5 @@
-<nav class="sidebar position-fixed top-0 start-0 h-100 p-3"
-     style="width: 250px; display: flex; flex-direction: column; justify-content: space-between;">
+<nav class="sidebar position-fixed top-0 start-0 h-100 p-3 bg-light"
+     style="width: 300px; display: flex; flex-direction: column; justify-content: space-between;">
     <div class="top-section">
         <a class="navbar-brand fs-4 text-dark" href="{{ route('courses') }}"><.Jarovit></a>
         <ul class="navbar-nav mt-3" style="list-style: none;">
@@ -13,16 +13,6 @@
                         <a class="nav-link dropdown-toggle d-flex align-items-center" href="{{ route('courses') }}" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Курсы
                         </a>
-                        <ul class="course-list list-unstyled ps-3">
-                            @foreach($courses->take(3) as $course)
-                                <li>
-                                    <a class="nav-link text-truncate" href="{{ route('courses.show', ['slug' => $course->slug]) }}" title="{{ $course->title }}">
-                                        {{ $course->title }}
-                                    </a>
-                                </li>
-                            @endforeach
-                        </ul>
-
                         @if($courses->count() > 3)
                             <ul class="dropdown-menu w-100 border-0 shadow-none" style="max-height: 300px; overflow-y: auto;">
                                 @foreach($courses as $course)

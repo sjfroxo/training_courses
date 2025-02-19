@@ -141,7 +141,7 @@ class CourseController extends Controller
 	{
 		$course = $this->service->findBySlug($slug);
 
-		$users = $course->users();
+		$users = $course->users;
 
 		$numberCourseExams = $this->service->countCourseExams($slug);
 
@@ -151,6 +151,12 @@ class CourseController extends Controller
 
 		$percentPassedCourseExams = $this->service->calculatePercentPassedCourseExams($numberCourseExams, $numberPassedCourseExamsByUsers);
 
-		return view('showUsers-course', ['numberPassedCourseExamsByUsers' => $numberPassedCourseExamsByUsers, 'numberCourseExams' => $numberCourseExams, 'percentPassedCourseExams' => $percentPassedCourseExams, 'users' => $users, 'averageMark' => $averageMark]);
+		return view('showUsers-course', [
+            'numberPassedCourseExamsByUsers' => $numberPassedCourseExamsByUsers,
+            'numberCourseExams' => $numberCourseExams,
+            'percentPassedCourseExams' => $percentPassedCourseExams,
+            'users' => $users,
+            'averageMark' => $averageMark,
+        ]);
 	}
 }
