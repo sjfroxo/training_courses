@@ -7,3 +7,14 @@
     background-color: #6620e4 !important;
     border-color: #6419e6 !important;
 }
+
+.btn-elprimary {
+    background-color: #ffffff !important;
+    border-color: #4a00cd !important;
+    color: #4a00cd !important;
+}
+
+.btn-elprimary:hover {
+    background-color: #6620e4 !important;
+    color: #ffffff !important;
+}
