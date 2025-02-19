@@ -1,29 +1,40 @@
 @extends('layouts.app')
 
 @section('main')
-    <div class="container mt-4 d-flex">
+    <div class="container d-flex flex-column" style="height: 100%; width: 60%; background-color: transparent;">
         @include('layouts.navigation')
 
         <div class="content flex-grow-1">
-            <div class="card border-0 rounded-4">
-                <div class="card-header rounded-top-4">
-                    <h2 class="mb-0">Курсы</h2>
-                </div>
-                <div class="card-body">
-                    @can('create', \App\Models\Course::class)
-                        <div class="mb-3 text-end">
-                            <x-add-button route="{{ route('courses.create') }}"/>
-                        </div>
-                    @endcan
+            <div class="card-header rounded-top-4" style="background-color: transparent; border: none;">
 
-                    @include('components.course-list', ['courses' => $courses])
-                </div>
-                <div class="card-footer bg-light rounded-bottom-4">
-                    <div class="d-flex justify-content-center">
-                        {{ $courses->links() }}
+            </div>
+            <div class="card-body" style="margin: 0 auto; background-color: transparent;">
+                <h2 class="mb-3">Курсы</h2>
+                @can('create', \App\Models\Course::class)
+                    <div class="mb-3">
+                        <x-add-button-invert route="{{ route('courses.create') }}"/>
                     </div>
+                @endcan
+                <div class="d-flex flex-column justify-content-center align-items-center">
+                    @foreach($courses->take(3) as $course)
+                        @can('view', $course)
+                            <div class="mb-4" style="width: 100%; background-color: transparent;">
+                                @include('components.course-card', [
+                                    'title' => $course->title,
+                                    'description' => $course->description,
+                                    'course' => $course,
+                                    'deleteForm' => route('courses.destroy', $course->id),
+                                ])
+                            </div>
+                        @endcan
+                    @endforeach
                 </div>
             </div>
+        </div>
+
+        <div class="d-flex justify-content-center"
+             style="position: fixed; bottom: 20px; width: 80%; background-color: transparent;">
+            {{ $courses->links() }}
         </div>
     </div>
 @endsection
