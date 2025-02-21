@@ -63,4 +63,17 @@ class Course extends Model
 			],
 		];
 	}
+
+    public function studentsClass(): BelongsToMany
+    {
+        return $this->belongsToMany(StudentsClass::class, 'user_courses', 'course_id', 'user_id')
+            ->withPivot('progress')
+            ->withPivot('id')
+            ->withTimestamps();
+    }
+
+    public function courseVisits(): HasMany
+    {
+        return $this->hasMany(CourseVisit::class);
+    }
 }
