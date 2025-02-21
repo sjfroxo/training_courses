@@ -8,14 +8,13 @@ use App\Http\Controllers\ChatController;
 use App\Http\Controllers\ChatMessageController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\ExamUserResponseResultController;
-use App\Http\Controllers\ExamUserResultController;
 use App\Http\Controllers\ModuleCommentController;
 use App\Http\Controllers\ModuleController;
 use App\Http\Controllers\ModuleExamAnswerController;
 use App\Http\Controllers\ModuleExamController;
 use App\Http\Controllers\ModuleExamQuestionController;
-use App\Http\Controllers\ModuleExamUserResponseController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\StudentsClassController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserCourseController;
 use App\Http\Middleware\GuestMiddleware;
@@ -99,15 +98,6 @@ Route::middleware('auth')->group(function () {
         Route::patch('/{moduleExamAnswer}', [ModuleExamAnswerController::class, 'update'])->name('moduleExamAnswers.update');
     });
 
-//    Route::prefix('ExamUserResults')->group(function () {
-//        Route::get('/', [ExamUserResultController::class, 'index'])->name('examsUsersResults.index');
-//        Route::post('/', [ExamUserResultController::class, 'store'])->name('examsUsersResults.store');
-//    });
-
-//    Route::prefix('ModuleExamUserResponse')->group(function () {
-//        Route::post('/', [ModuleExamUserResponseController::class, 'store'])->name('moduleExamUserResponse.store');
-//    });
-
     Route::prefix('ExamUserResponseResult')->group(function () {
         Route::post('/', [ExamUserResponseResultController::class, 'store'])->name('examUserResponseResult.store');
     });
@@ -143,5 +133,17 @@ Route::prefix('account-details')->group(function () {
 Route::prefix('notifications')->group(function () {
     Route::get('/', [NotificationController::class, 'index'])->name('notifications');
 });
+
+Route::prefix('studentsClass')->group(function () {
+    Route::get('/', [StudentsClassController::class, 'index'])->name('studentsClass.index');
+});
+
+Route::get('/userStudy/{section?}', function ($section = 'home') {
+    $validSections = ['home', 'progress', 'tasks'];
+    if (!in_array($section, $validSections)) {
+        $section = 'home';
+    }
+    return view('user-study', ['section' => $section]);
+})->name('userStudy');
 
 Route::get('/test', [ChatController::class, 'test']);
