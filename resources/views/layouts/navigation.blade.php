@@ -46,32 +46,33 @@
 
                 @elseif(auth()->user()->isUser())
                     <h5>Обучение</h5>
-                    <li class="nav-item"><a class="nav-link" href="{{ route('courses') }}">Курсы</a></li>
-
-                    @if($courses->count() > 3)
-                        <div class="dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Показать все
-                            </a>
-                            <ul class="dropdown-menu" style="max-height: 300px; overflow-y: auto;">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="{{ route('courses') }}" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Курсы
+                        </a>
+                        @if($courses->count() > 3)
+                            <ul class="dropdown-menu w-100 border-0 shadow-none" style="max-height: 300px; overflow-y: auto;">
                                 @foreach($courses as $course)
-                                    <li><a class="dropdown-item" href="{{ route('courses.show', ['slug' => $course->slug]) }}">{{ $course->title }}</a></li>
+                                    <li>
+                                        <a class="dropdown-item text-truncate" href="{{ route('courses.show', ['slug' => $course->slug]) }}" title="{{ $course->title }}">
+                                            {{ $course->title }}
+                                        </a>
+                                    </li>
                                 @endforeach
                             </ul>
-                        </div>
-                    @else
-                        <ul class="mt-2 ps-3" style="list-style: none;">
-                            @foreach($courses->take(3) as $course)
-                                <li><a class="nav-link text-black-50" href="{{ route('courses.show', ['slug' => $course->slug]) }}">Курс: {{ $course->title }}</a></li>
-                            @endforeach
-                        </ul>
-                    @endif
+                        @endif
+                    </li>
 
-                    <li class="nav-item"><a class="nav-link" href="{{ route('notifications') }}">Уведомления</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link text-truncate" href="{{ route('notifications') }}">Задания</a>
+                    </li>
 
                     <h5>Общение</h5>
-                    <li class="nav-item"><a class="nav-link" href="{{ route('chats.index') }}">Чат</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link text-truncate" href="{{ route('chats.index') }}">Чат</a>
+                    </li>
                 @endif
+
             @endauth
         </ul>
     </div>

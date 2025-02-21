@@ -26,7 +26,7 @@
                     <div class="dropdown mt-2">
                         <button class="btn btn-secondary dropdown-toggle w-25" type="button" id="coursesDropdown"
                                 data-bs-toggle="dropdown" aria-expanded="false">
-                            Курсы {{count($user->courses)}}
+                            Курсы {{ count($user->courses) }}
                         </button>
                         <ul class="dropdown-menu w-50 p-3" style="max-height: 350px; overflow-y: auto;">
                             @foreach($courses as $course)
@@ -37,16 +37,14 @@
                                         </div>
                                         <div class="col-md-4">
                                             @if($user->courses->contains($course))
-                                                <form action="{{route('userCourses.destroy', ['userCourse' =>$user->courses->find($course->id)->pivot->id  ])}}" method="POST">
+                                                <form action="{{ route('userCourses.destroy', ['userCourse' => $user->courses->find($course->id)->pivot->id]) }}" method="POST">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button class="btn btn-danger" type="submit" id="deleteButton">Лишить курса</button>
                                                 </form>
                                             @else
-                                                <form action="{{route('userCourses.store')}}" method="POST">
-                                                    {{--Скрытое поле которое содержит текущий course->id--}}
+                                                <form action="{{ route('userCourses.store') }}" method="POST">
                                                     <input type="hidden" name="course_id" value="{{ $course->id }}">
-                                                    {{--Скрытое поле которое содержит текущий user_id--}}
                                                     <input type="hidden" name="user_id" value="{{ $user->id }}">
                                                     <input type="hidden" name="progress" value="0">
                                                     @csrf
@@ -60,14 +58,25 @@
                         </ul>
                     </div>
                 </div>
+
+                @if(Auth::check() && Auth::user()->isAdministrator())
+                    <!-- Календарь активности (отображается только для администраторов) -->
+                    <div class="mt-4">
+                        <h5 class="mb-3">Активность на курсе</h5>
+                        <div class="card p-3" style="border: none; background-color: #fff;">
+                            {!! $calendarHtml ?? '<p>Нет данных об активности.</p>' !!}
+                        </div>
+                    </div>
+                @endif
             </div>
             <div class="card-footer">
                 <a href="{{ route('users.edit', $user->id) }}" class="btn btn-primary">Редактировать</a>
                 <form action="{{ route('users.destroy', $user->id) }}" method="POST" class="d-inline">
                     @csrf
                     @method('DELETE')
-                    <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure?')">Удалить
-                    </button>
+                    <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure?')">Удалить</button>
                 </form>
             </div>
+        </div>
+    </div>
 @endsection

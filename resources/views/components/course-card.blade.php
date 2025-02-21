@@ -3,7 +3,11 @@
         <h5 class="card-title">{{ $title }}</h5>
         <p class="card-text text-truncate" style="max-height: 60px; overflow: hidden;">{{ $description }}</p>
 
-        <x-show-button route="{{ route('courses.show', ['slug' => $course->slug]) }}"/>
+        @if(auth()->user()->isAdministrator())
+            <x-show-button route="{{ route('courses.show', ['slug' => $course->slug]) }}"/>
+        @elseif(auth()->user()->isUser())
+            <x-show-button route="{{ route('userStudy', ['slug' => $course->slug]) }}"/>
+        @endif
 
         @can('update', $course)
             <x-edit-button route="{{ route('courses.edit', ['slug' => $course->slug]) }}"/>
