@@ -137,4 +137,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(ModuleComment::class, 'user_id');
     }
+
+    public function courseVisits(): HasMany
+    {
+        return $this->hasMany(CourseVisit::class);
+    }
+
+    public function studentsClass()
+    {
+
+    }
 }
