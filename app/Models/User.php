@@ -143,8 +143,10 @@ class User extends Authenticatable
         return $this->hasMany(CourseVisit::class);
     }
 
-    public function studentsClass()
+    public function studentsClasses()
     {
-
+        return $this->belongsToMany(StudentsClass::class, 'students_classes_users', 'user_id', 'students_class_id')
+            ->withPivot('user_role_id')
+            ->withTimestamps();
     }
 }
