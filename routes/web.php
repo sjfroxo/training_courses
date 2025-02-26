@@ -134,9 +134,15 @@ Route::prefix('notifications')->group(function () {
     Route::get('/', [NotificationController::class, 'index'])->name('notifications');
 });
 
-Route::prefix('studentsClass')->group(function () {
-    Route::get('/', [StudentsClassController::class, 'index'])->name('studentsClass.index');
+Route::middleware('auth')->group(function () {
+    Route::prefix('studentsClass')->group(function () {
+        Route::get('/', [StudentsClassController::class, 'index'])->name('studentsClass.index');
+        Route::get('/create', [StudentsClassController::class, 'create'])->name('studentsClass.create');
+        Route::post('/', [StudentsClassController::class, 'store'])->name('studentsClass.store');
+    });
 });
+
+
 
 Route::get('/userStudy/{section?}', function ($section = 'home') {
     $validSections = ['home', 'progress', 'tasks'];
