@@ -28,14 +28,20 @@
                                 <td>{{ $user->surname }}</td>
                                 <td>{{ $user->role->title }}</td>
                                 <td>{{ $user->email }}</td>
-                                <td>{{ $numberPassedCourseExamsByUsers[$user->id] ?? 0 }} ({{ $percentPassedCourseExams[$user->id] ?? 0 }}%)</td>
-                                <td>{{ ($numberCourseExams - ($numberPassedCourseExamsByUsers[$user->id] ?? 0)) }} ({{ (100 - ($percentPassedCourseExams[$user->id] ?? 0)) }}%)</td>
+                                <td>{{ $numberPassedCourseExamsByUsers[$user->id] ?? 0 }}
+                                    ({{ $percentPassedCourseExams[$user->id] ?? 0 }}%)
+                                </td>
+                                <td>{{ ($numberCourseExams - ($numberPassedCourseExamsByUsers[$user->id] ?? 0)) }}
+                                    ({{ (100 - ($percentPassedCourseExams[$user->id] ?? 0)) }}%)
+                                </td>
                                 <td>{{ $averageMark[$user->id] ?? 'Нет данных' }}</td>
                                 <td>
-                                    <a type="button" class="btn btn-success" href="{{ route('users.show', ['user' => $user->id]) }}">Подробнее</a>
-                                    @if(Auth::check() && Auth::user()->isAdministrator())
-                                        <a type="button" class="btn btn-success mt-2" href="{{ route('admin.user.activity', [$user->id, $course->id]) }}">Активность</a>
-                                    @endif
+                                    <a type="button" class="btn btn-success"
+                                       href="{{ route('users.show', ['user' => $user->id]) }}">Подробнее</a>
+{{--                                    @if(Auth::check() && Auth::user()->isAdministrator())--}}
+{{--                                        <a type="button" class="btn btn-success mt-2"--}}
+{{--                                           href="{{ route('admin.user.activity', [$user->id, $course->id]) }}">Активность</a>--}}
+{{--                                    @endif--}}
                                 </td>
                             </tr>
                         @endforeach
