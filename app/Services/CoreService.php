@@ -21,27 +21,25 @@ abstract class CoreService extends Service
 		parent::__construct($repository);
 	}
 
-	/**
-	 * @param ModelDTO $dto
-	 *
-	 * @return Model
-	 */
-	public function create(ModelDTO $dto): Model
+    /**
+     * @param ModelDTO $data
+     * @return Model
+     */
+	public function create(ModelDTO $data): Model
 	{
-		$dto = $dto->toArray();
+		$dto = $data->toArray();
 
 		return $this->repository->create($dto);
 	}
 
-	/**
-	 * @param Model $entity
-	 * @param ModelDTO $dto
-	 *
-	 * @return Model
-	 */
-	public function update(Model $entity, ModelDTO $dto): Model
+    /**
+     * @param Model $entity
+     * @param ModelDTO $data
+     * @return Model
+     */
+	public function update(Model $entity, ModelDTO $data): Model
 	{
-		$dto = $dto->toArray();
+		$dto = $data->toArray();
 
 		return $this->repository->update(
 			$entity,

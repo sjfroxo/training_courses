@@ -1,8 +1,9 @@
 <nav class="sidebar position-fixed top-0 start-0 h-100 p-3 bg-light"
      style="width: 300px; display: flex; flex-direction: column; justify-content: space-between;">
     <div class="top-section">
-        <a class="navbar-brand fs-4 text-dark" href="{{ route('courses') }}"><.Jarovit></a>
-        <ul class="navbar-nav mt-3" style="list-style: none;">
+
+        <a class="navbar-brand fs-4 text-dark" href="{{ route('courses') }}"><img class="mb-4" src="{{ asset('logo.svg') }}" alt="Logo"></a>
+        <ul class="navbar-nav" style="list-style: none;">
             @auth
                 @if(auth()->user()->isAdministrator())
                     <h5>Администрирование</h5>
@@ -28,7 +29,7 @@
 
 
                     <li class="nav-item">
-                        <a class="nav-link text-truncate" href="{{ route('courses') }}">Учебные классы</a>
+                        <a class="nav-link text-truncate" href="{{ route('studentsClass.index') }}">Учебные классы</a>
                     </li>
 
 

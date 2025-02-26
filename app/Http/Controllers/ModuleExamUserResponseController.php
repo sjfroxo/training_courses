@@ -37,9 +37,6 @@ class ModuleExamUserResponseController extends Controller
         $moduleExamId = $request->input('module_exam_id');
         $moduleExam = ModuleExam::query()->findOrFail($moduleExamId);
 
-//        dd($moduleExam);
-//        $this->authorize('create', [$moduleExam]);
-
         $userId = auth()->id();
         $responseDTOs = ModuleExamUserResponseDTO::appRequest($request, $this->questionService);
 
