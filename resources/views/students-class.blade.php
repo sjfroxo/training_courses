@@ -10,9 +10,9 @@
             </div>
             <div class="card-body" style="margin: 0 auto; background-color: transparent;">
                 <h2 class="mb-3">Учебные классы</h2>
-                @can('create', \App\Models\Course::class)
+                @can('create', \App\Models\StudentsClass::class)
                     <div class="mb-3">
-                        <x-add-button route="{{ route('courses.create') }}"/>
+                        <x-add-button-invert route="{{ route('studentsClass.create') }}"/>
                     </div>
                 @endcan
                 <div class="row">

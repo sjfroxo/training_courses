@@ -18,7 +18,7 @@ class StudentsClass extends Model
     public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'students_classes_users', 'students_class_id', 'user_id')
-            ->withPivot('id')
+            ->withPivot('user_role_id')
             ->withTimestamps();
     }
 

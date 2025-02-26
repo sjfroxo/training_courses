@@ -10,5 +10,6 @@ class StudentsClassesUsers extends Model
 
     protected $fillable = [
         'user_id',
+        'user_role_id',
     ];
 }
