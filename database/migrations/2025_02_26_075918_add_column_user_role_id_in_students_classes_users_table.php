@@ -12,13 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('students_classes_users', function (Blueprint $table) {
-            $table->unsignedBigInteger('user_id')->nullable(false)->after('id');
-            $table->unsignedBigInteger('user_role_id')->nullable(false)->after('user_id');
-            $table->unsignedBigInteger('students_class_id')->nullable(false)->after('user_role_id');
-
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('user_role_id')->references('id')->on('user_roles')->onDelete('cascade');
-            $table->foreign('students_class_id')->references('id')->on('students_classes')->onDelete('cascade');
+            $table->foreignId('students_class_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->unsignedTinyInteger('user_role_id');
         });
     }
 

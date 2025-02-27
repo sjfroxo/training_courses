@@ -137,8 +137,15 @@ Route::prefix('notifications')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::prefix('studentsClass')->group(function () {
         Route::get('/', [StudentsClassController::class, 'index'])->name('studentsClass.index');
+
         Route::get('/create', [StudentsClassController::class, 'create'])->name('studentsClass.create');
         Route::post('/', [StudentsClassController::class, 'store'])->name('studentsClass.store');
+
+        Route::delete('/{studentsClass}', [StudentsClassController::class, 'destroy'])->name('studentsClass.destroy');
+        Route::get('/{id}/edit', [StudentsClassController::class, 'edit'])->name('studentsClass.edit');
+        Route::patch('/{id}', [StudentsClassController::class, 'update'])->name('studentsClass.update');
+
+        Route::get('/{id}', [StudentsClassController::class, 'show'])->name('studentsClass.show');
     });
 });
 
