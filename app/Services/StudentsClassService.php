@@ -5,7 +5,6 @@ namespace App\Services;
 use App\Contracts\ModelDTO;
 use App\DataTransferObjects\StudentsClassDTO;
 use App\Enums\UserRoleEnum;
-use App\Models\User;
 use App\Repositories\StudentsClassRepository;
 use Illuminate\Database\Eloquent\Model;
 use Ramsey\Collection\Collection;
@@ -27,7 +26,10 @@ class StudentsClassService extends CoreService
 
     public function create(StudentsClassDTO|ModelDTO $data): Model
     {
-        $studentsClass = $this->repository->create($data->toArray());
+        $studentsClass = $this->repository->create([
+            'name' => $data->name,
+            'course_id' => $data->course_id,
+        ]);
 
         $studentsClass->users()->attach($data->curator_id, [
             'user_role_id' => UserRoleEnum::CURATOR->value,
@@ -40,5 +42,15 @@ class StudentsClassService extends CoreService
         }
 
         return $studentsClass;
+    }
+
+    public function getCourses()
+    {
+        return $this->repository->getCourses();
+    }
+
+    public function getUsers()
+    {
+        return $this->repository->getUsers();
     }
 }

@@ -3,35 +3,28 @@
 namespace App\Http\Requests;
 
 use App\Enums\UserRoleEnum;
-use App\Models\StudentsClass;
 use App\Models\User;
-use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\ValidationException;
 
 class StudentsClassRequest extends FormRequest
 {
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, ValidationRule|array|string>
-     */
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string'],
+            'name' => ['required', 'string', 'max:255'],
             'course_id' => ['required', 'exists:courses,id'],
-            'curator_id' => ['required', 'exists:users,id', 'integer'],
-            'student_ids' => ['required', 'array', 'min:1'],
-            'student_ids.*' => ['exists:users,id', 'integer'],
+            'curator_id' => ['required', 'exists:users,id'],
+            'student_ids' => ['required', 'array', 'min:1', 'max:30'],
+            'student_ids.*' => ['exists:users,id'],
         ];
     }
 
     public function messages(): array
     {
         return [
-            'name.required' => 'Поле "Название" обязательно для заполнения',
-            'name.string' => 'Поле "Название" должно быть строкой',
+            'name.required' => 'Поле "Название" обязательно для заполнения.',
+            'name.string' => 'Поле "Название" должно быть строкой.',
             'course_id.required' => 'Поле "Курс" обязательно для заполнения.',
             'course_id.exists' => 'Выбранный курс не существует.',
             'curator_id.required' => 'Поле "Куратор" обязательно для заполнения.',
@@ -39,37 +32,26 @@ class StudentsClassRequest extends FormRequest
             'student_ids.required' => 'Необходимо выбрать хотя бы одного ученика.',
             'student_ids.array' => 'Ученики должны быть списком.',
             'student_ids.min' => 'Необходимо выбрать хотя бы одного ученика.',
+            'student_ids.max' => 'Максимум можно выбрать 30 учеников.',
             'student_ids.*.exists' => 'Один или несколько выбранных учеников не существуют.',
         ];
     }
 
-    /**
-     * Get the validated data from the request.
-     *
-     * @param null $key
-     * @param null $default
-     * @return array
-     */
-    public function validated($key = null, $default = null): array
+    public function withValidator($validator): void
     {
-        $validated = parent::validated();
-
-        $curator = User::query()->findOrFail($validated['curator_id']);
-        if ($curator->user_role_id !== UserRoleEnum::CURATOR->value) {
-            throw ValidationException::withMessages([
-                'curator_id' => ['Выбранный куратор должен иметь роль "Куратор".'],
-            ]);
-        }
-
-        foreach ($validated['student_ids'] as $studentId) {
-            $student = User::query()->findOrFail($studentId);
-            if ($student->user_role_id !== UserRoleEnum::USER->value) {
-                throw ValidationException::withMessages([
-                    'student_ids' => ['Все выбранные ученики должны иметь роль "Пользователь".'],
-                ]);
+        $validator->after(function ($validator) {
+            $curator = User::query()->find($this->input('curator_id'));
+            if ($curator && $curator->user_role_id !== UserRoleEnum::CURATOR->value) {
+                $validator->errors()->add('curator_id', 'Выбранный куратор должен иметь роль "Куратор".');
             }
-        }
 
-        return $validated;
+            foreach ($this->input('student_ids', []) as $studentId) {
+                $student = User::query()->find($studentId);
+                if ($student && $student->user_role_id !== UserRoleEnum::USER->value) {
+                    $validator->errors()->add('student_ids', 'Все выбранные ученики должны иметь роль "Пользователь".');
+                    break;
+                }
+            }
+        });
     }
 }

@@ -21,14 +21,24 @@
                             <div class="card col-md-4 m-3">
                                 <div class="card-body">
                                     <div>
-                                        <h5 class="card-title">Класс номер 1</h5>
-                                        <p class="card-text">Курс по языку программированию C#</p>
+                                        <a style="text-decoration: none; color: #000;" href="{{ route('studentsClass.show', $studentsClass->id) }}">
+                                            <h5 class="card-title">Класс номер {{ $loop->iteration }}
+                                                . {{ $studentsClass->name }}</h5>
+                                        </a>
+                                        <p class="card-text">{{ $studentsClass->course?->title ?? 'Не указан' }}</p>
                                     </div>
                                     <div>
-                                        <span>2</span> <i class="bi bi-person-circle"></i>
                                         <div>
-                                            <button class="btn btn-primary btn">Редактировать</button>
-                                            <button class="btn btn-danger btn">Удалить</button>
+                                            @can('update', $studentsClass)
+                                                <x-edit-button route="{{ route('studentsClass.edit', ['id' => $studentsClass->id]) }}"/>
+                                            @endcan
+                                            @can('delete', $studentsClass)
+                                                <form action="{{ route('studentsClass.destroy', $studentsClass->id) }}" method="POST" style="display: inline;">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <x-delete-button/>
+                                                </form>
+                                            @endcan
                                         </div>
                                     </div>
                                 </div>
@@ -36,12 +46,12 @@
                         @endforeach
                     </div>
                 </div>
+
             </div>
         </div>
 
         <div class="d-flex justify-content-center"
              style="position: fixed; bottom: 20px; width: 80%; background-color: transparent;">
-            {{--            {{ $courses->links() }}--}}
         </div>
     </div>
 @endsection
