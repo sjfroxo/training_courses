@@ -142,13 +142,17 @@ Route::middleware('auth')->group(function () {
         Route::post('/', [StudentsClassController::class, 'store'])->name('studentsClass.store');
 
         Route::delete('/{studentsClass}', [StudentsClassController::class, 'destroy'])->name('studentsClass.destroy');
-        Route::get('/{id}/edit', [StudentsClassController::class, 'edit'])->name('studentsClass.edit');
-        Route::patch('/{id}', [StudentsClassController::class, 'update'])->name('studentsClass.update');
+        Route::get('/{studentsClass}/edit', [StudentsClassController::class, 'edit'])->name('studentsClass.edit');
+        Route::put('/{studentsClass}', [StudentsClassController::class, 'update'])->name('studentsClass.update');
 
-        Route::get('/{id}', [StudentsClassController::class, 'show'])->name('studentsClass.show');
+        Route::get('/{studentsClass}', [StudentsClassController::class, 'show'])->name('studentsClass.show');
+
+        Route::post('/{studentsClass}/add-students', [StudentsClassController::class, 'addStudents'])->name('studentsClass.addStudents');
+        Route::post('/{studentsClass}/add-curator', [StudentsClassController::class, 'addCurator'])->name('studentsClass.addCurator');
+        Route::delete('/{studentsClass}/delete-user/{userId}', [StudentsClassController::class, 'deleteUser'])->name('studentsClass.deleteUser');
+
     });
 });
-
 
 
 Route::get('/userStudy/{section?}', function ($section = 'home') {

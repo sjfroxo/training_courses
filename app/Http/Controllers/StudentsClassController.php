@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\DataTransferObjects\StudentsClassDTO;
+use App\Http\Requests\CuratorRequest;
+use App\Http\Requests\StudentRequest;
 use App\Http\Requests\StudentsClassRequest;
 use App\Models\StudentsClass;
 use App\Services\StudentsClassService;
@@ -30,8 +32,6 @@ class StudentsClassController
         $this->authorize('viewAny', StudentsClass::class);
 
         $studentsClasses = $this->service->paginate(4);
-
-//        $studentsClasses->getCollection()->load('course');
 
         return view('students-class', [
             'studentsClasses' => $studentsClasses,
@@ -115,4 +115,57 @@ class StudentsClassController
 
         return view('edit-studentsClass', ['studentsClass' => $studentsClass]);
     }
+
+    public function update(StudentsClassRequest $request, StudentsClass $studentsClass): RedirectResponse
+    {
+        $dto = new StudentsClassDTO(
+            $request->validated()['name'],
+            (int)$request->validated()['course_id'],
+            (int)$request->validated()['curator_id'],
+            (array)$request->validated()['student_ids'],
+        );
+
+        $this->service->update($studentsClass, $dto);
+
+        return redirect()->route('studentsClass.index');
+    }
+
+    /**
+     * @param StudentRequest $request
+     * @param StudentsClass $studentsClass
+     * @return RedirectResponse
+     */
+    public function addStudents(StudentRequest $request, StudentsClass $studentsClass): RedirectResponse
+    {
+        $studentIds = (array) $request->validated()['student_ids'];
+
+        $this->service->addStudents($studentsClass, $studentIds);
+
+        return redirect()->route('studentsClass.show', $studentsClass->id);
+    }
+
+    /**
+     * @param CuratorRequest $request
+     * @param StudentsClass $studentsClass
+     * @return RedirectResponse
+     */
+    public function addCurator(CuratorRequest $request, StudentsClass $studentsClass): RedirectResponse
+    {
+        $curatorId = (int)$request->validated('curator_id');
+
+        $this->service->addCurator($studentsClass, $curatorId);
+
+        return to_route('studentsClass.show', $studentsClass->id);
+    }
+
+
+    public function deleteUser(StudentsClass $studentsClass, int $userId): RedirectResponse
+    {
+        $this->authorize('update', $studentsClass);
+
+        $this->service->removeStudent($studentsClass, $userId);
+
+        return redirect()->route('studentsClass.show', $studentsClass->id);
+    }
+
 }
