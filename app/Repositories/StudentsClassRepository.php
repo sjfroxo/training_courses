@@ -34,6 +34,9 @@ class StudentsClassRepository extends CoreRepository implements CourseRepository
         return Course::all();
     }
 
+    /**
+     * @return Collection
+     */
     public function getUsers(): Collection
     {
         return User::all();

@@ -30,9 +30,10 @@
                                     <div>
                                         <div>
                                             @can('update', $studentsClass)
-                                                <x-edit-button route="{{ route('studentsClass.edit', ['id' => $studentsClass->id]) }}"/>
+                                                <x-edit-button route="{{ route('studentsClass.edit', $studentsClass) }}"/>
                                             @endcan
-                                            @can('delete', $studentsClass)
+
+                                        @can('delete', $studentsClass)
                                                 <form action="{{ route('studentsClass.destroy', $studentsClass->id) }}" method="POST" style="display: inline;">
                                                     @csrf
                                                     @method('DELETE')

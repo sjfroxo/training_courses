@@ -5,7 +5,6 @@ namespace App\Http\Requests;
 use App\Enums\UserRoleEnum;
 use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\ValidationException;
 
 class StudentsClassRequest extends FormRequest
 {

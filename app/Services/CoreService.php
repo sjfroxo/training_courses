@@ -33,16 +33,16 @@ abstract class CoreService extends Service
 	}
 
     /**
-     * @param Model $entity
+     * @param Model $id
      * @param ModelDTO $data
      * @return Model
      */
-	public function update(Model $entity, ModelDTO $data): Model
+	public function update(Model $id, ModelDTO $data): Model
 	{
 		$dto = $data->toArray();
 
 		return $this->repository->update(
-			$entity,
+			$id,
 			$dto
 		);
 	}

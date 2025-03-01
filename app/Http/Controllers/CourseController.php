@@ -125,7 +125,7 @@ class CourseController extends Controller
 	{
 		$course = $this->service->findBySlug($slug);
 
-		$this->authorize('delete', $course);
+		$this->authorize('update', $course);
 
 		$this->service->update($course, CourseDTO::appRequest($request));
 
