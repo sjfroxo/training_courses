@@ -22,4 +22,9 @@ class ModuleService extends CoreService
     {
         return $this->repository->firstWithModule($id);
     }
+
+    public function findCourses()
+    {
+        return $this->repository->findCourses();
+    }
 }
