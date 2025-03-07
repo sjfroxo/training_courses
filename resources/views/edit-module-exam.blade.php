@@ -52,8 +52,9 @@
                                         @csrf
                                         @method('PATCH')
                                         <input type="hidden" name="value" value="{{ $answer->value }}">
-                                        <input type="hidden" name="is_correct" value="{{ $answer->is_correct }}">
                                         <input type="hidden" name="module_exam_question_id" value="{{ $question->id }}">
+                                        <input type="hidden" name="is_correct" value="{{ $answer->is_correct }}">
+                                        <input type="hidden" name="module_exam_id" value="{{ $moduleExam->id }}">
                                     </form>
                                 </div>
                             @endforeach
@@ -87,7 +88,8 @@
 
     <script>
         const questionTypes = @json($questionTypes);
-        const moduleExamId = {{ $moduleExam->id }};
+        const moduleExamId = {{ $moduleExam->id ?? 0 }};
+        console.log('Module Exam ID:', moduleExamId);
 
         document.getElementById('addQuestion').addEventListener('click', function () {
             const questionsContainer = document.getElementById('questions');
@@ -129,24 +131,25 @@ ${questionTypes.map(questionType => `
                 const answersContainer = event.target.closest('.answers');
                 const answerIndex = answersContainer.querySelectorAll('.answer').length;
                 const answerTemplate = `
-                <div class="form-group answer mb-3">
-                    <div class="input-group">
-                        <input type="text" required class="form-control" name="answers[${answerIndex}][value]" placeholder="Текст ответа">
-                        <div class="input-group-append">
-                            <div class="input-group-text">
-                                <input type="checkbox" name="answers[${answerIndex}][is_correct]" value="1">
-                            </div>
+            <div class="form-group answer mb-3">
+                <div class="input-group">
+                    <input type="text" required class="form-control" name="answers[${answerIndex}][value]" placeholder="Текст ответа">
+                    <div class="input-group-append">
+                        <div class="input-group-text">
+                            <input type="checkbox" name="answers[${answerIndex}][is_correct]" value="1">
                         </div>
-                        <button type="button" class="btn btn-success saveAnswer">Сохранить ответ</button>
                     </div>
-                    <form class="answerForm" action="{{ route('moduleExamAnswers.store') }}" method="POST" style="display: none;">
-                        @csrf
+                    <button type="button" class="btn btn-success saveAnswer">Сохранить ответ</button>
+                </div>
+                <form class="answerForm" action="{{ route('moduleExamAnswers.store') }}" method="POST" style="display: none;">
+                    @csrf
                 <input type="hidden" name="value" value="">
                 <input type="hidden" name="is_correct" value="">
                 <input type="hidden" name="module_exam_question_id" value="">
-            </form>
-        </div>
-`;
+                <input type="hidden" name="module_exam_id" value="${moduleExamId}">
+                </form>
+            </div>
+        `;
                 answersContainer.insertBefore(document.createRange().createContextualFragment(answerTemplate), answersContainer.firstChild);
             } else if (event.target.classList.contains('removeAnswer')) {
                 const answerId = event.target.getAttribute('data-answer-id');
@@ -178,14 +181,13 @@ ${questionTypes.map(questionType => `
                 const textInput = questionDiv.querySelector('input[name^="questions"][name$="[text]"]');
                 const typeSelect = questionDiv.querySelector('select[name^="questions"][name$="[question_type_id]"]');
 
-                // Обновляем значения скрытых полей
                 form.innerHTML = `
-                @csrf
+            @csrf
                 @method('PATCH')
                 <input type="hidden" name="text" value="${textInput.value}">
-                <input type="hidden" name="question_type_id" value="${typeSelect.value}">
-                <input type="hidden" name="module_exam_id" value="{{ $moduleExam->id }}">
-            `;
+            <input type="hidden" name="question_type_id" value="${typeSelect.value}">
+            <input type="hidden" name="module_exam_id" value="${moduleExamId}">
+        `;
 
                 form.submit();
             } else if (event.target.classList.contains('saveAnswer')) {
@@ -194,10 +196,17 @@ ${questionTypes.map(questionType => `
                 const isCorrectCheckbox = answerDiv.querySelector('input[type="checkbox"]');
                 const answerForm = answerDiv.querySelector('.answerForm');
 
-                // Обновляем значения скрытых полей
+                console.log('Saving answer with:', {
+                    value: answerInput.value,
+                    isCorrect: isCorrectCheckbox.checked ? 1 : 0,
+                    moduleExamQuestionId: event.target.closest('.question').getAttribute('data-question-id'),
+                    moduleExamId: moduleExamId
+                });
+
                 answerForm.querySelector('input[name="value"]').value = answerInput.value;
                 answerForm.querySelector('input[name="is_correct"]').value = isCorrectCheckbox.checked ? 1 : 0;
                 answerForm.querySelector('input[name="module_exam_question_id"]').value = event.target.closest('.question').getAttribute('data-question-id');
+                answerForm.querySelector('input[name="module_exam_id"]').value = moduleExamId;
 
                 answerForm.submit();
             } else if (event.target.classList.contains('updateAnswer')) {
@@ -207,19 +216,11 @@ ${questionTypes.map(questionType => `
                 const isCorrectCheckbox = answerDiv.querySelector('input[type="checkbox"]');
                 const answerInput = answerDiv.querySelector('input[type="text"]');
 
-
-                // Обновляем значения скрытых полей
                 answerForm.querySelector('input[name="value"]').value = answerInput.value;
                 answerForm.querySelector('input[name="is_correct"]').value = isCorrectCheckbox.checked ? 1 : 0;
 
-
-                // Убедитесь, что форма отображается перед отправкой
                 answerForm.style.display = 'block';
-
-                // Отправляем форму
                 answerForm.submit();
-
-
             }
         });
     </script>

@@ -31,9 +31,9 @@ abstract class CoreRepository extends Repository implements CoreRepositoryInterf
 
     /**
      * @param string|int $id
-     * @return Model|Collection|Builder|null
+     * @return Model|Collection|Builder
      */
-    public function findById(string|int $id): Model|Collection|Builder|null
+    public function findById(string|int $id): Model|Collection|Builder
     {
 		return $this->getBuilder()->find($id);
 	}
@@ -49,25 +49,23 @@ abstract class CoreRepository extends Repository implements CoreRepositoryInterf
         return $entity;
 	}
 
-	/**
-	 * @param array<string,mixed> $data
-	 *
-	 * @return Model
-	 */
-	public function create(array $data): Model
+    /**
+     * @param array $dto
+     * @return Model
+     */
+	public function create(array $dto): Model
 	{
-		return $this->getBuilder()->create($data);
+		return $this->getBuilder()->create($dto);
 	}
 
-	/**
-	 * @param Model $entity
-	 * @param array<string, mixed> $data
-	 *
-	 * @return Model
-	 */
-	public function update(Model $entity, array $data): Model
+    /**
+     * @param Model $entity
+     * @param array $dto
+     * @return Model
+     */
+	public function update(Model $entity, array $dto): Model
 	{
-        $entity->update($data);
+        $entity->update($dto);
         return $entity;
 	}
 
@@ -90,12 +88,12 @@ abstract class CoreRepository extends Repository implements CoreRepositoryInterf
 		return $this->model->query();
 	}
 
-	/**
-	 * @param string $slug
-	 *
-	 * @return Model
-	 */
-	public function findBySlug(string $slug): Model
+    /**
+     * @param string $slug
+     *
+     * @return Model|null
+     */
+	public function findBySlug(string $slug): ?Model
 	{
 		return $this->getBuilder()->firstWhere('slug', $slug);
 	}

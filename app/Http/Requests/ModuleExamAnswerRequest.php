@@ -16,7 +16,6 @@ class ModuleExamAnswerRequest extends FormRequest
 		return [
 			'value' => ['required', 'string'],
 			'module_exam_question_id' => ['required', 'exists:module_exam_questions,id'],
-			'module_exam_user_response_id' => ['required', 'exists:module_exam_user_response,id'],
 			'is_correct' => ['required', 'boolean'],
 			'module_exam_id' => ['required', 'exists:module_exams,id'],
 		];
@@ -38,8 +37,6 @@ class ModuleExamAnswerRequest extends FormRequest
 			'is_correct.boolean' => 'Поле "Правильный ответ" должно быть логическим значением (true/false).',
             'module_exam_id.required' => 'Поле "Экзамен модуля" обязательно для заполнения.',
             'module_exam_id.exists' => 'Выбранный экзамен модуля не существует.',
-            'module_exam_user_response_id.required' => 'Поле "Ответ от теста" обязательно для заполнения.',
-            'module_exam_user_response_id.exists' => 'Выбранный ответ от теста модуля не существует.',
 		];
 	}
 }

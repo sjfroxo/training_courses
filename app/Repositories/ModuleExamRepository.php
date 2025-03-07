@@ -21,9 +21,9 @@ class ModuleExamRepository extends CoreRepository implements ModuleExamRepositor
 
     /**
      * @param string|int $id
-     * @return Model|Builder|null
+     * @return Model|Builder
      */
-    public function firstWithModule(string|int $id): Model|Builder|null
+    public function firstWithModule(string|int $id): Model|Builder
     {
         return $this->model->query()
             ->where('id', '=', $id)

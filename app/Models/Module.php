@@ -30,7 +30,7 @@ class Module extends Model
 	 */
 	public function course(): BelongsTo
 	{
-		return $this->belongsTo(Course::class);
+		return $this->belongsTo(Course::class, 'course_id');
 	}
 
 	/**

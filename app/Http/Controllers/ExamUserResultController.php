@@ -9,20 +9,19 @@ use App\Services\CourseService;
 use App\Services\ExamUserResultService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Controller;
 
 class ExamUserResultController extends Controller
 {
     use AuthorizesRequests;
 
-	/**
-	 * @param ExamUserResultService $service
-	 * @param CourseService $courseService
-	 */
-	public function __construct(
+    /**
+     * @param ExamUserResultService $service
+     * @param CourseService $courseService
+     */
+    public function __construct(
         protected ExamUserResultService $service,
-        protected CourseService         $courseService
+        protected CourseService $courseService
     ) {}
 
     /**
@@ -31,14 +30,12 @@ class ExamUserResultController extends Controller
      */
     public function index(ExamUserResultRequest $request): View
     {
-        $moduleExams = ModuleExam::all();
-
         $moduleExam = ModuleExam::query()->findOrFail($request->input('module_exam_id'));
 
         $results = $this->service->calculateResults($moduleExam->id);
 
         return view('exams-users-results', [
-            'moduleExams' => $moduleExams,
+            'moduleExams' => ModuleExam::all(),
             'moduleExam' => $moduleExam,
             'results' => $results,
             'courses' => $this->courseService->all(),
@@ -46,18 +43,25 @@ class ExamUserResultController extends Controller
         ]);
     }
 
-    public function store(ExamUserResultRequest $request): RedirectResponse
+    /**
+     * @param ExamUserResultRequest $request
+     * @return View
+     */
+    public function store(ExamUserResultRequest $request): View
     {
         $moduleExamId = $request->input('module_exam_id');
-        $moduleExam = ModuleExam::query()->findOrFail($moduleExamId);
+        $userId = auth()->id();
 
         $results = $this->service->calculateResults($moduleExamId);
-        $request->merge(['mark' => (string)$results['percent']]);
+        $mark = (string) $results['percent'];
 
-        $examResultDTO = ExamUserResultDTO::appRequest($request);
+        $examResultDTO = new ExamUserResultDTO($userId, $moduleExamId, $mark);
         $this->service->createResult($examResultDTO);
 
-        return redirect()->route('examsUsersResults.index', [
+        $moduleExam = ModuleExam::query()->findOrFail($moduleExamId);
+
+        return view('exams-users-results', [
+            'moduleExams' => ModuleExam::all(),
             'moduleExam' => $moduleExam,
             'results' => $results,
             'courses' => $this->courseService->all(),
