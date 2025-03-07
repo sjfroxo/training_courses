@@ -2,8 +2,10 @@
 
 namespace App\Repositories;
 
+use App\Models\ModuleExam;
 use App\Models\UserCourse;
 use App\Repositories\Interfaces\UserCourseRepositoryInterface as RepositoryInterface;
+use Illuminate\Support\Facades\Auth;
 
 class UserCourseRepository extends CoreRepository implements RepositoryInterface
 {
@@ -17,23 +19,22 @@ class UserCourseRepository extends CoreRepository implements RepositoryInterface
 		parent::__construct($model);
 	}
 
-	/**
-	 * @param string $course_id
-	 * @param string $user_id
-	 *
-	 * @return string
-	 */
-	public function getProgress(string $course_id, string $user_id): string
-	{
-		$progress = $this->getBuilder()->firstWhere([
-			['course_id', '=', $course_id],
-			['user_id', '=', $user_id]
-		]);
+    /**
+     * @return int
+     */
+    public function getCurrentUserCourses(): int
+    {
+        $currentUserCourses = ModuleExam::query()->whereHas('users', function ($query) {
+            $query->where('user_id', Auth::id());
+        });
+        return $currentUserCourses->count();
+    }
 
-		if(auth()->user()->isAdministrator() && $progress == null) {
-			return "0";
-		}
-
-		return $progress->progress;
-	}
+    /**
+     * @return int
+     */
+    public function getCourses(): int
+    {
+        return ModuleExam::all()->count();
+    }
 }

@@ -3,25 +3,31 @@
 namespace App\Services;
 
 use App\Repositories\UserCourseRepository;
+use Error;
 
 class UserCourseService extends CoreService
 {
-	/**
-	 * @param UserCourseRepository $repository
-	 */
-	public function __construct(UserCourseRepository $repository)
-	{
-		parent::__construct($repository);
-	}
+    /**
+     * @param UserCourseRepository $repository
+     */
+    public function __construct(UserCourseRepository $repository)
+    {
+        parent::__construct($repository);
+    }
 
-	/**
-	 * @param string $course_id
-	 * @param string $user_id
-	 *
-	 * @return string
-	 */
-	public function getProgress(string $course_id, string $user_id): string
-	{
-		return $this->repository->getProgress($course_id, $user_id);
-	}
+    /**
+     * @return string
+     */
+    public function getProgress(): string
+    {
+        if (!auth()->user()) {
+            throw new Error('Пользователь не авторизован!');
+        }
+
+        $totalCountCourses = $this->repository->getCourses();
+
+        $countDoneUserCourses = $this->repository->getCurrentUserCourses();
+
+        return number_format(($countDoneUserCourses * 100 / $totalCountCourses), 1);
+    }
 }
