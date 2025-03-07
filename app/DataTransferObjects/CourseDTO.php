@@ -19,18 +19,6 @@ class CourseDTO implements ModelDTO
     }
 
     /**
-     * @param CourseRequest $request
-     * @return CourseDTO
-     */
-    public static function appRequest(CourseRequest $request): CourseDTO
-    {
-        return new CourseDTO(
-            $request['title'],
-            $request['description']
-        );
-    }
-
-    /**
      * @return array
      */
     public function toArray(): array

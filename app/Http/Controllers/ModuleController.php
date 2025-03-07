@@ -68,25 +68,34 @@ class ModuleController extends Controller
 	{
 		$this->authorize('create', Course::class);
 
-        $this->service->create(ModuleDTO::class::appRequest($request));
+        $dto = new ModuleDTO(
+            (string)$request->validated()['title'],
+            (string)$request->validated()['course_id'],
+            (string)$request->validated()['content'],
+        );
 
-		return back();
+        $this->service->create($dto);
+
+        $course = $this->service->findCourses()->findOrFail($dto->course_id);
+
+        return to_route('courses.show', ['slug' => $course->slug]);
 	}
 
-	/**
-	 * @param string $id
-	 *
-	 * @return RedirectResponse
-	 * @throws AuthorizationException
-	 */
-	public function destroy(string $id): RedirectResponse
-	{
+    /**
+     *
+     * @param string $id
+     * @return RedirectResponse
+     */
+    public function destroy(string $id): RedirectResponse
+    {
         $model = $this->service->firstWithModule($id);
+
+        $module = $model->course;
 
         $model->delete();
 
-        return to_route('modules.show', ['slug' => $model->module->slug]);
-	}
+        return to_route('courses.show', ['slug' => $module->slug]);
+    }
 
 	/**
 	 * @param string $slug
@@ -105,23 +114,27 @@ class ModuleController extends Controller
 
     /**
      * @param ModuleRequest $request
-     * @param string $id
+     * @param string $slug
      * @return RedirectResponse
      */
-    public function update(ModuleRequest $request, string $id): RedirectResponse
+    public function update(ModuleRequest $request, string $slug): RedirectResponse
     {
-        $user = $this->service->findById($id);
+        $module = $this->service->findBySlug($slug);
 
-        $this->authorize('update', $user);
+        $this->authorize('update', $module);
 
-        $entity = $this->service->findById($id);
-
-        $this->service->update(
-            $entity,
-            ModuleDTO::appRequest($request)
+        $dto = new ModuleDTO(
+            (string)$request->validated()['title'],
+            (string)$request->validated()['course_id'],
+            (string)$request->validated()['content'],
         );
 
-        return back();
+        $this->service->update($module, $dto);
+
+        $course = Course::query()->findOrFail($module->course_id);
+
+        return to_route('courses.show', ['slug' => $course->slug]);
     }
+
 }
 

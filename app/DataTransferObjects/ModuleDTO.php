@@ -13,24 +13,11 @@ class ModuleDTO implements ModelDTO
      * @param string $content
      */
     public function __construct(
-        public readonly string $course_id,
         public readonly string $title,
+        public readonly string $course_id,
         public readonly string $content,
     )
     {
-    }
-
-    /**
-     * @param ModuleRequest $request
-     * @return ModuleDTO
-     */
-    public static function appRequest(ModuleRequest $request): ModuleDTO
-    {
-        return new ModuleDTO(
-            $request['course_id'],
-            $request['title'],
-            $request['content'],
-        );
     }
 
     /**
@@ -39,8 +26,8 @@ class ModuleDTO implements ModelDTO
     public function toArray(): array
     {
         return [
-            'course_id' => $this->course_id,
             'title' => $this->title,
+            'course_id' => $this->course_id,
             'content' => $this->content,
         ];
     }

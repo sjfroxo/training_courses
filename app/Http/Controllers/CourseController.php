@@ -60,7 +60,7 @@ class CourseController extends Controller
 	{
 		$course = $this->service->findBySlug($slug);
 
-		$progress = $this->userCourseService->getProgress($course->id, auth()->user()->id);
+		$progress = $this->userCourseService->getProgress();
 
 		$this->authorize('view', $course);
 
@@ -77,7 +77,12 @@ class CourseController extends Controller
 	{
 		$this->authorize('create', Course::class);
 
-        $this->service->create(CourseDTO::appRequest($request));
+        $dto = new CourseDTO(
+            (string)$request->validated()['title'],
+            (string)$request->validated()['description'],
+        );
+
+        $this->service->create($dto);
 
 		return to_route('courses');
 	}
@@ -127,7 +132,12 @@ class CourseController extends Controller
 
 		$this->authorize('update', $course);
 
-		$this->service->update($course, CourseDTO::appRequest($request));
+        $dto = new CourseDTO(
+            (string)$request->validated()['title'],
+            (string)$request->validated()['description'],
+        );
+
+		$this->service->update($course, $dto);
 
 		return to_route('courses');
 	}

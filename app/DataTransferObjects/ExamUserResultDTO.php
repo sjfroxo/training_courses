@@ -3,7 +3,6 @@
 namespace App\DataTransferObjects;
 
 use App\Contracts\ModelDTO;
-use App\Http\Requests\ExamUserResultRequest;
 
 class ExamUserResultDTO implements ModelDTO
 {
@@ -16,14 +15,8 @@ class ExamUserResultDTO implements ModelDTO
         public readonly string $user_id,
         public readonly string $module_exam_id,
         public readonly string $mark,
-    )
-    {
+    ) {
     }
-
-    /**
-     * @param ExamUserResultRequest $request
-     * @return ExamUserResultDTO
-     */
 
     /**
      * @return array

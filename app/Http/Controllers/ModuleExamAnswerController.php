@@ -14,17 +14,18 @@ use Illuminate\Routing\Controller;
 class ModuleExamAnswerController extends Controller
 {
     use AuthorizesRequests;
+
     /**
      * @param ModuleExamAnswerService $service
      */
     public function __construct(
         protected ModuleExamAnswerService $service,
     )
-    {}
+    {
+    }
 
     /**
      * @param ModuleExamAnswerRequest $request
-     *
      * @return RedirectResponse
      * @throws AuthorizationException
      */
@@ -32,14 +33,22 @@ class ModuleExamAnswerController extends Controller
     {
         $this->authorize('create', ModuleExamAnswer::class);
 
-        $this->service->create(ModuleExamAnswerDTO::appRequest($request));
+        $validated = $request->validated();
+
+        $dto = new ModuleExamAnswerDTO(
+            (string)$validated['value'],
+            (int)$validated['module_exam_question_id'],
+            (bool)($validated['is_correct'] ?? 0),
+            (int)$validated['module_exam_id']
+        );
+
+        $this->service->create($dto);
 
         return back();
     }
 
     /**
      * @param string $id
-     *
      * @return RedirectResponse
      * @throws AuthorizationException
      */
@@ -57,7 +66,6 @@ class ModuleExamAnswerController extends Controller
     /**
      * @param ModuleExamAnswerRequest $request
      * @param string $id
-     *
      * @return RedirectResponse
      * @throws AuthorizationException
      */
@@ -69,10 +77,16 @@ class ModuleExamAnswerController extends Controller
 
         $entity = $this->service->findById($id);
 
-        $this->service->update(
-            $entity,
-            ModuleExamAnswerDTO::appRequest($request)
+        $validated = $request->validated();
+
+        $dto = new ModuleExamAnswerDTO(
+            (string)$validated['value'],
+            (int)$validated['module_exam_question_id'],
+            (bool)($validated['is_correct'] ?? 0),
+            (int)$validated['module_exam_id']
         );
+
+        $this->service->update($entity, $dto);
 
         return back();
     }
