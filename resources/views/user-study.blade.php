@@ -7,17 +7,20 @@
                 <h1 class="mb-3">Моё обучение</h1>
                 <ul class="nav nav-tabs mb-3" id="myTab" role="tablist">
                     <li class="nav-item" role="presentation">
-                        <a class="nav-link {{ $section === 'home' ? 'active' : '' }}" href="{{ route('userStudy', 'home') }}">
+                        <a class="nav-link {{ $section === 'home' ? 'active' : '' }}"
+                           href="{{ route('userStudy', 'home') }}">
                             Главная
                         </a>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <a class="nav-link {{ $section === 'progress' ? 'active' : '' }}" href="{{ route('userStudy', 'progress') }}">
+                        <a class="nav-link {{ $section === 'progress' ? 'active' : '' }}"
+                           href="{{ route('userStudy', 'progress') }}">
                             Успеваемость
                         </a>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <a class="nav-link {{ $section === 'tasks' ? 'active' : '' }}" href="{{ route('userStudy', 'tasks') }}">
+                        <a class="nav-link {{ $section === 'tasks' ? 'active' : '' }}"
+                           href="{{ route('userStudy', 'tasks') }}">
                             Задания
                         </a>
                     </li>
@@ -31,7 +34,8 @@
                             <div class="col-md-6">
                                 <div class="card p-3" style="border: none;">
                                     <h5 class="card-title">Главная</h5>
-                                    <p class="card-text">Здесь отображается информация о вашем обучении, текущие курсы и прогресс.</p>
+                                    <p class="card-text">Здесь отображается информация о вашем обучении, текущие курсы и
+                                        прогресс.</p>
                                 </div>
                             </div>
 
@@ -50,6 +54,7 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="tab-pane fade {{ $section === 'progress' ? 'show active' : '' }}"
                          id="progress"
                          role="tabpanel"
@@ -59,6 +64,7 @@
                             <p class="card-text">Здесь вы можете увидеть свои результаты и статистику по курсам.</p>
                         </div>
                     </div>
+
                     <div class="tab-pane fade {{ $section === 'tasks' ? 'show active' : '' }}"
                          id="tasks"
                          role="tabpanel"
@@ -67,8 +73,22 @@
                             <h5 class="card-title">Задания</h5>
                             <p class="card-text">Список заданий, которые нужно выполнить в рамках курсов.</p>
                         </div>
+{{--                        <div class="card mt-4">--}}
+{{--                            <div class="card-header">--}}
+{{--                                <h2>Программа курса</h2>--}}
+{{--                            </div>--}}
+{{--                            <div class="card-body">--}}
+{{--                                <h4>{{$course->title}}</h4>--}}
+{{--                                {{$course->description}}--}}
+{{--                                <x-progress-bar :progress="$progress"/>--}}
+{{--                                <h5>Модули:</h5>--}}
+{{--                                @can('create',\App\Models\Module::class)--}}
+{{--                                    <x-add-button route="{{ route('modules.create') }}"/>--}}
+{{--                                @endcan--}}
+{{--                                <x-module-list :modules="$course->modules"/>--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
                     </div>
-                </div>
             </main>
         </div>
     </div>
