@@ -16,7 +16,7 @@
                     </div>
                 @endcan
                 <div class="d-flex flex-column justify-content-center align-items-center">
-                    @foreach($courses->take(3) as $course)
+                    @foreach($courses as $course)
                         @can('view', $course)
                             <div class="mb-4" style="width: 100%; background-color: transparent;">
                                 @include('components.course-card', [
@@ -28,6 +28,7 @@
                             </div>
                         @endcan
                     @endforeach
+{{--                    @dd($course->id)--}}
                 </div>
             </div>
         </div>

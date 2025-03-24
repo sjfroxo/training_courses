@@ -17,6 +17,9 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\StudentsClassController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserCourseController;
+use App\Http\Controllers\UserStudyMainController;
+use App\Http\Controllers\UserStudyProgressController;
+use App\Http\Controllers\UserStudyTasksController;
 use App\Http\Middleware\GuestMiddleware;
 use Illuminate\Support\Facades\Route;
 
@@ -154,13 +157,16 @@ Route::middleware('auth')->group(function () {
     });
 });
 
+Route::middleware('auth')->group(function () {
+        Route::get('/userStudyMain/{id}', [UserStudyMainController::class, 'show'])->name('userStudyMain.show');
+});
 
-Route::get('/userStudy/{section?}', function ($section = 'home') {
-    $validSections = ['home', 'progress', 'tasks'];
-    if (!in_array($section, $validSections)) {
-        $section = 'home';
-    }
-    return view('user-study', ['section' => $section]);
-})->name('userStudy');
+Route::middleware('auth')->group(function () {
+    Route::get('/userStudyProgress/{id}', [UserStudyProgressController::class, 'show'])->name('userStudyProgress.show');
+});
+
+Route::middleware('auth')->group(function () {
+    Route::get('/userStudyTasks/{id}', [UserStudyTasksController::class, 'show'])->name('userStudyTasks.show');
+});
 
 Route::get('/test', [ChatController::class, 'test']);

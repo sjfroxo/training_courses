@@ -8,6 +8,11 @@ use Revalto\ServiceRepository\Repository\AbstractRepositoryInterface;
 
 interface ChatRepositoryInterface extends AbstractRepositoryInterface
 {
+    /**
+     * @param Chat $chat
+     * @return array
+     */
+    public function getChatDetails(Chat $chat): array;
 	/**
 	 * @param Chat $chat
 	 * @param string|null $lastMessId
@@ -22,6 +27,13 @@ interface ChatRepositoryInterface extends AbstractRepositoryInterface
 	 * @return array
 	 */
 	public function getReplies(Chat $chat): array;
+
+    /**
+     * @param Chat $chat
+     * @param string $type
+     * @return array
+     */
+    public function getMediaFiles(Chat $chat, string $type): array;
 
 	/**
 	 * @param Chat $chat

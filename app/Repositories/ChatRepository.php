@@ -188,7 +188,7 @@ class ChatRepository extends CoreRepository implements ChatRepositoryInterface
      *
      * @return array
      */
-    private function getMediaFiles(Chat $chat, string $type): array
+    public function getMediaFiles(Chat $chat, string $type): array
     {
         return $chat->chatMessages()
             ->where('type', $type)

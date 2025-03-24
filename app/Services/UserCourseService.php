@@ -24,7 +24,7 @@ class UserCourseService extends CoreService
             throw new Error('Пользователь не авторизован!');
         }
 
-        $totalCountCourses = $this->repository->getCourses();
+        $totalCountCourses = $this->repository->getModuleExams();
 
         $countDoneUserCourses = $this->repository->getCurrentUserCourses();
 

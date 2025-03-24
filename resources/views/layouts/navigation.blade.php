@@ -16,7 +16,8 @@
                            role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Курсы
                         </a>
-                        <ul class="dropdown-menu w-100 border-0 shadow-none" style="max-height: 300px; overflow-y: auto;"
+                        <ul class="dropdown-menu w-100 border-0 shadow-none"
+                            style="max-height: 300px; overflow-y: auto;"
                             aria-labelledby="coursesDropdown">
                             @if($courses->count() > 0)
                                 @foreach($courses as $course)
@@ -40,7 +41,8 @@
                 @elseif(auth()->user()->isCurator())
                     <h5>Преподавание</h5>
                     <li class="nav-item"><a class="nav-link" href="{{ route('courses') }}">Курсы</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ route('courses.create') }}">Создать задание</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('courses.create') }}">Создать задание</a>
+                    </li>
                     <li class="nav-item"><a class="nav-link" href="{{ route('notifications') }}">Уведомления</a></li>
 
                     <h5>Общение</h5>
@@ -48,18 +50,23 @@
 
                 @elseif(auth()->user()->isUser())
                     <h5>Обучение</h5>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="coursesDropdown"
-                           role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <li class="nav-item dropdown d-flex">
+                        <a class="nav-link d-flex align-items-center" style="margin-right: 5px;"
+                           href="{{ route('courses') }}" id="coursesDropdown"
+                           role="button">
                             Курсы
                         </a>
-                        <ul class="dropdown-menu w-100 border-0 shadow-none" style="max-height: 300px; overflow-y: auto;"
+                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="{{ route('courses') }}"
+                           id="coursesDropdown"
+                           role="button" data-bs-toggle="dropdown" aria-expanded="false"></a>
+                        <ul class="dropdown-menu w-100 border-0 shadow-none"
+                            style="max-height: 300px; overflow-y: auto;"
                             aria-labelledby="coursesDropdown">
                             @if($courses->count() > 0)
                                 @foreach($courses as $course)
                                     <li>
                                         <a class="dropdown-item text-truncate"
-                                           href="{{ route('courses.show', ['slug' => $course->slug]) }}"
+                                           href="{{ route('userStudyMain.show', ['id' => $course->id]) }}"
                                            title="{{ $course->title }}">
                                             {{ $course->title }}
                                         </a>
@@ -72,7 +79,7 @@
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link text-truncate" href="{{ route('notifications') }}">Задания</a>
+                        <a class="nav-link text-truncate" href="{{ route('userStudyTasks.show', ['id' => $course->id]) }}">Задания</a>
                     </li>
 
                     <li class="nav-item">
@@ -89,10 +96,19 @@
     </div>
 
     <div class="bottom-section mt-auto">
-        <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button"
-           data-bs-toggle="dropdown" aria-expanded="false">
-            Профиль
-        </a>
+        <div style="display: flex; align-items: center;">
+            <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Admin" class="rounded-circle" width="50">
+            <a class="nav-link dropdown-toggle"
+               style="margin-left: 10px;"
+               href="#"
+               id="profileDropdown"
+               role="button"
+               data-bs-toggle="dropdown"
+               aria-expanded="false"
+            >
+                Профиль
+            </a>
+        </div>
         @guest
             <ul class="dropdown-menu" aria-labelledby="profileDropdown">
                 <li><a class="dropdown-item" href="{{ route('login') }}">Войти</a></li>

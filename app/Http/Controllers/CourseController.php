@@ -169,23 +169,4 @@ class CourseController extends Controller
             'averageMark' => $averageMark,
         ]);
 	}
-
-//    /**
-//     * @param string $section
-//     * @return View
-//     * @throws AuthorizationException
-//     */
-//    public function userStudy(string $section): View
-//    {
-//        $course = $this->service->findBySlug('default-slug');
-//        $progress = $this->userCourseService->getProgress();
-//
-//        $this->authorize('view', $course);
-//
-//        return view('user-study', [
-//            'section' => $section,
-//            'course' => $course,
-//            'progress' => $progress,
-//        ]);
-//    }
 }
