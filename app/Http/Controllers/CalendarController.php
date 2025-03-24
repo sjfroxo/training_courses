@@ -61,7 +61,7 @@ class CalendarController extends Controller
         $user = User::query()->findOrFail($userId);
         $calendarHtml = $this->generateCalendarHtml($firstDay, $daysInMonth, $startingDay, $visits, $month, $year, $userId, $courseId);
 
-        return view('user-study', [
+        return view('user-study-main', [
             'user' => $user,
             'course' => $course,
             'courseId' => $courseId,
