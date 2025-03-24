@@ -142,4 +142,9 @@ class StudentsClassService extends CoreService
     {
         return $studentsClass->users()->detach($studentId);
     }
+
+    public function getCuratorForClass(int $studentsClassId)
+    {
+        return $this->repository->getCurator($studentsClassId);
+    }
 }
