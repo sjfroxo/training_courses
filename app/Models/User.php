@@ -94,6 +94,11 @@ class User extends Authenticatable
         return $this->user_role_id === UserRoleEnum::USER->value;
     }
 
+    public function isUnverified(): bool
+    {
+        return $this->user_role_id === UserRoleEnum::UNVERIFIED->value;
+    }
+
     public function role(): BelongsTo
     {
         return $this->belongsTo(UserRole::class, 'user_role_id');

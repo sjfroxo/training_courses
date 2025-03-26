@@ -79,7 +79,8 @@
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link text-truncate" href="{{ route('userStudyTasks.show', ['id' => $course->id]) }}">Задания</a>
+                        <a class="nav-link text-truncate"
+                           href="{{ route('userStudyTasks.show', ['id' => $course->id]) }}">Задания</a>
                     </li>
 
                     <li class="nav-item">
@@ -108,19 +109,19 @@
             >
                 Профиль
             </a>
+            @guest
+                <ul class="dropdown-menu" aria-labelledby="profileDropdown">
+                    <li><a class="dropdown-item" href="{{ route('login') }}">Войти</a></li>
+                    <li><a class="dropdown-item" href="{{ route('register') }}">Зарегистрироваться</a></li>
+                </ul>
+            @endguest
+            @auth
+                <ul class="dropdown-menu" aria-labelledby="profileDropdown">
+                    <li><a class="dropdown-item" href="{{ route('account.show', ['id' => auth()->id()]) }}">Личный
+                            кабинет</a></li>
+                    <li><a class="dropdown-item" href="{{ route('logout') }}">Выйти</a></li>
+                </ul>
+            @endauth
         </div>
-        @guest
-            <ul class="dropdown-menu" aria-labelledby="profileDropdown">
-                <li><a class="dropdown-item" href="{{ route('login') }}">Войти</a></li>
-                <li><a class="dropdown-item" href="{{ route('register') }}">Зарегистрироваться</a></li>
-            </ul>
-        @endguest
-        @auth
-            <ul class="dropdown-menu" aria-labelledby="profileDropdown">
-                <li><a class="dropdown-item" href="{{ route('account.show', ['id' => auth()->id()]) }}">Личный
-                        кабинет</a></li>
-                <li><a class="dropdown-item" href="{{ route('logout') }}">Выйти</a></li>
-            </ul>
-        @endauth
     </div>
 </nav>

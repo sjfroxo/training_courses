@@ -28,7 +28,6 @@
                             </div>
                         @endcan
                     @endforeach
-{{--                    @dd($course->id)--}}
                 </div>
             </div>
         </div>

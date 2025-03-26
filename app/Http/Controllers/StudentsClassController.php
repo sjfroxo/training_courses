@@ -31,7 +31,7 @@ class StudentsClassController
     {
         $this->authorize('viewAny', StudentsClass::class);
 
-        $studentsClasses = $this->service->paginate(4);
+        $studentsClasses = $this->service->paginate(12);
 
         return view('students-class', [
             'studentsClasses' => $studentsClasses,

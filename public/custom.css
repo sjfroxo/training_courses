@@ -19,3 +19,39 @@
     background-color: #6620e4 !important;
     color: #ffffff !important;
 }
+
+/* Стили для пагинации */
+.pagination {
+    --bs-pagination-bg: #e9ecef; /* Серый фон для кнопок */
+    --bs-pagination-color: #212529; /* Тёмный текст */
+    --bs-pagination-border-color: #dee2e6; /* Цвет границы */
+    --bs-pagination-hover-bg: #d3d4d5; /* Фон при наведении */
+    --bs-pagination-hover-color: #212529; /* Цвет текста при наведении */
+    --bs-pagination-active-bg: #e5f4fa; /* Синий фон для активной страницы */
+    --bs-pagination-active-color: #000000; /* Белый текст для активной страницы */
+    --bs-pagination-disabled-bg: #e9ecef; /* Фон для неактивных кнопок */
+    --bs-pagination-disabled-color: #6c757d; /* Серый текст для неактивных кнопок */
+}
+
+.pagination .page-item .page-link {
+    background-color: var(--bs-pagination-bg);
+    color: var(--bs-pagination-color);
+    border-color: var(--bs-pagination-border-color);
+}
+
+.pagination .page-item .page-link:hover {
+    background-color: var(--bs-pagination-hover-bg);
+    color: var(--bs-pagination-hover-color);
+}
+
+.pagination .page-item.active .page-link {
+    background-color: var(--bs-pagination-active-bg);
+    color: var(--bs-pagination-active-color);
+    border-color: var(--bs-pagination-active-bg);
+}
+
+.pagination .page-item.disabled .page-link {
+    background-color: var(--bs-pagination-disabled-bg);
+    color: var(--bs-pagination-disabled-color);
+    border-color: var(--bs-pagination-border-color);
+}

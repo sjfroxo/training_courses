@@ -1,12 +1,11 @@
 @extends('layouts.app')
 
 @section('main')
-    <div class="container d-flex flex-column" style="height: 100%; width: 90%; background-color: transparent;">
+    <div class="container d-flex" style="height: 100%; width: 90%; background-color: transparent;">
         @include('layouts.navigation')
 
         <div class="content flex-grow-1">
             <div class="card-header rounded-top-4" style="background-color: transparent; border: none;">
-
             </div>
             <div class="card-body" style="margin: 0 auto; background-color: transparent;">
                 <h2 class="mb-3">Учебные классы</h2>
@@ -16,38 +15,39 @@
                     </div>
                 @endcan
                 <div class="row">
-                    <div class="d-flex justify-content-around align-items-center">
-                        @foreach($studentsClasses as $studentsClass)
-                            <div class="card col-md-4 m-3">
+                    @foreach($studentsClasses as $studentsClass)
+                        <div class="col-md-4 mb-3">
+                            <div class="card">
                                 <div class="card-body">
                                     <div>
-                                        <a style="text-decoration: none; color: #000;" href="{{ route('studentsClass.show', $studentsClass->id) }}">
-                                            <h5 class="card-title">Класс номер {{ $loop->iteration }}
-                                                . {{ $studentsClass->name }}</h5>
+                                        <a style="text-decoration: none; color: #000;"
+                                           href="{{ route('studentsClass.show', $studentsClass->id) }}">
+                                            <h5 class="card-title">Класс номер {{ $loop->iteration }}. {{ $studentsClass->name }}</h5>
                                         </a>
                                         <p class="card-text">{{ $studentsClass->course?->title ?? 'Не указан' }}</p>
                                     </div>
-                                    <div>
-                                        <div>
-                                            @can('update', $studentsClass)
-                                                <x-edit-button route="{{ route('studentsClass.edit', $studentsClass) }}"/>
-                                            @endcan
+                                    <div class="d-flex gap-2">
+                                        @can('update', $studentsClass)
+                                            <x-edit-button route="{{ route('studentsClass.edit', $studentsClass) }}"/>
+                                        @endcan
 
                                         @can('delete', $studentsClass)
-                                                <form action="{{ route('studentsClass.destroy', $studentsClass->id) }}" method="POST" style="display: inline;">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <x-delete-button/>
-                                                </form>
-                                            @endcan
-                                        </div>
+                                            <form action="{{ route('studentsClass.destroy', $studentsClass->id) }}"
+                                                  method="POST" style="display: inline;">
+                                                @csrf
+                                                @method('DELETE')
+                                                <x-delete-button/>
+                                            </form>
+                                        @endcan
                                     </div>
                                 </div>
                             </div>
-                        @endforeach
-                    </div>
+                        </div>
+                    @endforeach
                 </div>
-
+            </div>
+            <div class="d-flex justify-content-center mt-4">
+                {{ $studentsClasses->links() }}
             </div>
         </div>
 
@@ -56,4 +56,3 @@
         </div>
     </div>
 @endsection
-

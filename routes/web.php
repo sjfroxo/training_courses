@@ -23,10 +23,6 @@ use App\Http\Controllers\UserStudyTasksController;
 use App\Http\Middleware\GuestMiddleware;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
 Route::get('/courses', [CourseController::class, 'index'])
     ->name('courses')->middleware('auth');
 

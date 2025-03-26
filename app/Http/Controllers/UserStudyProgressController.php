@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\UserRoleEnum;
 use App\Models\StudentsClass;
 use App\Services\CourseService;
 use App\Services\StudentsClassService;
