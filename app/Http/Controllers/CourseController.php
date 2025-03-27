@@ -30,14 +30,19 @@ class CourseController extends Controller
 	 * @return View
 	 * @throws AuthorizationException
 	 */
-	public function index(): View
-	{
-		$this->authorize('viewAny', Course::class);
+    public function index(): View
+    {
+        $this->authorize('viewAny', Course::class);
 
-		$courses = $this->service->paginate(4);
+        $user = auth()->user();
+        if ($user->isAdministrator()) {
+            $courses = $this->service->paginate(4);
+        } else {
+            $courses = $user->courses()->paginate(4);
+        }
 
-		return view('courses', ['courses' => $courses]);
-	}
+        return view('courses', ['courses' => $courses]);
+    }
 
 	/**
 	 * @return View

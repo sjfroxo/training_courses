@@ -116,11 +116,10 @@ class User extends Authenticatable
         return $this->hasMany(ChatMessage::class, 'user_id');
     }
 
-    public function courses(): BelongsToMany
+    public function courses()
     {
-        return $this->belongsToMany(Course::class, 'user_courses', 'user_id', 'course_id')
-            ->withPivot('progress')
-            ->withPivot('id')
+        return $this->belongsToMany(Course::class, 'user_courses')
+            ->withPivot('id', 'progress')
             ->withTimestamps();
     }
 

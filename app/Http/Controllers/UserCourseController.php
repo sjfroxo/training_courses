@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\DataTransferObjects\UserCourseDTO;
 use App\Http\Requests\UserCourseRequest;
+use App\Models\User;
 use App\Models\UserCourse;
 use App\Services\UserCourseService;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -14,20 +15,14 @@ use Illuminate\Routing\Controller;
 class UserCourseController extends Controller
 {
     use AuthorizesRequests;
-    /**
-     * @param UserCourseService $service
-     */
-    public function __construct(
-        protected UserCourseService $service,
-    )
-    {}
+
+    public function __construct(protected UserCourseService $service)
+    {
+    }
 
     /**
      * @param UserCourseRequest $request
-     *
      * @return RedirectResponse
-     * @throws AuthorizationException
-     * Ожидает от клиента course_id, user_id, progress
      */
     public function store(UserCourseRequest $request): RedirectResponse
     {
@@ -39,22 +34,22 @@ class UserCourseController extends Controller
     }
 
     /**
-     * @param string $id
-     *
+     * @param string $user
+     * @param string $userCourse
      * @return RedirectResponse
-     * Клиент должен послать именно id UserCourse
-     * через pivot
+     * Клиент должен послать именно id UserCourse через pivot
      * Например:>$user->courses->find($course->id)->pivot->id
      * @throws AuthorizationException
      */
-    public function destroy(string $id): RedirectResponse
+    public function destroy(string $user, string $userCourse): RedirectResponse
     {
-        $userCourse = $this->service->findById($id);
+        $userModel = User::query()->findOrFail($user);
+        $userCourseModel = $this->service->findById($userCourse);
 
-        $this->authorize('delete', $userCourse);
+        $this->authorize('delete', $userCourseModel);
 
-        $this->service->destroyById($id);
+        $this->service->destroyById($userCourse);
 
-        return to_route('users.show', ['user' => $userCourse['user_id']]);
+        return to_route('users.show', ['user' => $userModel->id]);
     }
 }

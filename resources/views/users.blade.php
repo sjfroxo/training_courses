@@ -5,7 +5,7 @@
         <div class="card mt-4" style="border: none;">
             <div style="display: flex; flex-direction: column;">
                 <h2 class="m-3">Пользователи</h2>
-                <a type="button" class="btn btn-primary m-3 mt-0" href="{{route('users.create')}}">Создать пользователя +</a>
+                <a type="button" class="btn btn-primary m-3 mt-0" style="width: 20%" href="{{route('users.create')}}">Создать пользователя +</a>
             </div>
             <div class="card-body">
                 <div class="table-responsive">

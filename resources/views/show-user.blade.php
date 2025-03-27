@@ -37,10 +37,13 @@
                                         </div>
                                         <div class="col-md-4">
                                             @if($user->courses->contains($course))
-                                                <form action="{{ route('userCourses.destroy', ['userCourse' => $user->courses->find($course->id)->pivot->id]) }}" method="POST">
+                                                @php
+                                                    $pivot = $user->courses->where('id', $course->id)->first()->pivot;
+                                                @endphp
+                                                <form action="{{ route('userCourses.destroy', ['user' => $user->id, 'userCourse' => $pivot->id]) }}" method="POST">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button class="btn btn-danger" type="submit" id="deleteButton">Лишить курса</button>
+                                                    <button class="btn btn-danger" type="submit">Лишить курса</button>
                                                 </form>
                                             @else
                                                 <form action="{{ route('userCourses.store') }}" method="POST">
@@ -60,7 +63,6 @@
                 </div>
 
                 @if(Auth::check() && Auth::user()->isAdministrator())
-                    <!-- Календарь активности (отображается только для администраторов) -->
                     <div class="mt-4">
                         <h5 class="mb-3">Активность на курсе</h5>
                         <div class="card p-3" style="border: none; background-color: #fff;">

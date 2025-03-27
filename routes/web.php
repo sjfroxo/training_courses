@@ -69,9 +69,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/{user}', [AdminUserController::class, 'show'])->name('users.show');
     });
 
-    Route::prefix('userCourse')->group(function () {
+    Route::prefix('userCourses')->group(function () {
         Route::post('/', [UserCourseController::class, 'store'])->name('userCourses.store');
-        Route::delete('/{userCourse}', [UserCourseController::class, 'destroy'])->name('userCourses.destroy');
+        Route::delete('/users/{user}/courses/{userCourse}', [UserCourseController::class, 'destroy'])->name('userCourses.destroy');
     });
 
     Route::prefix('moduleExams')->group(function () {

@@ -39,7 +39,7 @@ class UserCourseRepository extends CoreRepository implements RepositoryInterface
         return ModuleExam::all()->count();
     }
 
-    public function getAverageUserScore()
+    public function getAverageUserScore(): string
     {
         $marks = ExamUserResult::query()->where('user_id', Auth::id())->pluck('mark');
         $sum = 0;
@@ -49,6 +49,4 @@ class UserCourseRepository extends CoreRepository implements RepositoryInterface
 
         return number_format($sum / $marks->count());
     }
-
-
 }
