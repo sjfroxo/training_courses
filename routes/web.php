@@ -165,4 +165,4 @@ Route::middleware('auth')->group(function () {
     Route::get('/userStudyTasks/{id}', [UserStudyTasksController::class, 'show'])->name('userStudyTasks.show');
 });
 
-Route::get('/test', [ChatController::class, 'test']);
+Route::redirect('/chatify', '/chatify');

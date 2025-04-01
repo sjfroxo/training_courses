@@ -59,10 +59,10 @@
                         <a class="nav-link dropdown-toggle d-flex align-items-center" href="{{ route('courses') }}"
                            id="coursesDropdown"
                            role="button" data-bs-toggle="dropdown" aria-expanded="false"></a>
-                        <ul class="dropdown-menu w-100 border-0 shadow-none"
-                            style="max-height: 300px; overflow-y: auto;"
-                            aria-labelledby="coursesDropdown">
-                            @if($courses->count() > 0)
+                        @if($courses->count() > 0)
+                            <ul class="dropdown-menu w-100 border-0 shadow-none"
+                                style="max-height: 300px; overflow-y: auto;"
+                                aria-labelledby="coursesDropdown">
                                 @foreach($courses as $course)
                                     <li>
                                         <a class="dropdown-item text-truncate"
@@ -72,10 +72,10 @@
                                         </a>
                                     </li>
                                 @endforeach
-                            @else
-                                <li><span class="dropdown-item text-muted">Нет курсов</span></li>
-                            @endif
-                        </ul>
+                            </ul>
+                        @elseif ($courses->count() <= 0)
+                            <div>huy</div>
+                        @endif
                     </li>
 
                     <li class="nav-item">

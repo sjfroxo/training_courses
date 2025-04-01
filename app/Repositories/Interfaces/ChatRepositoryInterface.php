@@ -21,13 +21,6 @@ interface ChatRepositoryInterface extends AbstractRepositoryInterface
 	 */
 	public function getMessages(Chat $chat, ?string $lastMessId = null): LengthAwarePaginator;
 
-	/**
-	 * @param Chat $chat
-	 *
-	 * @return array
-	 */
-	public function getReplies(Chat $chat): array;
-
     /**
      * @param Chat $chat
      * @param string $type

@@ -8,52 +8,30 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ChatMessage extends Model
 {
-	use HasFactory;
+    use HasFactory;
 
-	/**
-	 * @var string
-	 */
-	protected $table = 'chat_messages';
-	/**
-	 * @var string[]
-	 */
-	protected $fillable = [
-		'message',
-		'user_id',
-		'chat_id',
-		'type',
-		'reply_message_id'
-	];
+    protected $table = 'chat_messages';
+    protected $fillable = [
+        'message',
+        'user_id',
+        'chat_id',
+        'type',
+        'reply_message_id',
+        'media_url',
+    ];
 
-	/**
-	 * @return BelongsTo
-	 */
-	public function chat(): BelongsTo
-	{
-		return $this->belongsTo(Chat::class);
-	}
+    public function chat(): BelongsTo
+    {
+        return $this->belongsTo(Chat::class);
+    }
 
-	/**
-	 * @return BelongsTo
-	 */
-	public function user(): BelongsTo
-	{
-		return $this->belongsTo(User::class);
-	}
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 
-	/**
-	 * @return string
-	 */
-	public function replyMessage(): string
-	{
-		$message = ChatMessage::query()->where("id", "=", $this->reply_message_id)->get()[0];
-
-		if($message->type == "voice") {
-			return "voice message";
-		} else if($message->type == "video") {
-			return "video message";
-		} else {
-			return $message->message;
-		}
-	}
+    public function repliedToMessage(): BelongsTo
+    {
+        return $this->belongsTo(ChatMessage::class, 'reply_message_id');
+    }
 }

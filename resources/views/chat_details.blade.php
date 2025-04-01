@@ -15,7 +15,7 @@
             border-radius: 10px;
             position: relative;
             margin-bottom: 5px;
-            cursor: pointer; /* Добавляем курсор указателя */
+            cursor: pointer;
         }
 
         .message.sent {
@@ -27,26 +27,26 @@
         }
 
         .reply-message {
-            background-color: rgba(0, 0, 0, 0.2); /* Цвет фона блока ответа */
-            border-left: 3px solid rgba(136, 136, 136, 0.5); /* Линия слева */
+            background-color: rgba(0, 0, 0, 0.2);
+            border-left: 3px solid rgba(136, 136, 136, 0.5);
             padding: 5px;
             border-radius: 5px;
-            color: #000000; /* Цвет текста */
+            color: #000000;
             margin-bottom: 5px;
         }
 
         .message-content {
-            background-color: #f1f1f1; /* Цвет фона сообщения */
+            background-color: #f1f1f1;
             border-radius: 10px;
             padding: 10px;
         }
 
         .message-content.received {
-            background-color: rgba(57, 192, 237, .2); /* Цвет фона полученного сообщения */
+            background-color: rgba(57, 192, 237, .2);
         }
 
         .selected-message {
-            border: 2px solid #007bff; /* Выдление выбранног�� сообщения */
+            border: 2px solid #007bff;
         }
 
         .recording-interface {
@@ -101,11 +101,10 @@
             <div class="row d-flex justify-content-center">
                 <div class="col-md-8 col-lg-6 col-xl-4">
                     <div class="card" id="chat1" style="border-radius: 15px;">
-                        <div
-                                class="card-header d-flex justify-content-between align-items-center p-3 bg-info text-white border-bottom-0"
-                                style="border-top-left-radius: 15px; border-top-right-radius: 15px;">
+                        <div class="card-header d-flex justify-content-between align-items-center p-3 bg-info text-white border-bottom-0"
+                             style="border-top-left-radius: 15px; border-top-right-radius: 15px;">
                             <i class="fas fa-angle-left"></i>
-                            <p class="mb-0 fw-bold">{{$chat->title}}</p>
+                            <p class="mb-0 fw-bold">{{ $chat->title }}</p>
                             <i class="fas fa-times"></i>
                         </div>
                         <div class="card-body" id="card-body" style="max-height: 569px; overflow-y: auto;">
@@ -114,21 +113,29 @@
                                     <div class="message {{ $message->user_id == auth()->user()->id ? 'sent' : 'received' }}"
                                          data-message-id="{{ $message->id }}">
                                         <div class="message-content {{ $message->user_id == auth()->user()->id ? '' : 'received' }}">
-                                            @if($message->reply_message_id != null)
+                                            @if($message->reply_message_id && $message->repliedToMessage)
                                                 <div class="reply-message">
-                                                    {{$replyMessages[$message->reply_message_id]}}
+                                                    @if($message->repliedToMessage->type == 'text')
+                                                        {{ $message->repliedToMessage->message }}
+                                                    @elseif($message->repliedToMessage->type == 'voice')
+                                                        Voice message
+                                                    @else
+                                                        Video message
+                                                    @endif
                                                 </div>
                                             @endif
-                                            @if($message->type == "text")
-                                                <p class="small mb-0">{{$message->message}}</p>
-                                            @elseif($message->type == "voice")
+                                            @if($message->type == 'text')
+                                                <p class="small mb-0">{{ $message->message }}</p>
+                                            @elseif($message->type == 'voice' && isset($voiceMessages[$message->id]))
                                                 <audio controls class="" style="width:170px">
-                                                    <source src="{{$voiceMessages[$message->id]}}" type="audio/mpeg">
+                                                    <source src="{{ $voiceMessages[$message->id] }}" type="audio/mpeg">
                                                 </audio>
-                                            @else
+                                            @elseif($message->type == 'video' && isset($videoMessages[$message->id]))
                                                 <video controls class="" style="width:170px">
-                                                    <source src="{{$videoMessages[$message->id]}}">
+                                                    <source src="{{ $videoMessages[$message->id] }}">
                                                 </video>
+                                            @else
+                                                <p class="small mb-0">[Media unavailable]</p>
                                             @endif
                                         </div>
                                     </div>
@@ -157,13 +164,11 @@
                                     <div class="messages" id="messages"></div>
                                 </div>
                                 <div class="row justify-content-between">
-                                    <button type="submit" id="sendRequestButton" class="col-5 mx-3">Send Request
-                                    </button>
+                                    <button type="submit" id="sendRequestButton" class="col-5 mx-3">Send Request</button>
                                 </div>
                             </form>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -171,84 +176,84 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         let currentScrollPosition = 0;
-        let lastMessageId = {{$messages[count($messages)-1]->id}};
-        let replyMessages = @json($replyMessages);
+        let lastMessageId = {{ $messages->isNotEmpty() ? $messages[count($messages)-1]->id : 0 }};
         let voiceMessages = @json($voiceMessages);
         let videoMessages = @json($videoMessages);
-        let replyMessageHtml = '';
-        let messageContent = '';
 
         function loadMoreMessages() {
             $.ajax({
-                url: '{{ route("chat.loadMore", ['slug' => $slug]) }}',
+                url: '{{ route("chat.loadMore", ["slug" => $slug]) }}',
                 type: 'get',
                 data: {
                     last_message_id: lastMessageId,
                 },
                 success: function (response) {
-                    console.log(response);
-                    // response = response['data'];
-
                     const messages = response.data;
-
                     messages.forEach(function (message) {
                         prependNewMessage(message);
                     });
-
                     if (messages.length > 0) {
                         lastMessageId = messages[messages.length - 1].id;
                     }
-
                     $('#card-body').scrollTop($('#card-body')[0].scrollHeight - currentScrollPosition);
+                },
+                error: function (error) {
+                    console.error('Error loading messages:', error);
                 }
             });
         }
 
         $('#card-body').scroll(function () {
             currentScrollPosition = $('#card-body')[0].scrollHeight - $('#card-body').scrollTop();
-
             if ($('#card-body').scrollTop() === 0) {
                 loadMoreMessages();
             }
         });
 
         function prependNewMessage(message) {
-            replyMessageHtml = '';
-            messageContent = '';
-            if (message.reply_message_id) {
+            let replyMessageHtml = '';
+            if (message.reply_message_id && message.replied_to_message) {
+                let replyContent = message.replied_to_message.type === 'text'
+                    ? message.replied_to_message.message
+                    : message.replied_to_message.type === 'voice'
+                        ? 'Voice message'
+                        : 'Video message';
                 replyMessageHtml = `
-                <div class="reply-message">
-                    ${replyMessages[message.reply_message_id]}
-                </div>
-            `;
+                    <div class="reply-message">
+                        ${replyContent}
+                    </div>
+                `;
             }
 
+            let messageContent = '';
             if (message.type === 'text') {
                 messageContent = `<p class="small mb-0">${message.message}</p>`;
-            } else if (message.type === 'voice') {
+            } else if (message.type === 'voice' && voiceMessages[message.id]) {
                 messageContent = `
-                <audio controls style="width:170px">
-                    <source src="${voiceMessages[message.id]}" type="audio/mpeg">
-                </audio>
-            `;
+                    <audio controls style="width:170px">
+                        <source src="${voiceMessages[message.id]}" type="audio/mpeg">
+                    </audio>
+                `;
+            } else if (message.type === 'video' && videoMessages[message.id]) {
+                messageContent = `
+                    <video controls style="width:170px">
+                        <source src="${videoMessages[message.id]}">
+                    </video>
+                `;
             } else {
-                messageContent = `
-                <video controls style="width:170px">
-                    <source src="${videoMessages[message.id]}">
-                </video>
-            `;
+                messageContent = `<p class="small mb-0">[Media unavailable]</p>`;
             }
 
             let newMessage = `
-            <div class="message-container">
-                <div class="message ${message.user_id === {{auth()->user()->id}} ? 'sent' : 'received'}" data-message-id="${message.id}">
-                    <div class="message-content ${message.user_id === {{auth()->user()->id}} ? '' : 'received'}">
-                        ${replyMessageHtml}
-                        ${messageContent}
+                <div class="message-container">
+                    <div class="message ${message.user_id === {{ auth()->user()->id }} ? 'sent' : 'received'}" data-message-id="${message.id}">
+                        <div class="message-content ${message.user_id === {{ auth()->user()->id }} ? '' : 'received'}">
+                            ${replyMessageHtml}
+                            ${messageContent}
+                        </div>
                     </div>
                 </div>
-            </div>
-        `;
+            `;
 
             $(".card-body").prepend(newMessage);
         }
@@ -266,21 +271,22 @@
                 e.preventDefault();
                 sendMessage($('#textAreaExample').val(), "text", null);
             });
-
-
         });
 
         function sendMessage(content, type, mediaBlob = null) {
             const formData = new FormData();
-
             formData.append('user_id', {{ auth()->user()->id }});
             formData.append('chat_id', {{ $chat->id }});
             formData.append('type', type);
             formData.append('reply_message_id', $('#replyMessageId').val());
-            formData.append('message', content);
+            formData.append('message', content || '');
 
             if ((type === 'voice' || type === 'video') && mediaBlob) {
-                formData.append('media_file', mediaBlob);
+                if (mediaBlob.size === 0) {
+                    console.error('Media blob is empty, aborting send');
+                    return;
+                }
+                formData.append('media_file', mediaBlob, type === 'voice' ? 'voice.webm' : 'video.webm');
             }
 
             $.ajax({
@@ -290,20 +296,15 @@
                 processData: false,
                 contentType: false,
                 success: function (response) {
-                    response = response['data'];
-                    console.log(response);
-                    newOwnMessage(response);
-
-                    newMessageToOthers();
-
+                    const message = response.data;
+                    newOwnMessage(message);
                     $(".card-body").scrollTop($(".card-body")[0].scrollHeight);
-
                     $('.message').removeClass('selected-message');
-
+                    $('#textAreaExample').val('');
                     $('#replyMessageId').val('');
                 },
                 error: function (error) {
-                    console.log('Error:', error.responseJSON);
+                    console.error('Error sending message:', error.responseJSON);
                 },
             });
         }
@@ -312,104 +313,93 @@
 
         function newOwnMessage(message) {
             let replyMessageHtml = '';
-            let messageContent = '';
-
-            if (message.reply_message_id) {
-                replyMessageHtml = replyMessageHtml = replyChoose(message.reply_message_id);
+            if (message.reply_message_id && message.replied_to_message) {
+                let replyContent = message.replied_to_message.type === 'text'
+                    ? message.replied_to_message.message
+                    : message.replied_to_message.type === 'voice'
+                        ? 'Voice message'
+                        : 'Video message';
+                replyMessageHtml = `
+                    <div class="reply-message">
+                        ${replyContent}
+                    </div>
+                `;
             }
 
-            messageContent = messageContentChoose(message.message, message.type, message.media_url);
+            let messageContent = messageContentChoose(message.message, message.type, message.media_url);
 
             let newMessage = `
-        <div class="message-container">
-            <div class="message sent" data-message-id="${message.id}">
-                <div class="message-content">
-                    ${replyMessageHtml}
-                    ${messageContent}
+                <div class="message-container">
+                    <div class="message sent" data-message-id="${message.id}">
+                        <div class="message-content">
+                            ${replyMessageHtml}
+                            ${messageContent}
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-    `;
+            `;
 
             $(".card-body").append(newMessage);
         }
 
         function newMessageToOthers() {
-            let messageContent = "";
-
-            Echo.channel('chat.{{$chat->id}}').stopListening('.chat-message.sent');
-
-            Echo.channel('chat.{{$chat->id}}')
+            Echo.channel('chat.{{ $chat->id }}')
                 .listen('.chat-message.sent', (e) => {
-
-                    if (e.reply_message_id) {
-                        replyMessageHtml = replyChoose(e.reply_message_id);
+                    let replyMessageHtml = '';
+                    if (e.reply_message_id && e.replied_to_message) {
+                        let replyContent = e.replied_to_message.type === 'text'
+                            ? e.replied_to_message.message
+                            : e.replied_to_message.type === 'voice'
+                                ? 'Voice message'
+                                : 'Video message';
+                        replyMessageHtml = `
+                            <div class="reply-message">
+                                ${replyContent}
+                            </div>
+                        `;
                     }
 
-                    messageContent = messageContentChoose(e.message, e.type, e.media_url)
+                    let messageContent = messageContentChoose(e.message, e.type, e.media_url);
 
                     let newMessage = `
-                    <div class="message-container">
-                        <div class="message received" data-message-id="${e.id}">
-                            <div class="message-content received">
-                                ${replyMessageHtml}
-                                ${messageContent}
+                        <div class="message-container">
+                            <div class="message received" data-message-id="${e.id}">
+                                <div class="message-content received">
+                                    ${replyMessageHtml}
+                                    ${messageContent}
+                                </div>
                             </div>
                         </div>
-                    </div>
-
-                `;
+                    `;
 
                     $(".card-body").append(newMessage);
-
                     $(".card-body").scrollTop($(".card-body")[0].scrollHeight);
                 });
-
-            $('#textAreaExample').val('');
-        }
-
-        function replyChoose(reply_id) {
-            let replyMessage = "";
-
-            if ($(`.message[data-message-id="${reply_id}"]`).find('p').length > 0) {
-                replyMessage = $(`.message[data-message-id="${reply_id}"]`).find('p').text();
-            } else if ($(`.message[data-message-id="${reply_id}"]`).find('audio').length > 0) {
-                replyMessage = "voice message";
-            } else if ($(`.message[data-message-id="${reply_id}"]`).find('video').length > 0) {
-                replyMessage = "video message";
-            }
-
-            return `
-                        <div class="reply-message">
-                            ${replyMessage}
-                        </div>
-                    `;
         }
 
         function messageContentChoose(message, type, media_url) {
             if (type === 'text') {
                 return `<p class="small mb-0">${message}</p>`;
-            } else if (type === 'voice') {
+            } else if (type === 'voice' && media_url) {
                 return `
             <audio controls style="width:170px">
-                <source src="${media_url}" type="audio/mpeg">
+                <source src="${media_url}" type="audio/webm">
             </audio>
         `;
-            } else if (type === 'video') {
+            } else if (type === 'video' && media_url) {
                 return `
             <video controls style="width:170px">
-                <source src="${media_url}">
+                <source src="${media_url}" type="video/webm">
             </video>
         `;
+            } else {
+                return `<p class="small mb-0">[Media unavailable]</p>`;
             }
         }
 
         $('.card-body').on('click', '.message', function () {
-
             const isSelected = $(this).hasClass('selected-message');
-
             $('.message').removeClass('selected-message');
-
             if (!isSelected) {
                 $(this).addClass('selected-message');
                 $('#replyMessageId').val($(this).data('message-id'));
@@ -437,16 +427,20 @@
             if (!isRecording) {
                 const stream = await navigator.mediaDevices.getUserMedia({audio: true});
                 mediaRecorder = new MediaRecorder(stream);
-
                 mediaRecorder.ondataavailable = (e) => {
-                    audioChunks.push(e.data);
+                    if (e.data.size > 0) {
+                        audioChunks.push(e.data);
+                    }
                 };
-
                 mediaRecorder.onstop = () => {
-                    const audioBlob = new Blob(audioChunks, {type: 'audio/wav'});
+                    if (audioChunks.length === 0) {
+                        console.error('No audio data recorded');
+                        return;
+                    }
+                    const audioBlob = new Blob(audioChunks, {type: 'audio/webm'});
+                    console.log('Audio Blob size:', audioBlob.size); // Логирование размера
                     sendMessage(null, 'voice', audioBlob);
                 };
-
                 mediaRecorder.start();
                 audioChunks = [];
                 startTime = Date.now();
@@ -454,10 +448,20 @@
                 startTimer();
                 isRecording = true;
             } else {
-                mediaRecorder.stop();
-                recordingInterface.classList.remove('active');
-                stopTimer();
-                isRecording = false;
+                // Минимальное время записи — 1 секунда
+                if (Date.now() - startTime < 1000) {
+                    setTimeout(() => {
+                        mediaRecorder.stop();
+                        recordingInterface.classList.remove('active');
+                        stopTimer();
+                        isRecording = false;
+                    }, 1000 - (Date.now() - startTime));
+                } else {
+                    mediaRecorder.stop();
+                    recordingInterface.classList.remove('active');
+                    stopTimer();
+                    isRecording = false;
+                }
             }
         }, {passive: true});
 
@@ -489,22 +493,25 @@
             if (!isRecordingVideo) {
                 const stream = await navigator.mediaDevices.getUserMedia({video: true, audio: true});
                 mediaRecorderVideo = new MediaRecorder(stream);
-
                 videoPreview.srcObject = stream;
                 videoPreview.classList.add('active');
                 videoPreview.play();
-
                 mediaRecorderVideo.ondataavailable = (e) => {
-                    videoChunks.push(e.data);
+                    if (e.data.size > 0) {
+                        videoChunks.push(e.data);
+                    }
                 };
-
                 mediaRecorderVideo.onstop = () => {
+                    if (videoChunks.length === 0) {
+                        console.error('No video data recorded');
+                        return;
+                    }
                     const videoBlob = new Blob(videoChunks, {type: 'video/webm'});
+                    console.log('Video Blob size:', videoBlob.size); // Логирование размера
                     sendMessage(null, 'video', videoBlob);
                     videoPreview.classList.remove('active');
                     videoPreview.srcObject = null;
                 };
-
                 mediaRecorderVideo.start();
                 videoChunks = [];
                 startVideoTime = Date.now();
@@ -512,10 +519,20 @@
                 startVideoTimer();
                 isRecordingVideo = true;
             } else {
-                mediaRecorderVideo.stop();
-                recordingVideoInterface.classList.remove('active');
-                stopVideoTimer();
-                isRecordingVideo = false;
+                // Минимальное время записи — 1 секунда
+                if (Date.now() - startVideoTime < 1000) {
+                    setTimeout(() => {
+                        mediaRecorderVideo.stop();
+                        recordingVideoInterface.classList.remove('active');
+                        stopVideoTimer();
+                        isRecordingVideo = false;
+                    }, 1000 - (Date.now() - startVideoTime));
+                } else {
+                    mediaRecorderVideo.stop();
+                    recordingVideoInterface.classList.remove('active');
+                    stopVideoTimer();
+                    isRecordingVideo = false;
+                }
             }
         }, {passive: true});
 
@@ -534,4 +551,3 @@
         }
     </script>
 @endsection
-

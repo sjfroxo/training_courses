@@ -28,7 +28,8 @@
         "laravel/sanctum": "^4.0",
         "laravel/socialite": "^5.15",
         "laravel/tinker": "^2.9",
-        "pusher/pusher-php-server": "*",
+        "munafio/chatify": "^1.6",
+        "pusher/pusher-php-server": "^7.2",
         "revalto/laravel-seeder": "@dev",
         "revalto/laravel-service-repository": "@dev"
     },
