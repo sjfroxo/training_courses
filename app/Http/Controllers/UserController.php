@@ -61,10 +61,14 @@ class UserController extends Controller
 
         $entity = $this->service->findById($id);
 
-        $this->service->update(
-            $entity,
-            UserDTO::appRequest($request)
+        $validated = $request->validated();
+
+        $dto = new UserDTO(
+            $validated['name'],
+            $validated['surname'],
         );
+
+        $this->service->update($entity, $dto);
 
 		return to_route('account.show', ['id' => $id]);
 	}

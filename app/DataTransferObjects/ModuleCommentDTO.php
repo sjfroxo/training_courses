@@ -21,19 +21,6 @@ class ModuleCommentDTO implements ModelDTO
     }
 
     /**
-     * @param ModuleCommentRequest $request
-     * @return ModuleCommentDTO
-     */
-    public static function appRequest(ModuleCommentRequest $request): ModuleCommentDTO
-    {
-        return new ModuleCommentDTO(
-            $request['user_id'],
-            $request['module_id'],
-            $request['text'],
-        );
-    }
-
-    /**
      * @return array
      */
     public function toArray(): array

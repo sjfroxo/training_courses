@@ -69,9 +69,9 @@ class ModuleController extends Controller
 		$this->authorize('create', Course::class);
 
         $dto = new ModuleDTO(
-            (string)$request->validated()['title'],
-            (string)$request->validated()['course_id'],
-            (string)$request->validated()['content'],
+            $request->validated()['title'],
+            $request->validated()['course_id'],
+            $request->validated()['content'],
         );
 
         $this->service->create($dto);
@@ -124,9 +124,9 @@ class ModuleController extends Controller
         $this->authorize('update', $module);
 
         $dto = new ModuleDTO(
-            (string)$request->validated()['title'],
-            (string)$request->validated()['course_id'],
-            (string)$request->validated()['content'],
+            $request->validated()['title'],
+            $request->validated()['course_id'],
+            $request->validated()['content'],
         );
 
         $this->service->update($module, $dto);

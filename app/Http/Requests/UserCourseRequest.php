@@ -14,8 +14,8 @@ class UserCourseRequest extends FormRequest
 	public function rules(): array
 	{
 		return [
-			'user_id' => ['required', 'exists:users,id'],
-			'course_id' => ['required', 'exists:courses,id'],
+			'user_id' => ['required', 'string', 'exists:users,id'],
+			'course_id' => ['required', 'string', 'exists:courses,id'],
 			'progress' => ['integer', 'between:0,100'],
 		];
 	}
@@ -29,9 +29,11 @@ class UserCourseRequest extends FormRequest
 	{
 		return [
 			'user_id.required' => 'Поле "Пользователь" обязательно для заполнения.',
+			'user_id.string' => 'Поле "Пользователь" должно быть строкой.',
 			'user_id.exists' => 'Выбранный пользователь не существует.',
 			'course_id.required' => 'Поле "Курс" обязательно для заполнения.',
-			'course_id.exists' => 'Выбранный курс не существует.',
+            'course_id.string' => 'Поле "Курс" должно быть строкой.',
+            'course_id.exists' => 'Выбранный курс не существует.',
 			'progress.required' => 'Поле "Прогресс" обязательно для заполнения.',
 			'progress.integer' => 'Поле "Прогресс" должно быть целым числом.',
 			'progress.min' => 'Значение поля "Прогресс" должно быть не менее 0.',

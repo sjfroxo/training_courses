@@ -21,19 +21,6 @@ class ModuleExamQuestionDTO implements ModelDTO
     }
 
     /**
-     * @param ModuleExamQuestionRequest $request
-     * @return ModuleExamQuestionDTO
-     */
-    public static function appRequest(ModuleExamQuestionRequest $request): ModuleExamQuestionDTO
-    {
-        return new ModuleExamQuestionDTO(
-            $request['text'],
-            $request['module_exam_id'],
-            $request['question_type_id'],
-        );
-    }
-
-    /**
      * @return array
      */
     public function toArray(): array

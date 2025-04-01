@@ -29,9 +29,14 @@ class LoginController extends Controller
      */
     public function authenticate(LoginUserRequest $request): RedirectResponse
     {
-        $user = LoginUserDTO::appRequest($request)->toArray();
+        $validated = $request->validated();
 
-        if (Auth::attempt($user)) {
+        $dto = new LoginUserDTO(
+            $validated['email'],
+            $validated['password'],
+        );
+
+        if (Auth::attempt((array)$dto)) {
             $this->service->regenerateSession($request);
 
             return to_route('courses');

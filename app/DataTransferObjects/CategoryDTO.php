@@ -19,18 +19,6 @@ class CategoryDTO implements ModelDTO
     }
 
     /**
-     * @param CategoryRequest $request
-     * @return CategoryDTO
-     */
-    public static function appRequest(CategoryRequest $request): CategoryDTO
-    {
-        return new CategoryDTO(
-            $request['title'],
-            $request['description'],
-        );
-    }
-
-    /**
      * @return array
      */
     public function toArray(): array

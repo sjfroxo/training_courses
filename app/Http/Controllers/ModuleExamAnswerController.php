@@ -11,7 +11,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Controller;
 
-class ModuleExamAnswerController extends Controller
+class  ModuleExamAnswerController extends Controller
 {
     use AuthorizesRequests;
 
@@ -36,10 +36,10 @@ class ModuleExamAnswerController extends Controller
         $validated = $request->validated();
 
         $dto = new ModuleExamAnswerDTO(
-            (string)$validated['value'],
-            (int)$validated['module_exam_question_id'],
-            (bool)($validated['is_correct'] ?? 0),
-            (int)$validated['module_exam_id']
+            $validated['value'],
+            $validated['module_exam_question_id'],
+            ($validated['is_correct'] ?? 0),
+            $validated['module_exam_id']
         );
 
         $this->service->create($dto);
@@ -80,10 +80,10 @@ class ModuleExamAnswerController extends Controller
         $validated = $request->validated();
 
         $dto = new ModuleExamAnswerDTO(
-            (string)$validated['value'],
-            (int)$validated['module_exam_question_id'],
-            (bool)($validated['is_correct'] ?? 0),
-            (int)$validated['module_exam_id']
+            $validated['value'],
+            $validated['module_exam_question_id'],
+            ($validated['is_correct'] ?? 0),
+            $validated['module_exam_id']
         );
 
         $this->service->update($entity, $dto);

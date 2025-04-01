@@ -76,11 +76,13 @@ class StudentsClassController
     {
         $this->authorize('create', StudentsClass::class);
 
+        $validated = $request->validated();
+
         $dto = new StudentsClassDTO(
-            $request->validated()['name'],
-            (int)$request->validated()['course_id'],
-            (int)$request->validated()['curator_id'],
-            (array)$request->validated()['student_ids'],
+            $validated['name'],
+            $validated['course_id'],
+            $validated['curator_id'],
+            $validated['student_ids'],
         );
 
         $this->service->create($dto);
@@ -118,11 +120,13 @@ class StudentsClassController
 
     public function update(StudentsClassRequest $request, StudentsClass $studentsClass): RedirectResponse
     {
+        $validated = $request->validated();
+
         $dto = new StudentsClassDTO(
-            $request->validated()['name'],
-            (int)$request->validated()['course_id'],
-            (int)$request->validated()['curator_id'],
-            (array)$request->validated()['student_ids'],
+            $validated['name'],
+            $validated['course_id'],
+            $validated['curator_id'],
+            $validated['student_ids'],
         );
 
         $this->service->update($studentsClass, $dto);
@@ -137,7 +141,7 @@ class StudentsClassController
      */
     public function addStudents(StudentRequest $request, StudentsClass $studentsClass): RedirectResponse
     {
-        $studentIds = (array) $request->validated()['student_ids'];
+        $studentIds = $request->validated()['student_ids'];
 
         $this->service->addStudents($studentsClass, $studentIds);
 
@@ -151,7 +155,7 @@ class StudentsClassController
      */
     public function addCurator(CuratorRequest $request, StudentsClass $studentsClass): RedirectResponse
     {
-        $curatorId = (int)$request->validated('curator_id');
+        $curatorId = $request->validated('curator_id');
 
         $this->service->addCurator($studentsClass, $curatorId);
 

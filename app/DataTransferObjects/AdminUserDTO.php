@@ -24,22 +24,6 @@ class AdminUserDTO implements ModelDTO
 	) {}
 
 	/**
-	 * @param AdminUserRequest $request
-	 *
-	 * @return AdminUserDTO
-	 */
-	public static function appRequest(AdminUserRequest $request): AdminUserDTO
-	{
-		return new AdminUserDTO(
-			$request['user_role_id'],
-			$request['name'],
-			$request['surname'],
-			$request['email'],
-			$request['password'],
-		);
-	}
-
-	/**
 	 * @return array
 	 */
 	public function toArray(): array

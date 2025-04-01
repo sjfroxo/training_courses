@@ -17,17 +17,6 @@ class QuestionTypeDTO implements ModelDTO
     }
 
     /**
-     * @param QuestionTypeRequest $request
-     * @return QuestionTypeDTO
-     */
-    public static function appRequest(QuestionTypeRequest $request): QuestionTypeDTO
-    {
-        return new QuestionTypeDTO(
-            $request['title'],
-        );
-    }
-
-    /**
      * @return array
      */
     public function toArray(): array

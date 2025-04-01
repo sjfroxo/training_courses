@@ -16,21 +16,8 @@ class LoginUserDTO implements ModelDTO
         private readonly string $email,
         private readonly string $password
     )
-    {
+    {}
 
-    }
-
-    /**
-     * @param LoginUserRequest $request
-     * @return LoginUserDTO
-     */
-    public static function appRequest(LoginUserRequest $request): LoginUserDTO
-    {
-        return new LoginUserDTO(
-            $request['email'],
-            $request['password'],
-        );
-    }
     /**
      * @return array
      */

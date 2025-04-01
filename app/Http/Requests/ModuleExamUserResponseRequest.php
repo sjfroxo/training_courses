@@ -30,7 +30,7 @@ class ModuleExamUserResponseRequest extends FormRequest
 				}
 			}],
 			'answer.*.*' => ['nullable', 'exists:module_exam_answers,id'],
-            'module_exam_id' => ['required','exists:module_exams,id'],
+            'module_exam_id' => ['required', 'string', 'exists:module_exams,id'],
 		];
 	}
 
@@ -44,6 +44,7 @@ class ModuleExamUserResponseRequest extends FormRequest
 		return [
             'module_exam_answer_id.exists' => 'Выбранный ответ на вопрос экзамена модуля не существует.',
             'module_exam_id.required' => 'Поле "Тест" обязательно для заполнения',
+            'module_exam_id.sting' => 'Поле "Тест" должно быть строкой',
             'module_exam_id.exists' => 'Выбранный тест не существует',
 			'question_id.required' => 'Поле "Вопрос" обязательно для заполнения.',
 			'question_id.exists' => 'Выбранный вопрос не существует.',

@@ -21,19 +21,6 @@ class ModuleExamDTO implements ModelDTO
     }
 
     /**
-     * @param ModuleExamRequest $request
-     * @return ModuleExamDTO
-     */
-    public static function appRequest(ModuleExamRequest $request): ModuleExamDTO
-    {
-        return new ModuleExamDTO(
-            $request['module_id'],
-            $request['is_autochecked'],
-            $request['name'],
-        );
-    }
-
-    /**
      * @return array
      */
     public function toArray(): array

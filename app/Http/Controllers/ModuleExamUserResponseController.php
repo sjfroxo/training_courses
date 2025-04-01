@@ -15,16 +15,10 @@ class ModuleExamUserResponseController extends Controller
 {
     use AuthorizesRequests;
 
-    protected ModuleExamUserResponseService $responseService;
-    protected ModuleExamQuestionService $questionService;
-
     public function __construct(
-        ModuleExamUserResponseService $responseService,
-        ModuleExamQuestionService     $questionService
-    ) {
-        $this->responseService = $responseService;
-        $this->questionService = $questionService;
-    }
+        protected ModuleExamUserResponseService $responseService,
+        protected ModuleExamQuestionService     $questionService
+    ) {}
 
     /**
      * Сохранение ответов пользователя.
@@ -35,12 +29,22 @@ class ModuleExamUserResponseController extends Controller
     public function store(ModuleExamUserResponseRequest $request): RedirectResponse
     {
         $moduleExamId = $request->input('module_exam_id');
-        $moduleExam = ModuleExam::query()->findOrFail($moduleExamId);
 
         $userId = auth()->id();
-        $responseDTOs = ModuleExamUserResponseDTO::appRequest($request, $this->questionService);
 
-        $this->responseService->processUserResponses($moduleExamId, $userId, $responseDTOs);
+        $validated = $request->validated();
+
+        $dto = new ModuleExamUserResponseDTO(
+            $validated['module_exam_question_id'],
+            $validated['user_id'],
+            $validated['module_exam_answer_id'],
+            $validated['text'],
+            $validated['module_exam_id'],
+        );
+
+        $this->responseService->create($dto);
+
+        $this->responseService->processUserResponses($moduleExamId, $userId, (array)$dto);
 
         return redirect()->route('examsUsersResults.store', ['module_exam_id' => $moduleExamId]);
     }

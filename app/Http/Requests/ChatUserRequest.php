@@ -14,9 +14,9 @@ class ChatUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id' => ['required','exists:users,id'],
-            'chat_id' => ['required','exists:chats,id'],
-            'user_role' => ['required','string','in:user,administrator,moderator']
+            'user_id' => ['required', 'string', 'exists:users,id'],
+            'chat_id' => ['required', 'string', 'exists:chats,id'],
+            'user_role' => ['required', 'string', 'in:user,administrator,moderator']
         ];
     }
 
@@ -27,8 +27,10 @@ class ChatUserRequest extends FormRequest
     {
         return [
             'user_id.required' => 'Поле "Пользователь" обязательно для заполнения.',
+            'user_id.string' => 'Поле "Пользователь" должно быть строкой.',
             'user_id.exists' => 'Выбранный пользователь не существует.',
             'chat_id.required' => 'Поле "Чат" обязательно для заполнения.',
+            'chat_id.string' => 'Поле "Чат" должно быть строкой.',
             'chat_id.exists' => 'Выбранный чат не существует.',
             'user_role.required' => 'Поле "Роль пользователя" обязательно для заполнения.',
             'user_role.string' => 'Поле "Роль пользователя" должно быть строкой.',

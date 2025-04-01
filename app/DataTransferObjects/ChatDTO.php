@@ -17,17 +17,6 @@ class ChatDTO implements ModelDTO
     }
 
     /**
-     * @param ChatRequest $request
-     * @return ChatDTO
-     */
-    public static function appRequest(ChatRequest $request): ChatDTO
-    {
-        return new ChatDTO(
-            $request['title'],
-        );
-    }
-
-    /**
      * @return array
      */
     public function toArray(): array

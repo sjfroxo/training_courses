@@ -6,6 +6,12 @@ use App\Contracts\ModelDTO;
 
 class StudentsClassDTO implements ModelDTO
 {
+    /**
+     * @param string $name
+     * @param int $course_id
+     * @param int $curator_id
+     * @param array $student_ids
+     */
     public function __construct(
         public readonly string $name,
         public readonly int $course_id,
@@ -13,6 +19,9 @@ class StudentsClassDTO implements ModelDTO
         public readonly array $student_ids,
     ) {}
 
+    /**
+     * @return array
+     */
     public function toArray(): array
     {
         return [

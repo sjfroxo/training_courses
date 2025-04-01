@@ -21,19 +21,6 @@ class ChatUserDTO implements ModelDTO
     }
 
     /**
-     * @param ChatUserRequest $request
-     * @return ChatUserDTO
-     */
-    public static function appRequest(ChatUserRequest $request): ChatUserDTO
-    {
-        return new ChatUserDTO(
-            $request['chat_id'],
-            $request['user_id'],
-            $request['user_role'],
-        );
-    }
-
-    /**
      * @return array
      */
     public function toArray(): array

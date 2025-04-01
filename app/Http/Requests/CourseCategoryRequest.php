@@ -14,8 +14,8 @@ class CourseCategoryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'category_id' => ['required','exists:categories,id'],
-            'course_id' => ['required','exists:courses,id'],
+            'category_id' => ['required', 'string', 'exists:categories,id'],
+            'course_id' => ['required', 'string', 'exists:courses,id'],
         ];
     }
 
@@ -26,8 +26,10 @@ class CourseCategoryRequest extends FormRequest
     {
         return [
             'category_id.required' => 'Поле "Категория" обязательно для заполнения.',
+            'category_id.string' => 'Поле "Категория" должно быть строкой.',
             'category_id.exists' => 'Выбранная категория не существует.',
             'course_id.required' => 'Поле "Курс" обязательно для заполнения.',
+            'course_id.string' => 'Поле "Курс" должно быть строкой.',
             'course_id.exists' => 'Выбранный курс не существует.',
         ];
     }

@@ -82,9 +82,11 @@ class CourseController extends Controller
 	{
 		$this->authorize('create', Course::class);
 
+        $validated = $request->validated();
+
         $dto = new CourseDTO(
-            (string)$request->validated()['title'],
-            (string)$request->validated()['description'],
+            $validated['title'],
+            $validated['description'],
         );
 
         $this->service->create($dto);
@@ -137,9 +139,11 @@ class CourseController extends Controller
 
 		$this->authorize('update', $course);
 
+        $validated = $request->validated();
+
         $dto = new CourseDTO(
-            (string)$request->validated()['title'],
-            (string)$request->validated()['description'],
+            $validated['title'],
+            $validated['description'],
         );
 
 		$this->service->update($course, $dto);

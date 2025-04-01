@@ -28,7 +28,15 @@ class UserCourseController extends Controller
     {
         $this->authorize('create', UserCourse::class);
 
-        $this->service->create(UserCourseDTO::appRequest($request));
+        $validated = $request->validated();
+
+        $dto = new UserCourseDTO(
+            $validated['user_id'],
+            $validated['course_id'],
+            $validated['progress'],
+        );
+
+        $this->service->create($dto);
 
         return to_route('users.show', ['user' => $request['user_id']]);
     }

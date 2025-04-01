@@ -22,23 +22,8 @@ class RegisterUserDTO implements ModelDTO
     {
     }
 
-
     /**
-     * @param RegisterUserRequest $request
-     * @return RegisterUserDTO
-     */
-    public static function appRequest(RegisterUserRequest $request): RegisterUserDTO
-    {
-        return new RegisterUserDTO(
-            $request['name'],
-            $request['surname'],
-            $request['email'],
-            $request['password'],
-        );
-    }
-
-    /**
-     * @return array|mixed[]
+     * @return array
      */
     public function toArray(): array
     {

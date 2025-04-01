@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Models\ModuleExamQuestion;
+use Exception;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -41,7 +42,7 @@ class ExamUserResponseResultRequest extends FormRequest
 //                'module_exam_question_id' => ['required','exists:module_exam_questions,id'],
                 'mark' => ['nullable','integer','between:0,10'],
             ];
-        } catch (\Exception $e) {dd($e);}
+        } catch (Exception $e) {dd($e);}
     }
 
     public function messages(): array

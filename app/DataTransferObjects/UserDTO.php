@@ -17,19 +17,6 @@ class UserDTO implements ModelDTO
 	) {}
 
 	/**
-	 * @param UserRequest $request
-	 *
-	 * @return UserDTO
-	 */
-	public static function appRequest(UserRequest $request): UserDTO
-	{
-		return new UserDTO(
-			$request['name'],
-			$request['surname'],
-		);
-	}
-
-	/**
 	 * @return array
 	 */
 	public function toArray(): array

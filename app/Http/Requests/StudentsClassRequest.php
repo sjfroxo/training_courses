@@ -12,8 +12,8 @@ class StudentsClassRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
-            'course_id' => ['required', 'exists:courses,id'],
-            'curator_id' => ['required', 'exists:users,id'],
+            'course_id' => ['required', 'integer', 'exists:courses,id'],
+            'curator_id' => ['required', 'integer', 'exists:users,id'],
             'student_ids' => ['required', 'array', 'min:1', 'max:30'],
             'student_ids.*' => ['exists:users,id'],
         ];
@@ -25,8 +25,10 @@ class StudentsClassRequest extends FormRequest
             'name.required' => 'Поле "Название" обязательно для заполнения.',
             'name.string' => 'Поле "Название" должно быть строкой.',
             'course_id.required' => 'Поле "Курс" обязательно для заполнения.',
+            'course_id.string' => 'Поле "Курс" должно быть числом.',
             'course_id.exists' => 'Выбранный курс не существует.',
             'curator_id.required' => 'Поле "Куратор" обязательно для заполнения.',
+            'curator_id.string' => 'Поле "Куратор" должно быть числом.',
             'curator_id.exists' => 'Выбранный куратор не существует.',
             'student_ids.required' => 'Необходимо выбрать хотя бы одного ученика.',
             'student_ids.array' => 'Ученики должны быть списком.',

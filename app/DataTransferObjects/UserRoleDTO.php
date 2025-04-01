@@ -3,8 +3,6 @@
 namespace App\DataTransferObjects;
 
 use App\Contracts\ModelDTO;
-use App\Http\Requests\AuthRequest;
-use App\Http\Requests\UserRoleRequest;
 
 class UserRoleDTO implements ModelDTO
 {
@@ -15,17 +13,6 @@ class UserRoleDTO implements ModelDTO
         public readonly string $title,
     )
     {
-    }
-
-    /**
-     * @param UserRoleRequest $request
-     * @return UserRoleDTO
-     */
-    public static function appRequest(UserRoleRequest $request): UserRoleDTO
-    {
-        return new UserRoleDTO(
-            $request['title'],
-        );
     }
 
     /**

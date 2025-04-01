@@ -28,7 +28,16 @@ class RegisterController extends Controller
      */
 	public function store(RegisterUserRequest $request): RedirectResponse
     {
-        $user = $this->service->create(RegisterUserDTO::appRequest($request));
+        $validated = $request->validated();
+
+        $dto = new RegisterUserDTO(
+            $validated['name'],
+            $validated['surname'],
+            $validated['email'],
+            $validated['password'],
+        );
+
+        $user = $this->service->create($dto);
 
 		$this->service->authLogin($user);
 

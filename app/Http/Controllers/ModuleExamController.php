@@ -74,7 +74,15 @@ class ModuleExamController extends Controller
 
 		$module = $this->moduleService->findById($request['module_id']);
 
-        $this->service->create(ModuleExamDTO::appRequest($request));
+        $validated = $request->validated();
+
+        $dto = new ModuleExamDTO(
+            $validated['module_id'],
+            $validated['is_autochecked'],
+            $validated['name'],
+        );
+
+        $this->service->create($dto);
 
 		return to_route('modules.show', ['slug' => $module->slug]);
 	}
@@ -113,10 +121,15 @@ class ModuleExamController extends Controller
 
         $entity = $this->service->findById($id);
 
-        $this->service->update(
-            $entity,
-            ModuleExamDTO::appRequest($request)
+        $validated = $request->validated();
+
+        $dto = new ModuleExamDTO(
+            $validated['module_id'],
+            $validated['is_autochecked'],
+            $validated['name'],
         );
+
+        $this->service->update($entity, $dto);
 
 		return to_route('moduleExams.show', ['moduleExam' => $id]);
 	}

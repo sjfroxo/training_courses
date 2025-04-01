@@ -14,7 +14,7 @@ class ChatRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => ['required','string','between:3,255'],
+            'title' => ['required', 'string', 'between:3,255'],
         ];
     }
 

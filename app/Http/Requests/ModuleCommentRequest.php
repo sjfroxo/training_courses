@@ -14,8 +14,8 @@ class ModuleCommentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id' => ['required','exists:users,id'],
-            'module_id' => ['required','exists:modules,id'],
+            'user_id' => ['required', 'string', 'exists:users,id'],
+            'module_id' => ['required', 'string', 'exists:modules,id'],
             'text' => ['required','string'],
         ];
     }
@@ -30,7 +30,9 @@ class ModuleCommentRequest extends FormRequest
         return [
             'user_id.required' => 'Поле "Пользователь" обязательно для заполнения.',
             'user_id.exists' => 'Выбранный пользователь не существует.',
+            'user_id.string' => 'Поле "Пользователь" должно быть строкой.',
             'module_id.required' => 'Поле "Модуль" обязательно для заполнения.',
+            'module_id.string' => 'Поле "Пользователь" должно быть строкой.',
             'module_id.exists' => 'Выбранный модуль не существует.',
             'text.required' => 'Поле "Текст комментария" обязательно для заполнения.',
             'text.string' => 'Поле "Текст комментария" должно быть строкой.',

@@ -10,11 +10,7 @@ class CuratorRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'curator_id' => [
-                'required',
-                'integer',
-                'exists:users,id',
-            ],
+            'curator_id' => ['required', 'integer', 'exists:users,id'],
         ];
     }
 

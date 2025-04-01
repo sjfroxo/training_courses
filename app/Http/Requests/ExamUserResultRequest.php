@@ -14,9 +14,9 @@ class ExamUserResultRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id' => ['required','exists:users,id'],
-            'module_exam_question_id' => ['required','exists:module_exam_questions,id'],
-            'mark' => ['required','integer','between:0,10'],
+            'user_id' => ['required', 'exists:users,id'],
+            'module_exam_question_id' => ['required', 'exists:module_exam_questions,id'],
+            'mark' => ['required', 'integer', 'between:0,10'],
         ];
     }
 

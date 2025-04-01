@@ -14,9 +14,9 @@ class ModuleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => ['required','string','between:3,255'],
-            'course_id' => ['required','exists:courses,id'],
-            'content' => ['required','string'],
+            'title' => ['required', 'string', 'between:3,255'],
+            'course_id' => ['required', 'string', 'exists:courses,id'],
+            'content' => ['required', 'string'],
         ];
     }
 
@@ -32,6 +32,7 @@ class ModuleRequest extends FormRequest
             'title.string' => 'Поле "Название" должно быть строкой.',
             'title.max' => 'Поле "Название" не должно превышать 255 символов.',
             'course_id.required' => 'Поле "Курс" обязательно для заполнения.',
+            'course_id.string' => 'Поле "Курс" должно быть строкой.',
             'course_id.exists' => 'Выбранный курс не существует.',
             'content.required' => 'Поле "Содержание" обязательно для заполнения.',
             'content.string' => 'Поле "Содержание" должно быть строкой.',

@@ -112,7 +112,7 @@ Route::middleware([GuestMiddleware::class])->group(function () {
     Route::view('/login', 'auth.login')->name('login');
     Route::post('/login', [LoginController::class, 'authenticate'])->name('login.store');
     Route::get('/login/google', LoginWithGoogleController::class)->name('google.redirect');
-    Route::get('/login/google/call-back', [LoginWithGoogleController::class, 'store'])->name('google.callback');
+    Route::get('/login/google/callback', [LoginWithGoogleController::class, 'store'])->name('google.callback');
 });
 
 Route::get('/chats', [ChatController::class, 'index'])->name('chats.index');

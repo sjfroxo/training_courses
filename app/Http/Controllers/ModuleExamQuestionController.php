@@ -32,7 +32,15 @@ class ModuleExamQuestionController extends Controller
     {
         $this->authorize('create', ModuleExamQuestion::class);
 
-        $this->service->create(ModuleExamQuestionDTO::appRequest($request));
+        $validated = $request->validated();
+
+        $dto = new ModuleExamQuestionDTO(
+            $validated['text'],
+            $validated['module_exam_id'],
+            $validated['question_type_id'],
+        );
+
+        $this->service->create($dto);
 
         return back();
     }
@@ -69,10 +77,15 @@ class ModuleExamQuestionController extends Controller
 
         $entity = $this->service->findById($id);
 
-        $this->service->update(
-            $entity,
-            ModuleExamQuestionDTO::appRequest($request)
+        $validated = $request->validated();
+
+        $dto = new ModuleExamQuestionDTO(
+            $validated['text'],
+            $validated['module_exam_id'],
+            $validated['question_type_id'],
         );
+
+        $this->service->update($entity, $dto);
 
         return back();
     }

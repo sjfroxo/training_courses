@@ -19,23 +19,19 @@ class ExamUserResponseResultController extends Controller
 {
     use AuthorizesRequests;
 
-    protected ModuleExamUserResponseService $responseService;
-    protected ExamUserResultService $resultService;
-    protected CourseService $courseService;
-    protected ModuleExamQuestionService $questionService;
-
+    /**
+     * @param ModuleExamUserResponseService $responseService
+     * @param ExamUserResultService $resultService
+     * @param CourseService $courseService
+     * @param ModuleExamQuestionService $questionService
+     */
     public function __construct(
-        ModuleExamUserResponseService $responseService,
-        ExamUserResultService         $resultService,
-        CourseService                 $courseService,
-        ModuleExamQuestionService     $questionService
+        protected ModuleExamUserResponseService $responseService,
+        protected ExamUserResultService         $resultService,
+        protected CourseService                 $courseService,
+        protected ModuleExamQuestionService     $questionService
     )
-    {
-        $this->responseService = $responseService;
-        $this->resultService = $resultService;
-        $this->courseService = $courseService;
-        $this->questionService = $questionService;
-    }
+    {}
 
     /**
      * Объединённое сохранение ответов и результата теста.

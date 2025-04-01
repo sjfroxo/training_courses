@@ -66,7 +66,17 @@ class AdminUserController extends Controller
     {
         $this->authorize('create', User::class);
 
-        $this->service->create(AdminUserDTO::appRequest($request));
+        $validated = $request->validated();
+
+        $dto = new AdminUserDTO(
+            $validated['user_role_id'],
+            $validated['name'],
+            $validated['surname'],
+            $validated['email'],
+            $validated['password'],
+        );
+
+        $this->service->create($dto);
 
         return to_route('users');
     }
@@ -102,10 +112,17 @@ class AdminUserController extends Controller
 
         $entity = $this->service->findById($id);
 
-        $this->service->update(
-            $entity,
-            AdminUserDTO::appRequest($request)
+        $validated = $request->validated();
+
+        $dto = new AdminUserDTO(
+            $validated['user_role_id'],
+            $validated['name'],
+            $validated['surname'],
+            $validated['email'],
+            $validated['password'],
         );
+
+        $this->service->update($entity, $dto);
 
         return to_route('users');
     }

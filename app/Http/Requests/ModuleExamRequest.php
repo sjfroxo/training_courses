@@ -14,8 +14,8 @@ class ModuleExamRequest extends FormRequest
 	public function rules(): array
 	{
 		return [
-			'module_id' => ['required', 'exists:modules,id'],
-			'is_autochecked' => ['required', 'boolean'],
+			'module_id' => ['required', 'string', 'exists:modules,id'],
+			'is_autochecked' => ['required', 'string', 'boolean'],
 			'name' => ['required', 'string'],
 		];
 	}
@@ -29,8 +29,10 @@ class ModuleExamRequest extends FormRequest
 	{
 		return [
 			'module_id.required' => 'Поле "Модуль" обязательно для заполнения.',
+            'module_id.string' => 'Поле "Модуль" должно быть строковым значением.',
 			'module_id.exists' => 'Выбранный модуль не существует.',
 			'is_autochecked.required' => 'Поле "Автоматическая проверка" обязательно для заполнения.',
+            'is_autochecked.string' => 'Поле "Автоматическая проверка" должно быть строковым значением.',
 			'is_autochecked.boolean' => 'Поле "Автоматическая проверка" должно быть логическим значением (true/false).',
             'name.required' => 'Поле "Имя" обязательно для заполнения.',
             'name.string' => 'Поле "Имя" должно быть строковым значением.',

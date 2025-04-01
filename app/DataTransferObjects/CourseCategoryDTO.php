@@ -20,18 +20,6 @@ class CourseCategoryDTO implements ModelDTO
     }
 
     /**
-     * @param CategoryRequest $request
-     * @return CourseCategoryDTO
-     */
-    public static function appRequest(CourseCategoryRequest $request): CourseCategoryDTO
-    {
-        return new CourseCategoryDTO(
-            $request['category_id'],
-            $request['course_id'],
-        );
-    }
-
-    /**
      * @return array
      */
     public function toArray(): array

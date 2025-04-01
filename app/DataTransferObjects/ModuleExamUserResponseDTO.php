@@ -3,8 +3,6 @@
 namespace App\DataTransferObjects;
 
 use App\Contracts\ModelDTO;
-use App\Http\Requests\ModuleExamUserResponseRequest;
-use App\Services\ModuleExamQuestionService;
 
 class ModuleExamUserResponseDTO implements ModelDTO
 {
@@ -23,12 +21,6 @@ class ModuleExamUserResponseDTO implements ModelDTO
     )
     {
     }
-
-    /**
-     * @param ModuleExamUserResponseRequest $request
-     * @param ModuleExamQuestionService $moduleExamQuestionService
-     * @return array
-     */
 
     /**
      * @return array

@@ -7,6 +7,7 @@ use App\Events\MessageSent;
 use App\Http\Requests\ChatMessageRequest;
 use App\Http\Resources\ChatMessageResource;
 use App\Services\ChatMessageService;
+use Exception;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Routing\Controller;
 
@@ -24,14 +25,24 @@ class ChatMessageController extends Controller
      * @param ChatMessageRequest $request
      *
      * @return JsonResource
+     * @throws Exception
      */
 	public function store(ChatMessageRequest $request): JsonResource
 	{
 		$request = app(ChatMessageRequest::class, $request->all());
 
-		$dto = ChatMessageDTO::appRequest($request);
+        $validated = $request->validated();
 
-		$message = $this->service->create($dto);
+        $dto = new ChatMessageDTO(
+            $validated['chat_id'],
+            $validated['user_id'],
+            $validated['type'],
+            $validated['reply_message_id'],
+            $validated['message'],
+            $validated['media_file'],
+        );
+
+        $message = $this->service->create($dto);
 
 		broadcast(new MessageSent($message))->toOthers();
 

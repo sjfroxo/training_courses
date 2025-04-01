@@ -23,23 +23,8 @@ class LoginWithGoogleDTO implements ModelDTO
     {
     }
 
-
     /**
-     * @param LoginWithGoogleRequest $request
-     * @return LoginWithGoogleDTO
-     */
-    public static function appRequest(LoginWithGoogleRequest $request): LoginWithGoogleDTO
-    {
-        return new LoginWithGoogleDTO(
-            $request['email'],
-            $request['name'],
-            $request['surname'],
-            $request['google_id'],
-        );
-    }
-
-    /**
-     * @return array|mixed[]
+     * @return array
      */
     public function toArray(): array
     {

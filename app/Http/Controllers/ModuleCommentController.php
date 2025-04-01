@@ -37,7 +37,15 @@ class ModuleCommentController extends Controller
 
 		$module = $this->service->findById($request['module_id']);
 
-        $this->service->create(ModuleCommentDTO::appRequest($request));
+        $validated = $request->validated();
+
+        $dto = new ModuleCommentDTO(
+            $validated['user_id'],
+            $validated['module_id'],
+            $validated['text'],
+        );
+
+        $this->service->create($dto);
 
 		return to_route('modules.show', ['slug' => $module->slug]);
 	}
@@ -74,10 +82,15 @@ class ModuleCommentController extends Controller
 
         $entity = $this->service->findById($id);
 
-        $this->service->update(
-            $entity,
-            ModuleCommentDTO::appRequest($request)
+        $validated = $request->validated();
+
+        $dto = new ModuleCommentDTO(
+            $validated['user_id'],
+            $validated['module_id'],
+            $validated['text'],
         );
+
+        $this->service->update($entity, $dto);
 
 		return back();
 	}

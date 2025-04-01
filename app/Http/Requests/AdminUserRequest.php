@@ -17,9 +17,9 @@ class AdminUserRequest extends FormRequest
 		return [
 			'name' => ['required', 'string', 'between:2,255'],
 			'surname' => ['required', 'string', 'between:2,255'],
-			'email' => ['required', 'string', 'email', 'max:255'],
-			'password' => ['required', Password::defaults()],
-			'user_role_id' => ['required', 'exists:user_roles,id'],
+			'email' => ['required', 'email', 'max:255', 'unique'],
+			'password' => ['required', 'string', Password::defaults()],
+			'user_role_id' => ['required', 'string','exists:user_roles,id'],
 		];
 	}
 
@@ -38,7 +38,6 @@ class AdminUserRequest extends FormRequest
 			'surname.string' => 'Поле "Фамилия" должно быть строкой.',
 			'surname.max' => 'Поле "Фамилия" не должно превышать 255 символов.',
 			'email.required' => 'Поле "Email" обязательно для заполнения.',
-			'email.string' => 'Поле "Email" должно быть строкой.',
 			'email.email' => 'Поле "Email" должно быть действительным адресом электронной почты.',
 			'email.max' => 'Поле "Email" не должно превышать 255 символов.',
 			'email.unique' => 'Пользователь с таким Email уже существует.',
@@ -46,6 +45,7 @@ class AdminUserRequest extends FormRequest
 			'password.string' => 'Поле "Пароль" должно быть строкой.',
 			'password.min' => 'Поле "Пароль" должно содержать не менее 8 символов.',
 			'user_role_id.required' => 'Поле "Роль пользователя" обязательно для заполнения.',
+            'user_role_id.string' => 'Поле "Роль" должно быть строкой.',
 			'user_role_id.exists' => 'Выбранная роль пользователя не существует.',
 		];
 	}
