@@ -36,7 +36,9 @@ class LoginController extends Controller
             $validated['password'],
         );
 
-        if (Auth::attempt((array)$dto)) {
+        $credentials = $dto->toArray();
+
+        if (Auth::attempt($credentials)) {
             $this->service->regenerateSession($request);
 
             return to_route('courses');
@@ -61,5 +63,15 @@ class LoginController extends Controller
         $request->session()->regenerateToken();
 
         return redirect()->route('login');
+    }
+
+    public function resetPassword()
+    {
+        
+    }
+
+    public function rememberUser()
+    {
+        
     }
 }

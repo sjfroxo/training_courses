@@ -22,18 +22,12 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body>
-{{--@if(auth()->check() && auth()->user()->isUnverified())--}}
-{{--    <div class="container mt-4 text-center">--}}
-{{--        <h2>Ожидание подтверждения...</h2>--}}
-{{--        <p>Ваш аккаунт ещё не подтверждён. Пожалуйста, дождитесь подтверждения администратором.</p>--}}
-{{--    </div>--}}
-{{--@else--}}
+
 @include('layouts.navigation')
 
 <div class="container mt-4">
     @yield('main')
 </div>
-{{--@endif--}}
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>

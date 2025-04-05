@@ -47,10 +47,8 @@ class ExamUserResponseResultController extends Controller
         $this->responseService->handleUserResponses($request, $userId);
 
         $results = $this->resultService->calculateResults($moduleExamId);
-        $mark = (string) $results['percent'];
 
-        $dto = new ExamUserResultDTO($userId, $moduleExamId, $mark);
-        $this->resultService->createResult($dto);
+        $this->resultService->createResult(new ExamUserResultDTO($userId, $moduleExamId, $results['percent']));
 
         return view('exams-users-results', [
             'moduleExams' => ModuleExam::all(),

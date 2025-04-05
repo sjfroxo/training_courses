@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Auth;
 use App\DataTransferObjects\RegisterUserDTO;
 use App\Http\Requests\RegisterUserRequest;
 use App\Services\AuthService;
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -17,16 +19,17 @@ class RegisterController extends Controller
      */
     public function __construct(
         protected AuthService $service,
-        protected Request $request,
+        protected Request     $request,
     )
-    {}
+    {
+    }
 
     /**
      * @param RegisterUserRequest $request
      *
      * @return RedirectResponse
      */
-	public function store(RegisterUserRequest $request): RedirectResponse
+    public function store(RegisterUserRequest $request): RedirectResponse
     {
         $validated = $request->validated();
 
@@ -39,8 +42,29 @@ class RegisterController extends Controller
 
         $user = $this->service->create($dto);
 
-		$this->service->authLogin($user);
+        $this->service->authLogin($user);
 
-        return to_route('courses');
+        event(new Registered($user));
+
+        return to_route('verification.notice');
+    }
+
+    public function verifyNotice()
+    {
+        return view('auth.verify-email');
+    }
+
+    public function verifyEmail(EmailVerificationRequest $request): RedirectResponse
+    {
+        $request->fulfill();
+
+        return redirect()->route('courses');
+    }
+
+    public function verifyHandler(Request $request)
+    {
+        $request->user()->sendEmailVerificationNotification();
+
+        return back()->with('message', 'Verification link sent!');
     }
 }

@@ -20,15 +20,11 @@ use App\Http\Controllers\UserCourseController;
 use App\Http\Controllers\UserStudyMainController;
 use App\Http\Controllers\UserStudyProgressController;
 use App\Http\Controllers\UserStudyTasksController;
-use App\Http\Middleware\GuestMiddleware;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/courses', [CourseController::class, 'index'])
-    ->name('courses')->middleware('auth');
-
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('courses', [CourseController::class, 'index'])->name('courses');
     Route::prefix('courses')->group(function () {
-        Route::get('/', [CourseController::class, 'index'])->name('courses');
 
         Route::get('/create', [CourseController::class, 'create'])->name('courses.create');
         Route::post('/', [CourseController::class, 'store'])->name('courses.store');
@@ -38,7 +34,6 @@ Route::middleware('auth')->group(function () {
         Route::patch('/{slug}', [CourseController::class, 'update'])->name('courses.update');
 
         Route::get('/{slug}', [CourseController::class, 'show'])->name('courses.show');
-
         Route::get('/{slug}/users', [CourseController::class, 'showUsers'])->name('courses.showUsers');
     });
 
@@ -101,39 +96,6 @@ Route::middleware('auth')->group(function () {
         Route::post('/', [ExamUserResponseResultController::class, 'store'])->name('examUserResponseResult.store');
     });
 
-    Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
-});
-
-Route::middleware([GuestMiddleware::class])->group(function () {
-    Route::view('/register', 'auth.register')->name('register');
-    Route::post('/register', [RegisterController::class, 'create'])->name('register.create');
-    Route::post('/register', [RegisterController::class, 'store'])->name('register.store');
-
-    Route::view('/login', 'auth.login')->name('login');
-    Route::post('/login', [LoginController::class, 'authenticate'])->name('login.store');
-    Route::get('/login/google', LoginWithGoogleController::class)->name('google.redirect');
-    Route::get('/login/google/callback', [LoginWithGoogleController::class, 'store'])->name('google.callback');
-});
-
-Route::get('/chats', [ChatController::class, 'index'])->name('chats.index');
-
-Route::prefix('chat')->group(function () {
-    Route::post('/message-send', [ChatMessageController::class, 'store'])->name('message.store');
-    Route::get('/messages-load', [ChatController::class, 'loadMessages'])->name('chat.loadMore');
-    Route::get('/{slug}', [ChatController::class, 'show'])->name('chat.show');
-});
-
-Route::prefix('account-details')->group(function () {
-    Route::get('/{id}', [UserController::class, 'show'])->name("account.show");
-    Route::get('/{id}/edit', [UserController::class, 'edit'])->name("account.edit");
-    Route::patch('/{id}', [UserController::class, 'update'])->name("account.update");
-});
-
-Route::prefix('notifications')->group(function () {
-    Route::get('/', [NotificationController::class, 'index'])->name('notifications');
-});
-
-Route::middleware('auth')->group(function () {
     Route::prefix('studentsClass')->group(function () {
         Route::get('/', [StudentsClassController::class, 'index'])->name('studentsClass.index');
 
@@ -149,20 +111,48 @@ Route::middleware('auth')->group(function () {
         Route::post('/{studentsClass}/add-students', [StudentsClassController::class, 'addStudents'])->name('studentsClass.addStudents');
         Route::post('/{studentsClass}/add-curator', [StudentsClassController::class, 'addCurator'])->name('studentsClass.addCurator');
         Route::delete('/{studentsClass}/delete-user/{userId}', [StudentsClassController::class, 'deleteUser'])->name('studentsClass.deleteUser');
-
     });
-});
 
-Route::middleware('auth')->group(function () {
-        Route::get('/userStudyMain/{id}', [UserStudyMainController::class, 'show'])->name('userStudyMain.show');
-});
-
-Route::middleware('auth')->group(function () {
+    Route::get('/userStudyMain/{id}', [UserStudyMainController::class, 'show'])->name('userStudyMain.show');
     Route::get('/userStudyProgress/{id}', [UserStudyProgressController::class, 'show'])->name('userStudyProgress.show');
-});
-
-Route::middleware('auth')->group(function () {
     Route::get('/userStudyTasks/{id}', [UserStudyTasksController::class, 'show'])->name('userStudyTasks.show');
+
+    Route::get('/chats', [ChatController::class, 'index'])->name('chats.index');
+
+    Route::prefix('chat')->group(function () {
+        Route::post('/message-send', [ChatMessageController::class, 'store'])->name('message.store');
+        Route::get('/messages-load', [ChatController::class, 'loadMessages'])->name('chat.loadMore');
+        Route::get('/{slug}', [ChatController::class, 'show'])->name('chat.show');
+    });
+
+    Route::prefix('account-details')->group(function () {
+        Route::get('/{id}', [UserController::class, 'show'])->name("account.show");
+        Route::get('/{id}/edit', [UserController::class, 'edit'])->name("account.edit");
+        Route::patch('/{id}', [UserController::class, 'update'])->name("account.update");
+    });
+
+    Route::prefix('notifications')->group(function () {
+        Route::get('/', [NotificationController::class, 'index'])->name('notifications');
+    });
+
+    Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 });
 
-Route::redirect('/chatify', '/chatify');
+Route::view('/register', 'auth.register')->name('register');
+Route::post('/register', [RegisterController::class, 'create'])->name('register.create');
+Route::post('/register', [RegisterController::class, 'store'])->name('register.store');
+
+Route::view('/login', 'auth.login')->name('login');
+Route::post('/login', [LoginController::class, 'authenticate'])->name('login.store');
+Route::get('/auth/{provider}', [LoginWithGoogleController::class, 'redirect'])->name('social.redirect');
+Route::get('/auth/{provider}/callback', [LoginWithGoogleController::class, 'callback'])->name('social.callback');
+Route::get('/verify-email', [RegisterController::class, 'verifyNotice'])->name('verification.notice');
+Route::get('/verify-email/{id}/{hash}', [RegisterController::class, 'verifyEmail'])->middleware('signed')->name('verification.verify');
+Route::post('/email/verification-notification', [RegisterController::class, 'verifyHandler'])->middleware('throttle:6,1')->name('verification.send');
+
+
+
+
+
+
+

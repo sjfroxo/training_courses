@@ -11,6 +11,8 @@ use App\Repositories\ModuleExamRepository;
 use App\Repositories\UserRepository;
 use App\Services\ModuleExamQuestionService;
 use App\Services\UserService;
+use Illuminate\Auth\Notifications\VerifyEmail;
+use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
@@ -51,5 +53,11 @@ class AppServiceProvider extends ServiceProvider
     {
         Paginator::useBootstrapFive();
         View::composer('layouts.navigation', function ($view) { $view->with('courses', Course::all()); });
+
+        VerifyEmail::toMailUsing(function (object $notifiable, string $url) {
+            return (new MailMessage)
+                ->subject('Подтверждение электронной почты.')
+                ->view('auth.email', ['url' => $url]);
+        });
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Course;
 use App\Models\CourseVisit;
 use Closure;
 use Illuminate\Http\Request;
@@ -12,7 +13,7 @@ class LogCourseVisit
     public function handle(Request $request, Closure $next)
     {
         if (Auth::check() && $request->route('slug')) { // Извлекаем slug курса из маршрута
-            $course = \App\Models\Course::where('slug', $request->route('slug'))->firstOrFail();
+            $course = Course::query()->where('slug', $request->route('slug'))->firstOrFail();
             $user = Auth::user();
 
             $visitExists = CourseVisit::query()

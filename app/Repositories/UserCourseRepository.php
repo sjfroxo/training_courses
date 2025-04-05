@@ -47,6 +47,6 @@ class UserCourseRepository extends CoreRepository implements RepositoryInterface
             $sum += $mark;
         }
 
-        return number_format($sum / $marks->count());
+        return $marks->count() > 0 ? number_format($sum / $marks->count()) : 0;
     }
 }
