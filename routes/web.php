@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LoginWithGoogleController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\ChatMessageController;
 use App\Http\Controllers\CourseController;
@@ -138,17 +139,32 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 });
 
+Route::middleware('guest')->group(function () {
+    Route::get('/auth/{provider}', [LoginWithGoogleController::class, 'redirect'])->name('social.redirect');
+    Route::get('/auth/{provider}/callback', [LoginWithGoogleController::class, 'callback'])->name('social.callback');
+
+    Route::get('/forgot-password', [ResetPasswordController::class, 'showForgotPasswordForm'])->name('password.request');
+    Route::post('/forgot-password', [ResetPasswordController::class, 'passwordEmail'])->name('password.email');
+    Route::get('/reset-password/{token}', [ResetPasswordController::class, 'passwordReset'])->name('password.reset');
+    Route::post('/reset-password', [ResetPasswordController::class, 'passwordUpdate'])->name('password.update');
+});
+
 Route::view('/register', 'auth.register')->name('register');
 Route::post('/register', [RegisterController::class, 'create'])->name('register.create');
 Route::post('/register', [RegisterController::class, 'store'])->name('register.store');
 
 Route::view('/login', 'auth.login')->name('login');
 Route::post('/login', [LoginController::class, 'authenticate'])->name('login.store');
-Route::get('/auth/{provider}', [LoginWithGoogleController::class, 'redirect'])->name('social.redirect');
-Route::get('/auth/{provider}/callback', [LoginWithGoogleController::class, 'callback'])->name('social.callback');
+
 Route::get('/verify-email', [RegisterController::class, 'verifyNotice'])->name('verification.notice');
 Route::get('/verify-email/{id}/{hash}', [RegisterController::class, 'verifyEmail'])->middleware('signed')->name('verification.verify');
 Route::post('/email/verification-notification', [RegisterController::class, 'verifyHandler'])->middleware('throttle:6,1')->name('verification.send');
+
+
+
+
+
+
 
 
 
