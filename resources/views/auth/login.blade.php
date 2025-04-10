@@ -7,6 +7,12 @@
                 <h2 class="fw-bold text-center text-uppercase">Вход</h2>
                 <p class="text-center text-white-50 mb-4">Введите свои данные для входа</p>
 
+                @if (session('status'))
+                    <div class="alert alert-success mb-4">
+                        {{ session('status') }}
+                    </div>
+                @endif
+
                 <form id="login-form" action="{{ route('login.store') }}" method="POST">
                     @csrf
                     <div class="form-group mb-4">
@@ -19,8 +25,15 @@
                         <input type="password" id="password" name="password" class="form-control" required>
                     </div>
 
+                    <div class="form-group mb-4">
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="remember" name="remember">
+                            <label class="form-check-label text-white-50" for="remember">Запомнить меня</label>
+                        </div>
+                    </div>
+
                     <div class="d-flex justify-content-between">
-                        <a href="#" class="small text-white-50">Забыли пароль?</a>
+                        <a href="{{ route('password.request') }}" class="small text-white-50">Забыли пароль?</a>
                     </div>
 
                     <button type="submit" class="btn btn-light w-100 mt-4">Войти</button>
