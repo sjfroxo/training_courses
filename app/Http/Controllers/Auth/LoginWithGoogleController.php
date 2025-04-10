@@ -35,6 +35,7 @@ class LoginWithGoogleController extends Controller
                 [
                     'name' => $firstName,
                     'surname' => $surname,
+                    'email_verified_at' => now(),
                     'google_id' => $socialUser->getId(),
                     'password' => bcrypt(uniqid()),
                 ]
