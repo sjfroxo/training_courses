@@ -37,6 +37,7 @@ class LoginController extends Controller
         );
 
         $credentials = $dto->toArray();
+        $remember = $request->has('remember');
 
         if (Auth::attempt($credentials)) {
             $this->service->regenerateSession($request);
@@ -46,7 +47,7 @@ class LoginController extends Controller
 
         return back()->withErrors([
             'email' => 'Введены неверные данные.',
-        ]);
+        ])->withInput();
     }
 
     /**
@@ -63,15 +64,5 @@ class LoginController extends Controller
         $request->session()->regenerateToken();
 
         return redirect()->route('login');
-    }
-
-    public function resetPassword()
-    {
-        
-    }
-
-    public function rememberUser()
-    {
-        
     }
 }
