@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\Course;
+use App\Models\User;
 use App\Repositories\Interfaces\ModuleExamQuestionRepositoryInterface;
 use App\Repositories\Interfaces\ModuleExamRepositoryInterface;
 use App\Repositories\Interfaces\UserRepositoryInterface;
@@ -11,6 +12,7 @@ use App\Repositories\ModuleExamRepository;
 use App\Repositories\UserRepository;
 use App\Services\ModuleExamQuestionService;
 use App\Services\UserService;
+use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Pagination\Paginator;
@@ -58,6 +60,10 @@ class AppServiceProvider extends ServiceProvider
             return (new MailMessage)
                 ->subject('Подтверждение электронной почты.')
                 ->view('auth.email', ['url' => $url]);
+        });
+
+        ResetPassword::createUrlUsing(function (User $user, string $token) {
+            return url(route('password.reset', ['token' => $token], false));
         });
     }
 }
