@@ -17,7 +17,7 @@ class AdminUserRequest extends FormRequest
 		return [
 			'name' => ['required', 'string', 'between:2,255'],
 			'surname' => ['required', 'string', 'between:2,255'],
-			'email' => ['required', 'email', 'max:255', 'unique'],
+			'email' => ['required', 'email', 'max:255', 'unique:users,email'],
 			'password' => ['required', 'string', Password::defaults()],
 			'user_role_id' => ['required', 'string','exists:user_roles,id'],
 		];

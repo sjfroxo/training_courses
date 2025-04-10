@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Contracts\ModelDTO;
 use App\Models\User;
 use App\Repositories\UserRepository;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -19,11 +20,11 @@ class AuthService extends CoreService
 		parent::__construct($repository);
 	}
 
-	/**
-	 * @param ModelDTO $dto
-	 *
-	 * @return Model
-	 */
+    /**
+     * @param ModelDTO $dto
+     *
+     * @return User
+     */
 	public function firstOrCreate(ModelDTO $dto): Model
 	{
 		$dto = $dto->toArray();
@@ -46,8 +47,8 @@ class AuthService extends CoreService
 	 *
 	 * @return void
 	 */
-	public function authLogin(Model $user): void
+	public function authLogin(Authenticatable $user): void
 	{
-		Auth::login($user);
+		auth()->login($user);
 	}
 }

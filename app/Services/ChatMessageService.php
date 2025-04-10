@@ -36,7 +36,7 @@ class ChatMessageService extends CoreService
             }
 
             $path = 'public/messages/' . $message->id;
-            // Создаем директорию, если она не существует
+
             Storage::makeDirectory($path);
 
             $fileName = $dto->media_file->getClientOriginalName();
