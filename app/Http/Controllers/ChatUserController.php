@@ -11,4 +11,6 @@ class ChatUserController extends Controller
 	 * @param ChatUserService $service
 	 */
 	public function __construct(ChatUserService $service) {}
+
+
 }

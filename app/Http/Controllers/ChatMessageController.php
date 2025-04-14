@@ -23,13 +23,12 @@ class ChatMessageController extends Controller
 
     /**
      * @param ChatMessageRequest $request
-     *
      * @return JsonResource
      * @throws Exception
      */
-	public function store(ChatMessageRequest $request): JsonResource
-	{
-		$request = app(ChatMessageRequest::class, $request->all());
+    public function store(ChatMessageRequest $request): JsonResource
+    {
+        $request = app(ChatMessageRequest::class, $request->all());
 
         $validated = $request->validated();
 
@@ -42,10 +41,10 @@ class ChatMessageController extends Controller
             $validated['media_file'],
         );
 
-        $message = $this->service->create($dto);
+        $message = $this->service->createMessage($dto);
 
-		broadcast(new MessageSent($message))->toOthers();
+        broadcast(new MessageSent($message))->toOthers();
 
-		return ChatMessageResource::make($message);
-	}
+        return ChatMessageResource::make($message);
+    }
 }

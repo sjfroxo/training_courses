@@ -25,7 +25,7 @@ class ChatMessageService extends CoreService
      * @return Model
      * @throws Exception
      */
-    public function create(ModelDTO $dto): Model
+    public function createMessage(ModelDTO $dto): Model
     {
         $message = parent::create($dto);
 

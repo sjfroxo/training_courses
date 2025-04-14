@@ -30,7 +30,7 @@ class ChatRepository extends CoreRepository implements ChatRepositoryInterface
     public function getMessages(Chat $chat, ?string $lastMessId = null): LengthAwarePaginator
     {
         return $chat->chatMessages()
-            ->with('repliedToMessage') // Добавляем связь для ответных сообщений
+            ->with('repliedToMessage')
             ->when($lastMessId, fn($query) => $query->where('id', '<', $lastMessId))
             ->orderBy('created_at', 'desc')
             ->paginate(10);

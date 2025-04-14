@@ -14,13 +14,11 @@ class ChatService extends CoreService
 
     public function chatDetails(string $slug): array
     {
-        $chat = $this->repository->findBySlug($slug);
-        return $this->repository->getChatDetails($chat);
+        return $this->repository->getChatDetails($this->repository->findBySlug($slug));
     }
 
     public function getMessages(string $slug, string $lastMessId): LengthAwarePaginator
     {
-        $chat = $this->repository->findBySlug($slug);
-        return $this->repository->getMessages($chat, $lastMessId);
+        return $this->repository->getMessages($this->repository->findBySlug($slug), $lastMessId);
     }
 }
