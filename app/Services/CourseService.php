@@ -68,37 +68,6 @@ class CourseService extends CoreService
 	}
 
 	/**
-	 * @param string $slug
-	 *
-	 * @return array
-	 */
-	public function calculateAverageMark(string $slug): array
-	{
-		$course = $this->repository->findBySlug($slug);
-		$users = $course->users;
-		$userAverages = [];
-
-		$courseModuleExamIds = $course->modules->flatMap(function($module) {
-			return $module->moduleExams->pluck('id');
-		})->toArray();
-
-		foreach($users as $user) {
-			$userModuleExamIds = $user->moduleExams->pluck('pivot.module_exam_id')->toArray();
-			$intersection = array_intersect($userModuleExamIds, $courseModuleExamIds);
-			if(!empty($intersection)) {
-				$marks = $user->moduleExams
-					->whereIn('pivot.module_exam_id', $intersection)
-					->pluck('pivot.mark')
-					->toArray();
-				$averageGrade = array_sum($marks) / count($marks);
-				$userAverages[$user->id] = $averageGrade;
-			}
-		}
-
-		return $userAverages;
-	}
-
-	/**
 	 * @param $numberCourseExams
 	 * @param $numberPassedCourseExamsByUsers
 	 *

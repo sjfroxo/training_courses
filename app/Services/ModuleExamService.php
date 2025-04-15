@@ -12,7 +12,7 @@ class ModuleExamService extends CoreService
 	/**
 	 * @param ModuleExamRepository $repository
 	 */
-	public function __construct(ModuleExamRepositoryInterface $repository)
+	public function __construct(ModuleExamRepository $repository)
 	{
 		parent::__construct($repository);
 	}

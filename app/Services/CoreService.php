@@ -22,27 +22,27 @@ abstract class CoreService extends Service
 	}
 
     /**
-     * @param ModelDTO $dto
+     * @param ModelDTO $data
      * @return Model
      */
-	public function create(ModelDTO $dto): Model
+	public function create(ModelDTO $data): Model
 	{
-		$dto = $dto->toArray();
+		$dto = $data->toArray();
 
 		return $this->repository->create($dto);
 	}
 
     /**
-     * @param Model $entity
-     * @param ModelDTO $dto
+     * @param Model $id
+     * @param ModelDTO $data
      * @return Model
      */
-	public function update(Model $entity, ModelDTO $dto): Model
+	public function update(Model $id, ModelDTO $data): Model
 	{
-		$dto = $dto->toArray();
+		$dto = $data->toArray();
 
 		return $this->repository->update(
-            $entity,
+            $id,
 			$dto
 		);
 	}

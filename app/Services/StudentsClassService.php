@@ -17,7 +17,9 @@ class StudentsClassService extends CoreService
     /**
      * @param StudentsClassRepository $repository
      */
-    public function __construct(StudentsClassRepository $repository)
+    public function __construct(
+        StudentsClassRepository $repository
+    )
     {
         parent::__construct($repository);
     }
@@ -31,21 +33,21 @@ class StudentsClassService extends CoreService
     }
 
     /**
-     * @param StudentsClassDTO|ModelDTO $data
+     * @param StudentsClassDTO|ModelDTO $dto
      * @return Model
      */
-    public function create(StudentsClassDTO|ModelDTO $data): Model
+    public function create(StudentsClassDTO|ModelDTO $dto): Model
     {
         $studentsClass = $this->repository->create([
-            'name' => $data->name,
-            'course_id' => $data->course_id,
+            'name' => $dto->name,
+            'course_id' => $dto->course_id,
         ]);
 
-        $studentsClass->users()->attach($data->curator_id, [
+        $studentsClass->users()->attach($dto->curator_id, [
             'user_role_id' => UserRoleEnum::CURATOR->value,
         ]);
 
-        foreach ($data->student_ids as $studentId) {
+        foreach ($dto->student_ids as $studentId) {
             $studentsClass->users()->attach($studentId, [
                 'user_role_id' => UserRoleEnum::USER->value,
             ]);
@@ -56,22 +58,22 @@ class StudentsClassService extends CoreService
 
     /**
      * @param StudentsClass|Model $entity
-     * @param StudentsClassDTO|ModelDTO $dto
+     * @param StudentsClassDTO|ModelDTO $data
      * @return Model
      */
-    public function update(StudentsClass|Model $entity, StudentsClassDTO|ModelDTO $dto): Model
+    public function update(StudentsClass|Model $entity, StudentsClassDTO|ModelDTO $data): Model
     {
-        $data = $dto->toArray();
+        $dto = $data->toArray();
 
         $entity->update([
-            'name' => $data['name'],
-            'course_id' => $data['course_id'],
+            'name' => $dto['name'],
+            'course_id' => $dto['course_id'],
         ]);
 
         $syncData = [];
-        $syncData[$data['curator_id']] = ['user_role_id' => UserRoleEnum::CURATOR->value];
+        $syncData[$dto['curator_id']] = ['user_role_id' => UserRoleEnum::CURATOR->value];
 
-        foreach ($data['student_ids'] as $studentId) {
+        foreach ($dto['student_ids'] as $studentId) {
             $syncData[$studentId] = ['user_role_id' => UserRoleEnum::USER->value];
         }
 
@@ -143,6 +145,10 @@ class StudentsClassService extends CoreService
         return $studentsClass->users()->detach($studentId);
     }
 
+    /**
+     * @param int $studentsClassId
+     * @return mixed
+     */
     public function getCuratorForClass(int $studentsClassId)
     {
         return $this->repository->getCurator($studentsClassId);

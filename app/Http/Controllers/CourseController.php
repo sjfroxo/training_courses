@@ -22,12 +22,12 @@ class CourseController extends Controller
     /**
      * @param CourseService $service
      * @param UserCourseService $userCourseService
-     * @param ExamUserResultService $examUserResultService
+     * @param CalculateAverageMarkAction $action
      */
     public function __construct(
-        protected CourseService         $service,
-        protected UserCourseService     $userCourseService,
-        protected ExamUserResultService $examUserResultService,
+        protected CourseService              $service,
+        protected UserCourseService          $userCourseService,
+        protected CalculateAverageMarkAction $action,
     )
     {
     }
@@ -172,7 +172,7 @@ class CourseController extends Controller
 
         $numberPassedCourseExamsByUsers = $this->service->countPassedCourseExamsByUsers($slug);
 
-        $averageMark = $this->examUserResultService->calculateAverageMark($slug);
+        $averageMark = $this->action->handle($slug);
 
         $percentPassedCourseExams = $this->service->calculatePercentPassedCourseExams($numberCourseExams, $numberPassedCourseExamsByUsers);
 

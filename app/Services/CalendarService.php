@@ -24,7 +24,7 @@ class CalendarService
             'nextYear' => $nextMonth->year,
             'startingDay' => $firstDay->dayOfWeekIso,
             'daysInMonth' => $firstDay->daysInMonth,
-            'activeDays' => [1, 5, 10, 15, 20, 25], // Пример активных дней
+            'activeDays' => [1, 5, 10, 15, 20, 25],
         ];
     }
 }
