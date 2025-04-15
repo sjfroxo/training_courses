@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\CalculateAverageMarkAction;
 use App\DataTransferObjects\CourseDTO;
 use App\Http\Requests\CourseRequest;
 use App\Models\Course;
 use App\Services\CourseService;
+use App\Services\ExamUserResultService;
 use App\Services\UserCourseService;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\View\View;
@@ -16,20 +18,24 @@ use Illuminate\Routing\Controller;
 class CourseController extends Controller
 {
     use AuthorizesRequests;
+
     /**
      * @param CourseService $service
      * @param UserCourseService $userCourseService
+     * @param ExamUserResultService $examUserResultService
      */
-	public function __construct(
-		protected CourseService $service,
-		protected UserCourseService $userCourseService,
-	)
-    {}
+    public function __construct(
+        protected CourseService         $service,
+        protected UserCourseService     $userCourseService,
+        protected ExamUserResultService $examUserResultService,
+    )
+    {
+    }
 
-	/**
-	 * @return View
-	 * @throws AuthorizationException
-	 */
+    /**
+     * @return View
+     * @throws AuthorizationException
+     */
     public function index(): View
     {
         $this->authorize('viewAny', Course::class);
@@ -44,43 +50,43 @@ class CourseController extends Controller
         return view('courses', ['courses' => $courses]);
     }
 
-	/**
-	 * @return View
-	 * @throws AuthorizationException
-	 */
-	public function create(): View
-	{
-		$this->authorize('create', Course::class);
+    /**
+     * @return View
+     * @throws AuthorizationException
+     */
+    public function create(): View
+    {
+        $this->authorize('create', Course::class);
 
-		return view('create-course');
-	}
+        return view('create-course');
+    }
 
-	/**
-	 * @param string $slug
-	 *
-	 * @return View
-	 * @throws AuthorizationException
-	 */
-	public function show(string $slug): View
-	{
-		$course = $this->service->findBySlug($slug);
+    /**
+     * @param string $slug
+     *
+     * @return View
+     * @throws AuthorizationException
+     */
+    public function show(string $slug): View
+    {
+        $course = $this->service->findBySlug($slug);
 
-		$progress = $this->userCourseService->getProgress();
+        $progress = $this->userCourseService->getProgress();
 
-		$this->authorize('view', $course);
+        $this->authorize('view', $course);
 
-		return view('show-courses', ['course' => $course, 'progress' => $progress]);
-	}
+        return view('show-courses', ['course' => $course, 'progress' => $progress]);
+    }
 
-	/**
-	 * @param CourseRequest $request
-	 *
-	 * @return RedirectResponse
-	 * @throws AuthorizationException
-	 */
-	public function store(CourseRequest $request): RedirectResponse
-	{
-		$this->authorize('create', Course::class);
+    /**
+     * @param CourseRequest $request
+     *
+     * @return RedirectResponse
+     * @throws AuthorizationException
+     */
+    public function store(CourseRequest $request): RedirectResponse
+    {
+        $this->authorize('create', Course::class);
 
         $validated = $request->validated();
 
@@ -91,53 +97,53 @@ class CourseController extends Controller
 
         $this->service->create($dto);
 
-		return to_route('courses');
-	}
+        return to_route('courses');
+    }
 
-	/**
-	 * @param string $id
-	 *
-	 * @return RedirectResponse
-	 * @throws AuthorizationException
-	 */
-	public function destroy(string $id): RedirectResponse
-	{
+    /**
+     * @param string $id
+     *
+     * @return RedirectResponse
+     * @throws AuthorizationException
+     */
+    public function destroy(string $id): RedirectResponse
+    {
         $model = $this->service->findById($id);
 
         $this->authorize('delete', $model);
 
         $this->service->destroyById($id);
 
-		return to_route('courses');
-	}
+        return to_route('courses');
+    }
 
-	/**
-	 * @param string $slug
-	 *
-	 * @return View
-	 * @throws AuthorizationException
-	 */
-	public function edit(string $slug): View
-	{
-		$course = $this->service->findBySlug($slug);
+    /**
+     * @param string $slug
+     *
+     * @return View
+     * @throws AuthorizationException
+     */
+    public function edit(string $slug): View
+    {
+        $course = $this->service->findBySlug($slug);
 
-		$this->authorize('update', $course);
+        $this->authorize('update', $course);
 
-		return view('edit-course', ['course' => $course]);
-	}
+        return view('edit-course', ['course' => $course]);
+    }
 
-	/**
-	 * @param CourseRequest $request
-	 * @param string $slug
-	 *
-	 * @return RedirectResponse
-	 * @throws AuthorizationException
-	 */
-	public function update(CourseRequest $request, string $slug): RedirectResponse
-	{
-		$course = $this->service->findBySlug($slug);
+    /**
+     * @param CourseRequest $request
+     * @param string $slug
+     *
+     * @return RedirectResponse
+     * @throws AuthorizationException
+     */
+    public function update(CourseRequest $request, string $slug): RedirectResponse
+    {
+        $course = $this->service->findBySlug($slug);
 
-		$this->authorize('update', $course);
+        $this->authorize('update', $course);
 
         $validated = $request->validated();
 
@@ -146,36 +152,36 @@ class CourseController extends Controller
             $validated['description'],
         );
 
-		$this->service->update($course, $dto);
+        $this->service->update($course, $dto);
 
-		return to_route('courses');
-	}
+        return to_route('courses');
+    }
 
-	/**
-	 * @param string $slug
-	 *
-	 * @return View
-	 */
-	public function showUsers(string $slug): View
-	{
-		$course = $this->service->findBySlug($slug);
+    /**
+     * @param string $slug
+     *
+     * @return View
+     */
+    public function showUsers(string $slug): View
+    {
+        $course = $this->service->findBySlug($slug);
 
-		$users = $course->users;
+        $users = $course->users;
 
-		$numberCourseExams = $this->service->countCourseExams($slug);
+        $numberCourseExams = $this->service->countCourseExams($slug);
 
-		$numberPassedCourseExamsByUsers = $this->service->countPassedCourseExamsByUsers($slug);
+        $numberPassedCourseExamsByUsers = $this->service->countPassedCourseExamsByUsers($slug);
 
-		$averageMark = $this->service->calculateAverageMark($slug);
+        $averageMark = $this->examUserResultService->calculateAverageMark($slug);
 
-		$percentPassedCourseExams = $this->service->calculatePercentPassedCourseExams($numberCourseExams, $numberPassedCourseExamsByUsers);
+        $percentPassedCourseExams = $this->service->calculatePercentPassedCourseExams($numberCourseExams, $numberPassedCourseExamsByUsers);
 
-		return view('showUsers-course', [
+        return view('showUsers-course', [
             'numberPassedCourseExamsByUsers' => $numberPassedCourseExamsByUsers,
             'numberCourseExams' => $numberCourseExams,
             'percentPassedCourseExams' => $percentPassedCourseExams,
             'users' => $users,
             'averageMark' => $averageMark,
         ]);
-	}
+    }
 }

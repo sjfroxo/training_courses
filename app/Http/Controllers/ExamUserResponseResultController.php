@@ -42,6 +42,7 @@ class ExamUserResponseResultController extends Controller
     public function store(ExamUserResponseResultRequest $request)
     {
         $moduleExamId = $request->input('module_exam_id');
+
         $userId = auth()->id();
 
         $this->responseService->handleUserResponses($request, $userId);
@@ -51,7 +52,6 @@ class ExamUserResponseResultController extends Controller
         $this->resultService->createResult(new ExamUserResultDTO($userId, $moduleExamId, $results['percent']));
 
         return view('exams-users-results', [
-            'moduleExams' => ModuleExam::all(),
             'moduleExam' => ModuleExam::query()->findOrFail($moduleExamId),
             'results' => $results,
             'courses' => $this->courseService->all(),

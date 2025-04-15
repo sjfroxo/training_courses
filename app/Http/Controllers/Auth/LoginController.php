@@ -39,7 +39,7 @@ class LoginController extends Controller
         $credentials = $dto->toArray();
         $remember = $request->has('remember');
 
-        if (Auth::attempt($credentials)) {
+        if (Auth::attempt($credentials, $remember)) {
             $this->service->regenerateSession($request);
 
             return to_route('courses');

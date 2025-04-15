@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Actions\RegisterUserAction;
 use App\DataTransferObjects\RegisterUserDTO;
 use App\Http\Requests\RegisterUserRequest;
 use App\Services\AuthService;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -13,15 +13,9 @@ use Illuminate\Routing\Controller;
 
 class RegisterController extends Controller
 {
-    /**
-     * @param AuthService $service
-     * @param Request $request
-     * @param RegisterUserAction $action
-     */
     public function __construct(
         protected AuthService $service,
         protected Request     $request,
-        protected RegisterUserAction $action
     )
     {
     }
@@ -42,7 +36,11 @@ class RegisterController extends Controller
             $validated['password'],
         );
 
-        $this->action->RegisterUser($dto);
+        $user = $this->service->firstOrCreate($dto);
+
+        $this->service->authLogin($user);
+
+        event(new Registered($user));
 
         return to_route('verification.notice');
     }

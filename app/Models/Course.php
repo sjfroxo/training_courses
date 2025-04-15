@@ -5,6 +5,7 @@ namespace App\Models;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -76,4 +77,10 @@ class Course extends Model
     {
         return $this->hasMany(CourseVisit::class);
     }
+
+    public function curator(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'curator_id');
+    }
+
 }

@@ -21,10 +21,15 @@ class UserService extends CoreService
 	 *
 	 * @return Collection
 	 */
-	public function showChats(string $userId): Collection
+	public function getChats(string $userId): Collection
 	{
 		return $this->repository->getChats($userId);
 	}
+
+    public function getUsers(): Collection
+    {
+        return $this->repository->getUsers();
+    }
 
 	/**
 	 * @param string $id

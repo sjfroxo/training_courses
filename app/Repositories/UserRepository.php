@@ -30,6 +30,11 @@ class UserRepository extends CoreRepository implements RepositoryInterface
 		return $this->getLastMessages($chats);
 	}
 
+    public function getUsers(): Collection
+    {
+        return User::all();
+    }
+
 	/**
 	 * @param Collection $chats
 	 *
