@@ -21,7 +21,19 @@
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body>
+<body class="d-flex">
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    html, body {
+        overflow: hidden;
+        height: 100%;
+    }
+</style>
 
 @include('layouts.navigation')
 
