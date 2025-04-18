@@ -123,7 +123,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::prefix('chat')->group(function () {
         Route::post('/message-send', [ChatMessageController::class, 'store'])->name('message.store');
         Route::get('/messages-load', [ChatController::class, 'loadMessages'])->name('chat.loadMore');
-        Route::post('/chat/create', [ChatController::class, 'createChat'])->name('chat.create');
+        Route::post('/create', [ChatController::class, 'createChat'])->name('chat.create');
         Route::get('/{slug}', [ChatController::class, 'show'])->name('chat.show');
     });
 
