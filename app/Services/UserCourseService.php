@@ -30,4 +30,12 @@ class UserCourseService extends CoreService
 
         return number_format(($countDoneUserCourses * 100 / $totalCountCourses), 1);
     }
+
+    /**
+     * @return string
+     */
+    public function getTotalCountCourses(): string
+    {
+        return $this->repository->getModuleExams();
+    }
 }

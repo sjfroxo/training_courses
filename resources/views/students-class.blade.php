@@ -2,8 +2,6 @@
 
 @section('main')
     <div class="container d-flex" style="height: 100%; width: 90%; background-color: transparent;">
-        @include('layouts.navigation')
-
         <div class="content flex-grow-1">
             <div class="card-header rounded-top-4" style="background-color: transparent; border: none;">
             </div>

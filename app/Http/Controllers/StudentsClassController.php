@@ -8,6 +8,7 @@ use App\Http\Requests\StudentRequest;
 use App\Http\Requests\StudentsClassRequest;
 use App\Models\StudentsClass;
 use App\Services\StudentsClassService;
+use App\Services\UserService;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -18,11 +19,14 @@ class StudentsClassController
 
     /**
      * @param StudentsClassService $service
+     * @param UserService $userService
      */
     public function __construct(
         protected StudentsClassService $service,
+        protected UserService          $userService
     )
-    {}
+    {
+    }
 
     /**
      * @return View
@@ -60,7 +64,7 @@ class StudentsClassController
 
         $this->authorize('view', $studentsClass);
 
-        $users = $this->service->getUsers();
+        $users = $this->userService->getUsers();
 
         return view('show-students-class', [
             'studentsClass' => $studentsClass,

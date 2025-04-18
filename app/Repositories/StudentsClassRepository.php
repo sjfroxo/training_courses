@@ -37,11 +37,12 @@ class StudentsClassRepository extends CoreRepository implements CourseRepository
     }
 
     /**
-     * @return Collection
+     * @param int $curatorId
+     * @return User
      */
-    public function getUsers(): Collection
+    public function findCuratorId(int $curatorId): User
     {
-        return User::all();
+        return User::query()->find($curatorId);
     }
 
     public function getCurator(int $studentsClassId): ?Model

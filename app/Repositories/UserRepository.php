@@ -16,38 +16,13 @@ class UserRepository extends CoreRepository implements RepositoryInterface
 		parent::__construct($model);
 	}
 
-	/**
-	 * @param string $userId
-	 *
-	 * @return Collection
-	 */
-	public function getChats(string $userId): Collection
-	{
-		$user = $this->model->query()->firstWhere('id', '=', $userId);
-
-		$chats = $user->chats()->get();
-
-		return $this->getLastMessages($chats);
-	}
-
+    /**
+     * @return Collection
+     */
     public function getUsers(): Collection
     {
         return User::all();
     }
-
-	/**
-	 * @param Collection $chats
-	 *
-	 * @return Collection
-	 */
-	public function getLastMessages(Collection $chats): Collection
-	{
-		foreach($chats as $chat) {
-			$chat->lastMessage = $chat->lastMessage();
-		}
-
-		return $chats;
-	}
 
 	/**
 	 * @param User $user

@@ -31,9 +31,9 @@ abstract class CoreRepository extends Repository implements CoreRepositoryInterf
 
     /**
      * @param string|int $id
-     * @return Model|Collection|Builder
+     * @return Model|Collection|Builder|Null
      */
-    public function findById(string|int $id): Model|Collection|Builder
+    public function findById(string|int $id): Model|Collection|Builder|Null
     {
 		return $this->getBuilder()->find($id);
 	}
@@ -50,22 +50,22 @@ abstract class CoreRepository extends Repository implements CoreRepositoryInterf
 	}
 
     /**
-     * @param array $dto
+     * @param array $data
      * @return Model
      */
-	public function create(array $dto): Model
+	public function create(array $data): Model
 	{
-		return $this->getBuilder()->create($dto);
+		return $this->getBuilder()->create($data);
 	}
 
     /**
      * @param Model $entity
-     * @param array $dto
+     * @param array $data
      * @return Model
      */
-	public function update(Model $entity, array $dto): Model
+	public function update(Model $entity, array $data): Model
 	{
-        $entity->update($dto);
+        $entity->update($data);
         return $entity;
 	}
 

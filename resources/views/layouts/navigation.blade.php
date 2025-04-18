@@ -1,5 +1,5 @@
-<nav class="sidebar position-fixed top-0 start-0 h-100 p-3 bg-light"
-     style="width: 300px; display: flex; flex-direction: column; justify-content: space-between;">
+<nav class="sidebar top-0 start-0 p-3 bg-light"
+     style="height: 100dvh; width: 300px; display: flex; flex-direction: column; justify-content: space-between;">
     <div class="top-section">
         <a class="navbar-brand fs-4 text-dark" href="{{ route('courses') }}"><img class="mb-4"
                                                                                   src="{{ asset('logo.svg') }}"
@@ -34,10 +34,11 @@
                             @endif
                         </ul>
                     </li>
-
                     <li class="nav-item">
                         <a class="nav-link text-truncate" href="{{ route('studentsClass.index') }}">Учебные классы</a>
                     </li>
+                    <h5>Общение</h5>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('chats.index') }}">Чат</a></li>
                 @elseif(auth()->user()->isCurator())
                     <h5>Преподавание</h5>
                     <li class="nav-item"><a class="nav-link" href="{{ route('courses') }}">Курсы</a></li>

@@ -16,16 +16,6 @@ class UserService extends CoreService
 		parent::__construct($repository);
 	}
 
-	/**
-	 * @param string $userId
-	 *
-	 * @return Collection
-	 */
-	public function getChats(string $userId): Collection
-	{
-		return $this->repository->getChats($userId);
-	}
-
     public function getUsers(): Collection
     {
         return $this->repository->getUsers();

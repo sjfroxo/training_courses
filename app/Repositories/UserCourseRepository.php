@@ -23,20 +23,20 @@ class UserCourseRepository extends CoreRepository implements RepositoryInterface
     /**
      * @return int
      */
+    public function getModuleExams(): int
+    {
+        return ModuleExam::all()->count();
+    }
+
+    /**
+     * @return int
+     */
     public function getCurrentUserCourses(): int
     {
         $currentUserCourses = ModuleExam::query()->whereHas('users', function ($query) {
             $query->where('user_id', Auth::id());
         });
         return $currentUserCourses->count();
-    }
-
-    /**
-     * @return int
-     */
-    public function getModuleExams(): int
-    {
-        return ModuleExam::all()->count();
     }
 
     public function getAverageUserScore(): string

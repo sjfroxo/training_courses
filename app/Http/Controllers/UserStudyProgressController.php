@@ -43,7 +43,7 @@ class UserStudyProgressController
 
         $curator = $studentsClass ? $this->studentsClassService->getCuratorForClass($studentsClass->id) : null;
 
-        $totalCountCourses = $this->userStudyProgressService->getTotalCountCourses();
+        $totalCountCourses = $this->userCourseService->getTotalCountCourses();
 
         $progress = $this->userStudyProgressService->getProgress();
 

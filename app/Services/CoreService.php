@@ -5,6 +5,8 @@ namespace App\Services;
 use App\Contracts\ModelDTO;
 use App\Repositories\CoreRepository;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Revalto\ServiceRepository\Service\AbstractService as Service;
@@ -70,12 +72,11 @@ abstract class CoreService extends Service
         return $entity;
     }
 
-	/**
-	 * @param string $id
-	 *
-	 * @return Model
-	 */
-	public function findById(string $id): Model
+    /**
+     * @param string|int $id
+     * @return Model|null
+     */
+    public function findById(string|int $id): ?Model
 	{
 		return $this->repository->findById($id);
 	}

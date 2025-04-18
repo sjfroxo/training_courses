@@ -15,4 +15,9 @@ interface UserCourseRepositoryInterface extends AbstractRepositoryInterface
      * @return int
      */
     public function getModuleExams(): int;
+
+    /**
+     * @return string
+     */
+    public function getAverageUserScore(): string;
 }

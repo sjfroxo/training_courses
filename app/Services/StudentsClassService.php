@@ -33,21 +33,21 @@ class StudentsClassService extends CoreService
     }
 
     /**
-     * @param StudentsClassDTO|ModelDTO $dto
+     * @param StudentsClassDTO|ModelDTO $data
      * @return Model
      */
-    public function create(StudentsClassDTO|ModelDTO $dto): Model
+    public function create(StudentsClassDTO|ModelDTO $data): Model
     {
         $studentsClass = $this->repository->create([
-            'name' => $dto->name,
-            'course_id' => $dto->course_id,
+            'name' => $data->name,
+            'course_id' => $data->course_id,
         ]);
 
-        $studentsClass->users()->attach($dto->curator_id, [
+        $studentsClass->users()->attach($data->curator_id, [
             'user_role_id' => UserRoleEnum::CURATOR->value,
         ]);
 
-        foreach ($dto->student_ids as $studentId) {
+        foreach ($data->student_ids as $studentId) {
             $studentsClass->users()->attach($studentId, [
                 'user_role_id' => UserRoleEnum::USER->value,
             ]);
@@ -57,15 +57,15 @@ class StudentsClassService extends CoreService
     }
 
     /**
-     * @param StudentsClass|Model $entity
+     * @param StudentsClass|Model $id
      * @param StudentsClassDTO|ModelDTO $data
      * @return Model
      */
-    public function update(StudentsClass|Model $entity, StudentsClassDTO|ModelDTO $data): Model
+    public function update(StudentsClass|Model $id, StudentsClassDTO|ModelDTO $data): Model
     {
         $dto = $data->toArray();
 
-        $entity->update([
+        $id->update([
             'name' => $dto['name'],
             'course_id' => $dto['course_id'],
         ]);
@@ -77,9 +77,9 @@ class StudentsClassService extends CoreService
             $syncData[$studentId] = ['user_role_id' => UserRoleEnum::USER->value];
         }
 
-        $entity->users()->sync($syncData);
+        $id->users()->sync($syncData);
 
-        return $entity;
+        return $id;
     }
 
     /**
@@ -91,14 +91,6 @@ class StudentsClassService extends CoreService
     }
 
     /**
-     * @return mixed
-     */
-    public function getUsers(): mixed
-    {
-        return $this->repository->getUsers();
-    }
-
-    /**
      * @param StudentsClass $studentsClass
      * @param array $studentIds
      * @return array
@@ -106,9 +98,9 @@ class StudentsClassService extends CoreService
     public function addStudents(StudentsClass $studentsClass, array $studentIds): array
     {
         $attachData = [];
-            foreach ($studentIds as $studentId) {
-                $attachData[$studentId] = ['user_role_id' => UserRoleEnum::USER->value];
-            }
+        foreach ($studentIds as $studentId) {
+            $attachData[$studentId] = ['user_role_id' => UserRoleEnum::USER->value];
+        }
 
         return $studentsClass->users()->syncWithoutDetaching($attachData);
     }
@@ -120,8 +112,8 @@ class StudentsClassService extends CoreService
      */
     public function addCurator(StudentsClass $studentsClass, int $curatorId): void
     {
-        $user = User::query()->find($curatorId);
-        if (!$user || $user->user_role_id !== UserRoleEnum::CURATOR->value) {
+        $user = $this->repository->findCuratorId($curatorId);
+        if ($user->user_role_id !== UserRoleEnum::CURATOR->value) {
             throw new InvalidArgumentException('Указанный пользователь не является куратором.');
         }
 
@@ -149,7 +141,7 @@ class StudentsClassService extends CoreService
      * @param int $studentsClassId
      * @return mixed
      */
-    public function getCuratorForClass(int $studentsClassId)
+    public function getCuratorForClass(int $studentsClassId): mixed
     {
         return $this->repository->getCurator($studentsClassId);
     }

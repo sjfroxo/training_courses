@@ -15,14 +15,6 @@ class UserStudyProgressService extends CoreService
         parent::__construct($repository);
     }
 
-    /**
-     * @return string
-     */
-    public function getTotalCountCourses(): string
-    {
-        return $this->repository->getModuleExams();
-    }
-
     public function getProgress(): string
     {
         if (!auth()->user()) {
