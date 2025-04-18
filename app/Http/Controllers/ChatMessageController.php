@@ -10,40 +10,31 @@ use App\Services\ChatMessageService;
 use Exception;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Log;
 
 class ChatMessageController extends Controller
 {
-    /**
-     * @param ChatMessageService $service
-     */
-	public function __construct(
-        protected ChatMessageService $service,
-    )
-    {}
+    public function __construct(protected ChatMessageService $service) {}
 
     /**
-     * @param ChatMessageRequest $request
-     * @return JsonResource
      * @throws Exception
      */
     public function store(ChatMessageRequest $request): JsonResource
     {
-        $request = app(ChatMessageRequest::class, $request->all());
-
         $validated = $request->validated();
-
         $dto = new ChatMessageDTO(
-            $validated['chat_id'],
-            $validated['user_id'],
-            $validated['type'],
-            $validated['reply_message_id'],
-            $validated['message'],
-            $validated['media_file'],
+            data_get($validated, 'chat_id'),
+            data_get($validated, 'user_id'),
+            data_get($validated, 'type'),
+            data_get($validated, 'reply_message_id'),
+            data_get($validated, 'message'),
+            $request->file('media_file'),
         );
 
         $message = $this->service->createMessage($dto);
-
+        Log::info('Создано сообщение, инициируется трансляция', ['message_id' => $message->id]);
         broadcast(new MessageSent($message))->toOthers();
+        Log::info('Событие MessageSent отправлено', ['message_id' => $message->id]);
 
         return ChatMessageResource::make($message);
     }

@@ -10,62 +10,48 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Chat extends Model
 {
-	use HasFactory, Sluggable;
+    use HasFactory, Sluggable;
 
-	/**
-	 * @var string
-	 */
-	protected $table = 'chats';
-	/**
-	 * @var string[]
-	 */
-	protected $fillable = [
-		'title'
-	];
+    protected $table = 'chats';
+    protected $fillable = ['title', 'slug'];
 
-	/**
-	 * @return HasMany
-	 */
-	public function chatMessages(): HasMany
-	{
-		return $this->hasMany(ChatMessage::class, 'chat_id', 'id');
-	}
+    public function chatMessages(): HasMany
+    {
+        return $this->hasMany(ChatMessage::class, 'chat_id', 'id');
+    }
 
-	/**
-	 * @return BelongsToMany
-	 */
-	public function users(): BelongsToMany
-	{
-		return $this->belongsToMany(User::class, 'chat_users', 'chat_id', 'user_id')
-			->withPivot('user_role')
-			->withTimestamps();
-	}
+    public function users(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'chat_users', 'chat_id', 'user_id')
+            ->withPivot('user_role')
+            ->withTimestamps();
+    }
 
-	/**
-	 * @return ChatMessage|null
-	 */
-	public function lastMessage(): ChatMessage|null
-	{
-		$message = $this->chatMessages()->get()->last();
+    public function sluggable(): array
+    {
+        return [
+            'slug' => [
+                'source' => 'title',
+            ],
+        ];
+    }
 
-		if($message->type == "voice") {
-			$message->message = "Voice message";
-		} else if($message->type == "video") {
-			$message->message = "Video message";
-		}
+    public function getOtherUserAttribute()
+    {
+        $currentUserId = auth()->id();
+        return $this->users->firstWhere('id', '!=', $currentUserId);
+    }
 
-		return $message;
-	}
-
-	/**
-	 * @return array<string,mixed>
-	 */
-	public function sluggable(): array
-	{
-		return [
-			'slug' => [
-				'source' => 'title',
-			],
-		];
-	}
+    public function lastMessage(): ?ChatMessage
+    {
+        $message = $this->chatMessages()->latest()->first();
+        if ($message) {
+            if ($message->type === 'voice') {
+                $message->message = 'Voice message';
+            } elseif ($message->type === 'video') {
+                $message->message = 'Video message';
+            }
+        }
+        return $message;
+    }
 }

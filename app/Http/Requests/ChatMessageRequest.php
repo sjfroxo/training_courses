@@ -14,13 +14,13 @@ class ChatMessageRequest extends FormRequest
 	public function rules(): array
 	{
 		return [
-			'message' => ['string', 'nullable'],
-			'user_id' => ['required', 'string', 'exists:users,id'],
-			'chat_id' => ['required', 'string', 'exists:chats,id'],
-			'type' => ['required', 'string', 'in:text,voice,video'],
-			'reply_message_id' => ['nullable', 'string', 'exists:chat_messages,id'],
-			'media_file' => ['nullable', 'file', 'mimes:webm,mkv', 'max:10240'],
-		];
+            'chat_id' => ['required', 'string', 'exists:chats,id'],
+            'user_id' => ['required', 'string', 'exists:users,id'],
+            'type' => ['required', 'string', 'in:text,voice,video'],
+            'reply_message_id' => ['nullable', 'string', 'exists:chat_messages,id'],
+            'message' => ['string', 'nullable'],
+            'media_file' => ['nullable', 'file', 'mimes:webm,mkv', 'max:10240'],
+        ];
 	}
 
 	/**

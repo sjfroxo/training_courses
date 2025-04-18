@@ -4,16 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ChatRequest;
 use App\Models\Chat;
-use App\Models\User;
 use App\Services\ChatService;
 use App\Services\UserService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Str;
-use Illuminate\Http\Request;
-use Log;
-
 
 class ChatController extends Controller
 {
@@ -24,11 +21,8 @@ class ChatController extends Controller
 
     public function index(): View
     {
-
         $user = auth()->user();
-
-        $chats = $this->userService->getChats(auth()->user()->id);
-
+        $chats = $this->service->getChats($user->id);
         $users = $this->userService->getUsers();
 
         return view('chats', [
@@ -47,33 +41,40 @@ class ChatController extends Controller
             'voiceMessages' => $data['voiceMessages'],
             'chat' => $data['chat'],
             'messages' => $data['messages'],
-            'slug' => $slug
+            'slug' => $slug,
         ]);
     }
 
     public function createChat(Request $request): JsonResponse
     {
-        Log::info($request->all());
+        \Log::info('Creating chat with data:', $request->all());
         $validated = $request->validate([
-            'user_ids' => 'required|array',
-            'user_ids.*' => 'exists:users,id',
-            'title' => 'required|string|max:255',
+            'user_id' => 'required|exists:users,id',
+            'title' => 'nullable|string|max:255',
         ]);
 
-        $user = auth()->user();
+        $currentUser = auth()->user();
+        $otherUserId = $validated['user_id'];
 
-        $slug = Str::slug($validated['title']) . '-' . Str::random(8);
+        $existingChat = $this->service->getExistingChat($currentUser->id, $otherUserId);
+
+        if ($existingChat) {
+            return response()->json([
+                'status' => 'exists',
+                'message' => 'Чат уже существует.',
+                'chat' => $existingChat,
+            ], 200);
+        }
+
+        $title = $validated['title'] ?? "Chat with user {$otherUserId}";
+        $slug = Str::slug($title) . '-' . Str::random(8);
 
         $chat = Chat::query()->create([
-            'title' => $validated['title'],
+            'title' => $title,
             'slug' => $slug,
         ]);
 
-        $user_ids = array_merge($validated['user_ids'], [$user->id]);
-
-        foreach ($user_ids as $user_id) {
-            $chat->users()->attach($user_id);
-        }
+        $chat->users()->attach([$currentUser->id, $otherUserId]);
 
         return response()->json([
             'status' => 'success',
@@ -82,13 +83,11 @@ class ChatController extends Controller
         ], 201);
     }
 
-
-
-
-    public function loadMessages(ChatRequest $request): JsonResponse
+    public function loadMessages(Request $request): JsonResponse
     {
-        $messages = $this->service->getMessages($request->slug, $request->last_message_id);
-
+        $slug = $request->input('slug');
+        $lastMessageId = $request->input('last_message_id');
+        $messages = $this->service->getMessages($slug, $lastMessageId);
         return response()->json($messages);
     }
 }

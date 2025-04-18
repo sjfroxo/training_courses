@@ -3,26 +3,33 @@
 namespace App\Services;
 
 use App\Contracts\ModelDTO;
+use App\DataTransferObjects\ChatMessageDTO;
+use App\Models\ChatMessage;
 use App\Repositories\ChatMessageRepository;
+use App\Repositories\ChatRepository;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use Log;
 
 class ChatMessageService extends CoreService
 {
-	/**
-	 * @param ChatMessageRepository $repository
-	 */
-	public function __construct(ChatMessageRepository $repository)
+    /**
+     * @param ChatMessageRepository $repository
+     * @param ChatRepository $chatRepository
+     */
+	public function __construct(
+        ChatMessageRepository $repository,
+        protected ChatRepository $chatRepository,
+    )
 	{
 		parent::__construct($repository);
 	}
 
     /**
-     * @param ModelDTO $dto
+     * @param ChatMessageDTO $dto
      *
-     * @return Model
+     * @return ChatMessage
      * @throws Exception
      */
     public function createMessage(ModelDTO $dto): Model
