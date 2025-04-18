@@ -2,67 +2,61 @@
 
 namespace App\Events;
 
+use App\Models\ChatMessage;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
+use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+use Log;
 
 class MessageSent implements ShouldBroadcast
 {
-	use Dispatchable, InteractsWithSockets, SerializesModels;
+    use Dispatchable, InteractsWithSockets, SerializesModels;
 
-	/**
-	 * @var object
-	 */
-	protected object $message;
-	/**
-	 * @var string|null
-	 */
-	protected ?string $media_url;
+    public ChatMessage $message;
 
-	/**
-	 * @param Model $chatMessage
-	 */
-	public function __construct(Model $chatMessage)
-	{
-		$this->message = $chatMessage;
+    public function __construct(ChatMessage $message)
+    {
+        Log::info('MessageSent: Получен объект сообщения', [
+            'message_id' => $message->id,
+            'chat_id' => $message->chat_id,
+            'reply_message_id' => $message->reply_message_id,
+        ]);
+        $this->message = $message->load('repliedToMessage');
+        Log::info('MessageSent: Отношение repliedToMessage загружено', [
+            'replied_to_message_id' => $this->message->repliedToMessage ? $this->message->repliedToMessage->id : null,
+        ]);
+    }
 
-		$this->media_url = $this->message->media_url;
-	}
+    public function broadcastOn(): Channel
+    {
+        return new Channel('chat.1');
+//        return new PrivateChannel('chat.' . $this->message->chat_id);
+    }
 
-	/**
-	 * @return string
-	 */
-	public function broadcastAs(): string
-	{
-		return 'chat-message.sent';
-	}
+    public function broadcastAs(): string
+    {
+        return 'MessageSent';
+    }
 
-	/**
-	 * @return array
-	 */
-	public function broadCastWith(): array
-	{
-		return [
-			'message' => $this->message->message,
-			'user_id' => $this->message->user_id,
-			'chat_id' => $this->message->chat_id,
-			'reply_message_id' => $this->message->reply_message_id,
-			'id' => $this->message->id,
-			'type' => $this->message->type,
-			'media_url' => $this->media_url,
-		];
-	}
-
-	/**
-	 * @return Channel[]
-	 */
-	public function broadcastOn(): array
-	{
-		return [
-			new Channel('chat.' . $this->message->chat_id),
-		];
-	}
+    public function broadcastWith(): array
+    {
+        return [
+            'id' => $this->message->id,
+            'chat_id' => $this->message->chat_id,
+            'user_id' => $this->message->user_id,
+            'message' => $this->message->message,
+            'type' => $this->message->type,
+            'media_url' => $this->message->media_url,
+            'reply_message_id' => $this->message->reply_message_id,
+            'replied_to_message' => $this->message->repliedToMessage ? [
+                'id' => $this->message->repliedToMessage->id,
+                'message' => $this->message->repliedToMessage->message,
+                'type' => $this->message->repliedToMessage->type,
+            ] : null,
+            'created_at' => $this->message->created_at->toISOString(),
+        ];
+    }
 }
