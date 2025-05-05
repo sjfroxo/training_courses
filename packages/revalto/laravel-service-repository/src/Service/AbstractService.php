@@ -36,7 +36,7 @@ abstract class AbstractService
      */
     public function __call(string $name, array $arguments)
     {
-        return $this->getRepository()->{$name}(...$arguments);
+        return $this->repository->{$name}(...$arguments);
     }
 
     /**

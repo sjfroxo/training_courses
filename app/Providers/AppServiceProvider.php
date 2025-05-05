@@ -6,9 +6,11 @@ use App\Models\Course;
 use App\Models\User;
 use App\Repositories\Interfaces\ModuleExamQuestionRepositoryInterface;
 use App\Repositories\Interfaces\ModuleExamRepositoryInterface;
+use App\Repositories\Interfaces\TaskRepositoryInterface;
 use App\Repositories\Interfaces\UserRepositoryInterface;
 use App\Repositories\ModuleExamQuestionRepository;
 use App\Repositories\ModuleExamRepository;
+use App\Repositories\TaskRepository;
 use App\Repositories\UserRepository;
 use App\Services\ModuleExamQuestionService;
 use App\Services\UserService;
@@ -27,7 +29,8 @@ class AppServiceProvider extends ServiceProvider
     public array $bindings = [
         ModuleExamRepositoryInterface::class => ModuleExamRepository::class,
         UserRepositoryInterface::class => UserRepository::class,
-        ModuleExamQuestionRepositoryInterface::class => ModuleExamQuestionRepository::class
+        ModuleExamQuestionRepositoryInterface::class => ModuleExamQuestionRepository::class,
+        TaskRepositoryInterface::class => TaskRepository::class,
     ];
 
     /**

@@ -49,7 +49,7 @@ class StudentsClassController
     {
         $this->authorize('create', StudentsClass::class);
 
-        $courses = $this->service->getCourses();
+        $courses = $this->service->all();
 
         return view('create-students-class', compact('courses'));
     }

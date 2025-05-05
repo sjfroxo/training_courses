@@ -2,8 +2,10 @@
 
 namespace App\Services;
 
+use App\Models\Course;
 use App\Repositories\CourseRepository;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Support\Collection;
 
 class CourseService extends CoreService
 {
@@ -87,4 +89,13 @@ class CourseService extends CoreService
 
 		return $percentPassedCourseExams;
 	}
+
+    /**
+     * @param int $courseId
+     * @return Course
+     */
+    public function getUsers(int $courseId): Course
+    {
+        return $this->repository->getUsers($courseId);
+    }
 }

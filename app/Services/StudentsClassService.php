@@ -16,20 +16,14 @@ class StudentsClassService extends CoreService
 {
     /**
      * @param StudentsClassRepository $repository
+     * @param UserService $userService
      */
     public function __construct(
-        StudentsClassRepository $repository
+        StudentsClassRepository $repository,
+        protected UserService $userService
     )
     {
         parent::__construct($repository);
-    }
-
-    /**
-     * @return Collection
-     */
-    public function getStudentsClasses(): Collection
-    {
-        return $this->repository->getStudentsClasses();
     }
 
     /**
@@ -83,14 +77,6 @@ class StudentsClassService extends CoreService
     }
 
     /**
-     * @return mixed
-     */
-    public function getCourses(): mixed
-    {
-        return $this->repository->getCourses();
-    }
-
-    /**
      * @param StudentsClass $studentsClass
      * @param array $studentIds
      * @return array
@@ -112,7 +98,7 @@ class StudentsClassService extends CoreService
      */
     public function addCurator(StudentsClass $studentsClass, int $curatorId): void
     {
-        $user = $this->repository->findCuratorId($curatorId);
+        $user = $this->userService->findById($curatorId);
         if ($user->user_role_id !== UserRoleEnum::CURATOR->value) {
             throw new InvalidArgumentException('Указанный пользователь не является куратором.');
         }
@@ -139,10 +125,10 @@ class StudentsClassService extends CoreService
 
     /**
      * @param int $studentsClassId
-     * @return mixed
+     * @return Model|null
      */
-    public function getCuratorForClass(int $studentsClassId): mixed
+    public function getCuratorForClass(int $studentsClassId): Model|null
     {
-        return $this->repository->getCurator($studentsClassId);
+        return $this->userService->getCuratorByStudentClassId($studentsClassId);
     }
 }

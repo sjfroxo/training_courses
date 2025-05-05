@@ -83,4 +83,11 @@ class Course extends Model
         return $this->belongsTo(User::class, 'curator_id');
     }
 
+    /**
+     * @return HasMany
+     */
+    public function tasks(): HasMany
+    {
+        return $this->hasMany(Task::class, 'course_id');
+    }
 }

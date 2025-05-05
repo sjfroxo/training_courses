@@ -41,8 +41,8 @@
                     <li class="nav-item"><a class="nav-link" href="{{ route('chats.index') }}">Чат</a></li>
                 @elseif(auth()->user()->isCurator())
                     <h5>Преподавание</h5>
-                    <li class="nav-item"><a class="nav-link" href="{{ route('courses') }}">Курсы</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ route('courses.create') }}">Создать задание</a>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('curator.courses.interns.index') }}">Курсы</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Создать задание</a>
                     </li>
                     <li class="nav-item"><a class="nav-link" href="{{ route('notifications') }}">Уведомления</a></li>
 

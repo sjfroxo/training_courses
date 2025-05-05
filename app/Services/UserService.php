@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\UserRoleEnum;
 use App\Repositories\UserRepository;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -33,4 +34,22 @@ class UserService extends CoreService
 
 		return $user;
 	}
+
+    /**
+     * @param int $studentClassId
+     * @return Model|null
+     */
+    public function getCuratorByStudentClassId(int $studentClassId): Model|null
+    {
+        return $this->repository->getCuratorByStudentClassId($studentClassId);
+    }
+
+    /**
+     * @param int $courseId
+     * @return Collection
+     */
+    public function getCourseInterns(int $courseId): Collection
+    {
+        return $this->repository->getCourseUsers($courseId, UserRoleEnum::USER);
+    }
 }

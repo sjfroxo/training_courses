@@ -8,6 +8,9 @@ use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\ChatMessageController;
 use App\Http\Controllers\CourseController;
+use App\Http\Controllers\Curator\GradeController;
+use App\Http\Controllers\Curator\InternController;
+use App\Http\Controllers\Curator\TaskController;
 use App\Http\Controllers\ExamUserResponseResultController;
 use App\Http\Controllers\ModuleCommentController;
 use App\Http\Controllers\ModuleController;
@@ -21,6 +24,7 @@ use App\Http\Controllers\UserCourseController;
 use App\Http\Controllers\UserStudyMainController;
 use App\Http\Controllers\UserStudyProgressController;
 use App\Http\Controllers\UserStudyTasksController;
+use App\Http\Controllers\Curator\CourseController as CourseCuratorController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -138,6 +142,20 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
     Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
+
+    Route::prefix('curator')->group(function () {
+        Route::prefix('courses')->group(function () {
+            Route::get('/', [CourseCuratorController::class, 'index'])->name('curator.courses.index');
+            Route::post('/', [CourseCuratorController::class, 'index'])->name('curator.index');
+
+            Route::get('interns', [InternController::class, 'index'])->name('curator.courses.interns.index');
+            Route::resource('tasks', TaskController::class)->names('curator.courses.tasks');
+//            Route::get('tasks', [TaskController::class, 'index'])->name('curator.courses.tasks.index');
+//            Route::get('tasks/edit', [TaskController::class, 'edit'])->name('curator.courses.tasks.edit');
+//            Route::patch('tasks', [TaskController::class, 'update'])->name('curator.courses.tasks.update');
+            Route::get('grades', [GradeController::class, 'index'])->name('curator.courses.grades.index');
+        });
+    });
 });
 
 Route::middleware('guest')->group(function () {
@@ -160,16 +178,3 @@ Route::post('/login', [LoginController::class, 'authenticate'])->name('login.sto
 Route::get('/verify-email', [RegisterController::class, 'verifyNotice'])->name('verification.notice');
 Route::get('/verify-email/{id}/{hash}', [RegisterController::class, 'verifyEmail'])->middleware('signed')->name('verification.verify');
 Route::post('/email/verification-notification', [RegisterController::class, 'verifyHandler'])->middleware('throttle:6,1')->name('verification.send');
-
-
-
-
-
-
-
-
-
-
-
-
-

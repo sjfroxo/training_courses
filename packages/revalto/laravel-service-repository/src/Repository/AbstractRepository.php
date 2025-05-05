@@ -108,6 +108,19 @@ abstract class AbstractRepository implements AbstractRepositoryInterface
     }
 
     /**
+     * @param array $fillable
+     * @param string $orderField
+     * @param string $orderType
+     * @return Model
+     */
+    public function firstWhere(array $fillable, string $orderField = 'id', string $orderType = 'desc'): Model
+    {
+        return $this->newQuery()
+            ->orderBy($orderField, $orderType)
+            ->firstWhere($fillable);
+    }
+
+    /**
      * @return Collection
      */
     public function get(): Collection
