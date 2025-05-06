@@ -4,7 +4,7 @@
     @include('components.curator.course-header', ['active' => 'tasks'])
 
     @if (session()->has('success'))
-        <div class="alert alert-success">
+        <div class="alert alert-success mt-5">
             {{ session()->get('success') }}
         </div>
     @endif
@@ -39,7 +39,7 @@
                             </form>
                         </div>
                     </div>
-                    <p>{{ $task->deadline }}</p>
+                    <p>{{ $task->deadline_formatted }}</p>
                 </li>
             @empty
                 <h1 class="alert-heading">У курса ещё нет практикантов!</h1>
