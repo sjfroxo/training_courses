@@ -9,7 +9,7 @@
 
     <link rel="preconnect" href="https://fonts.bunny.net"/>
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
 
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet"/>
 
@@ -29,6 +29,7 @@
         padding: 0;
         box-sizing: border-box;
     }
+
     html, body {
         overflow: hidden;
         height: 100%;
@@ -37,10 +38,9 @@
 
 @include('layouts.navigation')
 
-<div class="container mt-4">
-    @yield('main')
-</div>
+@yield('main')
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+@yield('scripts')
 </body>
 </html>

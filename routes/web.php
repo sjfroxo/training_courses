@@ -125,10 +125,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/chats', [ChatController::class, 'index'])->name('chats.index');
 
     Route::prefix('chat')->group(function () {
-        Route::post('/message-send', [ChatMessageController::class, 'store'])->name('message.store');
-        Route::get('/messages-load', [ChatController::class, 'loadMessages'])->name('chat.loadMore');
-        Route::post('/create', [ChatController::class, 'createChat'])->name('chat.create');
+        Route::get('/messages-load', [ChatController::class, 'loadMessages'])->name('chat.loadMessages');
+        Route::post('/create', [ChatController::class, 'store'])->name('chat.store');
         Route::get('/{slug}', [ChatController::class, 'show'])->name('chat.show');
+
+        Route::post('/message-send', [ChatMessageController::class, 'store'])->name('message.store');
+        Route::put('/message/{message}', [ChatMessageController::class, 'update'])->name('message.update');
+        Route::delete('/message/{message}', [ChatMessageController::class, 'delete'])->name('message.delete');
     });
 
     Route::prefix('account-details')->group(function () {

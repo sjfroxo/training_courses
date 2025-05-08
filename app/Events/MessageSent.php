@@ -3,15 +3,14 @@
 namespace App\Events;
 
 use App\Models\ChatMessage;
-use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use Log;
 
-class MessageSent implements ShouldBroadcast
+class MessageSent implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -30,10 +29,9 @@ class MessageSent implements ShouldBroadcast
         ]);
     }
 
-    public function broadcastOn(): Channel
+    public function broadcastOn(): PrivateChannel
     {
-        return new Channel('chat.1');
-//        return new PrivateChannel('chat.' . $this->message->chat_id);
+        return new PrivateChannel('chat.' . $this->message->chat_id);
     }
 
     public function broadcastAs(): string

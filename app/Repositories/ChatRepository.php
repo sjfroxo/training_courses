@@ -49,7 +49,7 @@ class ChatRepository extends CoreRepository implements ChatRepositoryInterface
             ->with('repliedToMessage')
             ->when($lastMessId, fn($query) => $query->where('id', '<', $lastMessId))
             ->orderBy('created_at', 'desc')
-            ->paginate(10);
+            ->paginate(30);
     }
 
     public function getMedia(Chat $chat): array

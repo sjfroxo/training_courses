@@ -11,17 +11,17 @@ class ChatMessageDTO implements ModelDTO
      * @param string $chat_id
      * @param string $user_id
      * @param string $type
+     * @param string|null $message
      * @param string|null $reply_message_id
-     * @param string $message
      * @param UploadedFile|null $media_file
      */
     public function __construct(
         public readonly string $chat_id,
         public readonly string $user_id,
         public readonly string $type,
-        public readonly ?string $reply_message_id,
         public readonly ?string $message,
-        public readonly ?UploadedFile $media_file = null,
+        public readonly ?string $reply_message_id,
+        public readonly ?UploadedFile $media_file,
     ) {}
 
     /**
@@ -33,8 +33,8 @@ class ChatMessageDTO implements ModelDTO
             'chat_id' => $this->chat_id,
             'user_id' => $this->user_id,
             'type' => $this->type,
-            'reply_message_id' => $this->reply_message_id,
             'message' => $this->message,
+            'reply_message_id' => $this->reply_message_id,
             'media_file' => $this->media_file,
         ];
     }

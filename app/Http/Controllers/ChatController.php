@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ChatRequest;
 use App\Models\Chat;
 use App\Services\ChatService;
 use App\Services\UserService;
 use Illuminate\Contracts\View\View;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class ChatController extends Controller
@@ -19,13 +20,15 @@ class ChatController extends Controller
         protected UserService $userService
     ) {}
 
+    use AuthorizesRequests;
+
     public function index(): View
     {
-        $user = auth()->user();
+        $user = Auth::user();
         $chats = $this->service->getChats($user->id);
         $users = $this->userService->getUsers();
 
-        return view('chats', [
+        return view('chats.chats', [
             'chats' => $chats,
             'users' => $users,
             'user' => $user,
@@ -36,7 +39,7 @@ class ChatController extends Controller
     {
         $data = $this->service->chatDetails($slug);
 
-        return view('chat_details', [
+        return view('chats.chat_details', [
             'videoMessages' => $data['videoMessages'],
             'voiceMessages' => $data['voiceMessages'],
             'chat' => $data['chat'],
@@ -45,49 +48,60 @@ class ChatController extends Controller
         ]);
     }
 
-    public function createChat(Request $request): JsonResponse
+    public function store(Request $request)
     {
-        \Log::info('Creating chat with data:', $request->all());
         $validated = $request->validate([
             'user_id' => 'required|exists:users,id',
-            'title' => 'nullable|string|max:255',
+            'title' => 'required|string|max:255',
         ]);
 
-        $currentUser = auth()->user();
+        $currentUser = Auth::user();
         $otherUserId = $validated['user_id'];
 
         $existingChat = $this->service->getExistingChat($currentUser->id, $otherUserId);
 
         if ($existingChat) {
-            return response()->json([
-                'status' => 'exists',
-                'message' => 'Чат уже существует.',
-                'chat' => $existingChat,
-            ], 200);
+            return redirect()
+                ->route('chats.index')
+                ->with('warning', 'Чат уже существует.');
         }
 
-        $title = $validated['title'] ?? "Chat with user {$otherUserId}";
-        $slug = Str::slug($title) . '-' . Str::random(8);
+        $slug = Str::slug($validated['title']) . '-' . Str::random(8);
 
-        $chat = Chat::query()->create([
-            'title' => $title,
-            'slug' => $slug,
-        ]);
+        try {
+            $chat = Chat::query()->create([
+                'title' => $validated['title'],
+                'slug' => $slug,
+            ]);
 
-        $chat->users()->attach([$currentUser->id, $otherUserId]);
+            $chat->users()->attach([$currentUser->id, $otherUserId]);
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Чат успешно создан!',
-            'chat' => $chat,
-        ], 201);
+            return redirect()
+                ->route('chats.index')
+                ->with('success', 'Чат успешно создан!');
+        } catch (\Exception $e) {
+            return redirect()
+                ->route('chats.index')
+                ->with('error', 'Ошибка при создании чата: ' . $e->getMessage());
+        }
     }
-
     public function loadMessages(Request $request): JsonResponse
     {
-        $slug = $request->input('slug');
-        $lastMessageId = $request->input('last_message_id');
-        $messages = $this->service->getMessages($slug, $lastMessageId);
-        return response()->json($messages);
+        // получаем slug и номер страницы из query-параметров
+        $slug = $request->query('slug');
+        $page = (int) $request->query('page', 1);
+
+        // находим чат по slug
+        $chat = $this->service->findBySlug($slug);
+
+        // пагинируем сообщения: 30 штук на страницу, от новых к старым
+        $paginator = $chat->chatMessages()
+            ->with('user')
+            ->orderBy('created_at', 'desc')
+            ->paginate(30, ['*'], 'page', $page);
+
+        // возвращаем весь объект пагинатора
+        return response()->json($paginator);
     }
 }
+
