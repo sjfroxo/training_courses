@@ -1,11 +1,18 @@
 <div id="chat-details-content" class="d-flex flex-column" style="height: 95vh;">
-    <h5 class="mb-3">{{ $chat->title }}</h5>
+    <h5 class="mb-3">
+        @if($chat->users->count() === 1 && $chat->users->first()->id === auth()->id())
+            Избранное
+        @else
+            {{ $chat->users->where('id', '!=', auth()->id())->first()->name ?? 'Избранное' }}
+        @endif
+    </h5>
     <div
         id="messages"
-        class="flex-grow-1 mb-3 overflow-auto"
+        class="mb-3 overflow-auto"
         data-chat-id="{{ $chat->id }}"
         data-chat-slug="{{ $chat->slug }}"
         data-page="1"
+        style="flex: 1 1 auto; min-height: 0;"
     >
         @if($messages->count() >= 25)
             <div class="text-center mb-2" id="load-more-wrapper">
@@ -15,19 +22,25 @@
         @foreach($messages as $message)
             @php
                 $isMine = $message->user_id === auth()->id();
-                $align  = $isMine ? 'justify-content-end' : 'justify-content-start';
-                $cls    = $isMine ? ($mineBubbleClass ?? 'bg-primary text-white') : ($otherBubbleClass ?? 'bg-light text-dark');
             @endphp
-            <div class="d-flex mb-2 {{ $align }} chat-message" data-id="{{ $message->id }}">
-                <div class="p-2 rounded {{ $cls }}" style="max-width:70%;">
-                    <div class="small text-muted mb-1">{{ $message->created_at->format('h:i A') }}</div>
-                    <div class="msg-text">{{ $message->message }}</div>
+            @if($isMine ===   true)
+                <div class="d-flex mb-2 justify-content-end chat-message" data-id="{{ $message->id }}">
+                    <div class="p-2 rounded" style="background-color: #c6fff7; max-width:70%;">
+                        <div class="small text-muted mb-1">{{ $message->created_at->format('H:i') }}</div>
+                        <div class="msg-text">{{ $message->message }}</div>
+                    </div>
                 </div>
-            </div>
+            @else
+                <div class="d-flex mb-2 justify-content-start chat-message" data-id="{{ $message->id }}">
+                    <div class="p-2 rounded" style="background-color: #ececec; max-width:70%;">
+                        <div class="small text-muted mb-1">{{ $message->created_at->format('H:i') }}</div>
+                        <div class="msg-text">{{ $message->message }}</div>
+                    </div>
+                </div>
+            @endif
         @endforeach
     </div>
-
-    <form id="message-form" data-chat-id="{{ $chat->id }}">
+    <form id="message-form" data-chat-id="{{ $chat->id }}" style="flex: 0 0 auto;">
         @csrf
         <input type="hidden" name="chat_id" value="{{ $chat->id }}">
         <input type="hidden" name="user_id" value="{{ auth()->id() }}">

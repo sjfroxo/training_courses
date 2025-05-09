@@ -24,11 +24,6 @@ class ChatService extends CoreService
         return $this->repository->getChatDetails($this->repository->findBySlug($slug));
     }
 
-    public function getMessages(string $slug, ?string $lastMessId): LengthAwarePaginator
-    {
-        return $this->repository->getMessages($this->repository->findBySlug($slug), $lastMessId);
-    }
-
     public function getExistingChat(int $user1Id, int $user2Id): ?Chat
     {
         return $this->repository->getExistingChat($user1Id, $user2Id);

@@ -43,7 +43,10 @@ class ChatMessageController extends Controller
             );
 
             $message = $this->service->createMessage($dto);
-            broadcast(new MessageSent($message));
+
+            Log::info('Broadcasting MessageSent for chat ' . $message->chat_id);
+
+            broadcast(new MessageSent($message))->toOthers();
 
             return ChatMessageResource::make($message);
         } catch (Exception $e) {
@@ -59,7 +62,7 @@ class ChatMessageController extends Controller
 
         $message->delete();
 
-        broadcast(new MessageDeleted($messageId, $chatId));
+        broadcast(new MessageDeleted($messageId, $chatId))->toOthers();
 
         return response()->json(['success' => true]);
     }
@@ -82,7 +85,7 @@ class ChatMessageController extends Controller
 
         $updated = $this->service->updateMessage($message->id, $dto);
 
-        broadcast(new MessageUpdated($updated));
+        broadcast(new MessageUpdated($updated))->toOthers();
 
         return response()->json(['status' => 'updated', 'data' => $updated]);
     }

@@ -40,13 +40,13 @@ return [
                 'host' => env('PUSHER_HOST') ?: 'api-'.env('PUSHER_APP_CLUSTER', 'mt1').'.pusher.com',
                 'port' => env('PUSHER_PORT', 443),
                 'scheme' => env('PUSHER_SCHEME', 'https'),
-                'encrypted' => true,
+//                'encrypted' => true,
                 'useTLS' => true,
             ],
-            'client_options' => [
-                'verify' => true
-                // Guzzle client options: https://docs.guzzlephp.org/en/stable/request-options.html
-            ],
+//            'client_options' => [
+//                'verify' => true
+//                // Guzzle client options: https://docs.guzzlephp.org/en/stable/request-options.html
+//            ],
         ],
 
         'reverb' => [

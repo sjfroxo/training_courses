@@ -21,7 +21,7 @@
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="d-flex">
+<body class="d-flex" data-my-id="{{ auth()->id() }}">
 
 <style>
     * {

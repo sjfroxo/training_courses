@@ -26,31 +26,30 @@ class ChatRepository extends CoreRepository implements ChatRepositoryInterface
         return Chat::query()->whereHas('users', function ($query) use ($userId) {
             $query->where('users.id', $userId);
         })->with(['chatMessages' => function ($query) {
-            $query->latest()->first();
+            $query->latest()->limit(1);
         }])->get();
     }
 
     public function getChatDetails(Chat $chat): array
     {
-        $messages = $this->getMessages($chat);
+        $messages = $chat->chatMessages()
+            ->with('repliedToMessage', 'user')
+            ->latest()
+            ->take(30)
+            ->get()
+            ->sortBy('created_at')
+            ->values();
+
         $media = $this->getMedia($chat);
 
         return [
-            'chat' => $chat,
-            'messages' => $messages,
+            'chat'          => $chat,
+            'messages'      => $messages,
             'voiceMessages' => $media['voice'],
             'videoMessages' => $media['video'],
         ];
     }
 
-    public function getMessages(Chat $chat, ?string $lastMessId = null): LengthAwarePaginator
-    {
-        return $chat->chatMessages()
-            ->with('repliedToMessage')
-            ->when($lastMessId, fn($query) => $query->where('id', '<', $lastMessId))
-            ->orderBy('created_at', 'desc')
-            ->paginate(30);
-    }
 
     public function getMedia(Chat $chat): array
     {

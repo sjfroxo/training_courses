@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Chat;
 use App\Services\ChatService;
 use App\Services\UserService;
+use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\JsonResponse;
@@ -26,7 +27,7 @@ class ChatController extends Controller
     {
         $user = Auth::user();
         $chats = $this->service->getChats($user->id);
-        $users = $this->userService->getUsers();
+        $users = $this->userService->getUsers()->where('id', '!=', $user->id); // Исключаем текущего пользователя
 
         return view('chats.chats', [
             'chats' => $chats,
@@ -52,12 +53,12 @@ class ChatController extends Controller
     {
         $validated = $request->validate([
             'user_id' => 'required|exists:users,id',
-            'title' => 'required|string|max:255',
         ]);
 
         $currentUser = Auth::user();
         $otherUserId = $validated['user_id'];
 
+        // Проверяем, существует ли уже чат между этими пользователями
         $existingChat = $this->service->getExistingChat($currentUser->id, $otherUserId);
 
         if ($existingChat) {
@@ -66,42 +67,42 @@ class ChatController extends Controller
                 ->with('warning', 'Чат уже существует.');
         }
 
-        $slug = Str::slug($validated['title']) . '-' . Str::random(8);
+        // Определяем, является ли это чатом с самим собой
+        $isSelfChat = $currentUser->id === $otherUserId;
+        $title = $isSelfChat ? 'Избранное' : $this->userService->getUserName($otherUserId);
+        $slug = Str::slug($title) . '-' . Str::random(8);
 
         try {
             $chat = Chat::query()->create([
-                'title' => $validated['title'],
+                'title' => $title,
                 'slug' => $slug,
             ]);
 
+            // Привязываем пользователей к чату
             $chat->users()->attach([$currentUser->id, $otherUserId]);
 
             return redirect()
                 ->route('chats.index')
                 ->with('success', 'Чат успешно создан!');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return redirect()
                 ->route('chats.index')
                 ->with('error', 'Ошибка при создании чата: ' . $e->getMessage());
         }
     }
+
     public function loadMessages(Request $request): JsonResponse
     {
-        // получаем slug и номер страницы из query-параметров
         $slug = $request->query('slug');
         $page = (int) $request->query('page', 1);
 
-        // находим чат по slug
         $chat = $this->service->findBySlug($slug);
 
-        // пагинируем сообщения: 30 штук на страницу, от новых к старым
         $paginator = $chat->chatMessages()
             ->with('user')
             ->orderBy('created_at', 'desc')
             ->paginate(30, ['*'], 'page', $page);
 
-        // возвращаем весь объект пагинатора
         return response()->json($paginator);
     }
 }
-
