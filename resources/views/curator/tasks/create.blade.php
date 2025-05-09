@@ -13,8 +13,9 @@
                 <input type="text" name="name" class="input-group">
             </div>
 
-            <div>
-                <textarea name="description" id="editor"></textarea>
+            <div class="w-25">
+                <label for="description" class="form-label">Описание</label>
+                <textarea name="description" class="input-group"></textarea>
             </div>
 
             <div class="w-25">
@@ -33,11 +34,10 @@
             </div>
 
             <div class="d-flex justify-content-between align-items-center w-50 mt-3">
-                <a href="{{ route('curator.courses.tasks.index') }}">Отмена</a>
+                <a href="{{ redirect()->back() }}">Отмена</a>
+{{--                <button type="submit" class="btn">Сохранить как черновик</button>--}}
                 <button type="submit" class="btn btn-primary">Сохранить</button>
             </div>
         </form>
     </section>
-
-    @vite('resources/js/init-text-editor.js')
 @endsection

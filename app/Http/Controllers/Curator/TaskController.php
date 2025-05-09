@@ -74,15 +74,11 @@ class TaskController extends Controller
      */
     public function edit(int $taskId)
     {
-        if (auth()->user()->courses()->first()->tasks()->where('id', $taskId)->first()->doesntExist()) {
+        if (auth()->user()->courses()->first()->tasks()->where('id', $taskId)->dontExist()) {
             abort(403);
         }
 
-        return view('curator.tasks.edit', [
-            'title' => 'Задания',
-            'task' => $this->taskService->findById($taskId),
-            'users' => $this->userService->getCourseInterns(auth()->user()->courses()->first()->id)
-        ]);
+        return view('curator.tasks.edit', ['task' => $this->taskService->findById($taskId)]);
     }
 
     /**

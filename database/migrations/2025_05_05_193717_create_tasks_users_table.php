@@ -16,9 +16,6 @@ return new class extends Migration
 
             $table->foreignId('task_id')->constrained('tasks');
             $table->foreignId('user_id')->constrained('users');
-            $table->foreignId('task_answer_id')->nullable()->constrained('task_answers');
-
-            $table->tinyInteger('status')->default(0);
 
             $table->timestamps();
         });
