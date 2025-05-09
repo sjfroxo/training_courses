@@ -36,7 +36,9 @@
     }
 </style>
 
-@include('layouts.navigation')
+@if(auth()->check())
+    @include('layouts.navigation')
+@endif
 
 @yield('main')
 

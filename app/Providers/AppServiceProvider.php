@@ -45,7 +45,7 @@ class AppServiceProvider extends ServiceProvider
             $this->app->bind($key, $value);
         }
 
-        $this->app->bind(UserService::class, function ($app){
+        $this->app->bind(UserService::class, function ($app) {
             return new UserService($app->make(UserRepositoryInterface::class));
         });
 
@@ -60,7 +60,9 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Paginator::useBootstrapFive();
-        View::composer('layouts.navigation', function ($view) { $view->with('courses', Course::all()); });
+        View::composer('layouts.navigation', function ($view) {
+            $view->with('courses', auth()->user()->courses());
+        });
 
         VerifyEmail::toMailUsing(function (object $notifiable, string $url) {
             return (new MailMessage)

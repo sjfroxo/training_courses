@@ -69,7 +69,7 @@
 
                 @elseif(auth()->user()->isCurator())
                     <h5>Преподавание</h5>
-                    <li class="nav-item"><a class="nav-link" href="{{ route('courses') }}">Курсы</a>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('curator.courses.index') }}">Курсы</a>
                     </li>
                     <li class="nav-item"><a class="nav-link" href="{{ route('courses.create') }}">Создать
                             задание</a>
@@ -89,7 +89,7 @@
                            role="button">
                             Курсы
                         </a>
-                        @if($courses->isNotEmpty())
+                        @if($courses->count() > 0)
                             <a class="nav-link dropdown-toggle d-flex align-items-center"
                                href="{{ route('courses') }}"
                                id="coursesDropdown"
@@ -107,7 +107,7 @@
                                     </li>
                                 @endforeach
                             </ul>
-                        @elseif ($courses->isEmpty())
+                        @elseif ($courses = 0)
                             <p></p>
                         @endif
                     </li>
