@@ -69,10 +69,9 @@
 
                 @elseif(auth()->user()->isCurator())
                     <h5>Преподавание</h5>
-                    <li class="nav-item"><a class="nav-link" href="{{ route('courses') }}">Курсы</a>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('curator.courses.index') }}">Курсы</a>
                     </li>
-                    <li class="nav-item"><a class="nav-link" href="{{ route('courses.create') }}">Создать
-                            задание</a>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('curator.courses.tasks.index') }}">Задания</a>
                     </li>
                     <li class="nav-item"><a class="nav-link" href="{{ route('notifications') }}">Уведомления</a>
                     </li>

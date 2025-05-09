@@ -50,6 +50,16 @@ class TaskController extends Controller
         ]);
     }
 
+    public function show(int $taskId)
+    {
+        if (! $task = $this->taskService->findById($taskId)) {
+            return redirect()->back()
+                ->withErrors(['no_task' => 'Задачи с данным ID не существует!']);
+        }
+
+
+    }
+
     public function store(Request $request)
     {
         $taskDTO = new TaskDTO(
