@@ -84,11 +84,15 @@ class TaskController extends Controller
      */
     public function edit(int $taskId)
     {
-        if (auth()->user()->courses()->first()->tasks()->where('id', $taskId)->dontExist()) {
+        if (! $task = $this->taskService->findById($taskId)) {
             abort(403);
         }
 
-        return view('curator.tasks.edit', ['task' => $this->taskService->findById($taskId)]);
+        return view('curator.tasks.edit', [
+            'title' => 'Задания',
+            'task' => $task,
+            'users' => $this->userService->getCourseInterns(auth()->user()->courses()->first()->id)
+        ]);
     }
 
     /**
@@ -98,7 +102,7 @@ class TaskController extends Controller
      */
     public function update(Request $request, int $taskId)
     {
-        if (auth()->user()->courses()->first()->tasks()->where('id', $taskId)->dontExist()) {
+        if (! $task = $this->taskService->findById($taskId)) {
             abort(403);
         }
 
@@ -109,9 +113,8 @@ class TaskController extends Controller
             $request->input('course_id')
         );
 
-        $task = $this->taskService->findById($taskId);
         $this->taskService->update($task, $taskDTO);
 
-        return redirect()->back()->with('success', 'Задача успешно обновлена!');
+        return redirect()->route('curator.courses.tasks.index')->with('success', 'Задача успешно обновлена!');
     }
 }

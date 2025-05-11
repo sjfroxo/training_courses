@@ -2,14 +2,17 @@
 
 namespace App\Providers;
 
+use App\Filter\BaseFilter;
 use App\Models\Course;
 use App\Models\User;
 use App\Repositories\Interfaces\ModuleExamQuestionRepositoryInterface;
 use App\Repositories\Interfaces\ModuleExamRepositoryInterface;
+use App\Repositories\Interfaces\TaskAnswerRepositoryInterface;
 use App\Repositories\Interfaces\TaskRepositoryInterface;
 use App\Repositories\Interfaces\UserRepositoryInterface;
 use App\Repositories\ModuleExamQuestionRepository;
 use App\Repositories\ModuleExamRepository;
+use App\Repositories\TaskAnswerRepository;
 use App\Repositories\TaskRepository;
 use App\Repositories\UserRepository;
 use App\Services\ModuleExamQuestionService;
@@ -31,6 +34,7 @@ class AppServiceProvider extends ServiceProvider
         UserRepositoryInterface::class => UserRepository::class,
         ModuleExamQuestionRepositoryInterface::class => ModuleExamQuestionRepository::class,
         TaskRepositoryInterface::class => TaskRepository::class,
+        TaskAnswerRepositoryInterface::class => TaskAnswerRepository::class
     ];
 
     /**
@@ -41,6 +45,8 @@ class AppServiceProvider extends ServiceProvider
         foreach ($this->bindings as $key => $value) {
             $this->app->bind($key, $value);
         }
+
+        $this->app->bind(BaseFilter::class, fn ($app) => new Ba);
 
         $this->app->bind(UserService::class, function ($app){
             return new UserService($app->make(UserRepositoryInterface::class));

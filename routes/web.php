@@ -147,16 +147,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 
     Route::prefix('curator')->group(function () {
-        Route::prefix('courses')->group(function () {
-            Route::get('/', [CourseCuratorController::class, 'index'])->name('curator.courses.index');
-            Route::post('/', [CourseCuratorController::class, 'index'])->name('curator.index');
+        Route::prefix('course')->name('curator.course.')->group(function () {
+            Route::get('/', [CourseCuratorController::class, 'index'])->name('index');
+            Route::post('/', [CourseCuratorController::class, 'store']);
 
-            Route::get('interns', [InternController::class, 'index'])->name('curator.courses.interns.index');
-            Route::resource('tasks', TaskController::class)->names('curator.courses.tasks');
+            Route::resource('intern', InternController::class)->names('intern');
+            Route::resource('task', TaskController::class)->names('task');
 //            Route::get('tasks', [TaskController::class, 'index'])->name('curator.courses.tasks.index');
 //            Route::get('tasks/edit', [TaskController::class, 'edit'])->name('curator.courses.tasks.edit');
 //            Route::patch('tasks', [TaskController::class, 'update'])->name('curator.courses.tasks.update');
-            Route::get('grades', [GradeController::class, 'index'])->name('curator.courses.grades.index');
+            Route::get('grade', [GradeController::class, 'index'])->name('grade.index');
         });
     });
 });

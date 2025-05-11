@@ -11,14 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tasks_users', function (Blueprint $table) {
+        Schema::create('task_answers', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignId('task_id')->constrained('tasks');
-            $table->foreignId('user_id')->constrained('users');
-            $table->foreignId('task_answer_id')->nullable()->constrained('task_answers');
+            $table->text('answer');
 
             $table->tinyInteger('status')->default(0);
+            $table->tinyInteger('grade');
 
             $table->timestamps();
         });
@@ -29,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('tasks_users');
+        Schema::dropIfExists('task_answers');
     }
 };
