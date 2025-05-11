@@ -13,13 +13,6 @@ interface ChatRepositoryInterface extends AbstractRepositoryInterface
      * @return array
      */
     public function getChatDetails(Chat $chat): array;
-	/**
-	 * @param Chat $chat
-	 * @param string|null $lastMessId
-	 *
-	 * @return LengthAwarePaginator
-	 */
-	public function getMessages(Chat $chat, ?string $lastMessId = null): LengthAwarePaginator;
 
     /**
      * @param Chat $chat

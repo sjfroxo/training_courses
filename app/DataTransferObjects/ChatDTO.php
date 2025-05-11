@@ -22,7 +22,7 @@ class ChatDTO implements ModelDTO
     public function toArray(): array
     {
         return [
-            'name' => $this->title,
+            'title' => $this->title,
         ];
     }
 }
