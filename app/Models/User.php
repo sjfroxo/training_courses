@@ -156,4 +156,12 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
             ->withPivot('user_role_id')
             ->withTimestamps();
     }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function tasks(): BelongsToMany
+    {
+        return $this->belongsToMany(Task::class, 'tasks_users', 'user_id', 'task_id');
+    }
 }

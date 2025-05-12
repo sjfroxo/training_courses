@@ -8,7 +8,7 @@
         @php $required = '<span class="text-danger">*</span>' @endphp
 
         <section class="mt-5">
-            <form action="{{ route('curator.courses.tasks.store') }}" method="POST" class="form-control">
+            <form action="{{ route('curator.course.task.store') }}" method="POST" class="form-control">
                 @csrf
                 <div class="w-25">
                     <label for="name" class="form-label">Название {!! $required !!}</label>
@@ -35,7 +35,7 @@
                 </div>
 
                 <div class="d-flex justify-content-between align-items-center w-50 mt-3">
-                    <a href="{{ route('curator.courses.tasks.index') }}">Отмена</a>
+                    <a href="{{ route('curator.course.task.index') }}">Отмена</a>
                     <button type="submit" class="btn btn-primary">Сохранить</button>
                 </div>
             </form>

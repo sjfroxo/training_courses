@@ -29,6 +29,8 @@ class InternController extends Controller
             return redirect()->route('curator.intern.index');
         }
 
-        return view('curator.intern.show', ['intern' => $intern]);
+        $tasks = $intern->tasks()->get();
+
+        return view('curator.intern.show', ['intern' => $intern, 'tasks' => $tasks]);
     }
 }

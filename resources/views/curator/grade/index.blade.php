@@ -1,18 +1,19 @@
 @extends('layouts.app')
 
 @section('main')
-    @include('components.curator.course-header', ['active' => 'grades'])
+    <section class="w-100">
 
-    <table class="table table-bordered table-striped text-center align-middle mt-5">
-        <thead class="table-light">
-        <tr>
-            <th>Студенты</th>
-            @foreach($answers as $answer)
-                <th>{{ $answer->task->name }}</th>
-            @endforeach
-        </tr>
-        </thead>
-        <tbody>
+        @include('components.curator.course-header', ['active' => 'grades'])
+
+        <table class="table table-bordered table-striped text-center align-middle mt-5">
+            <thead class="table-light">
+            <tr>
+                <th>Студенты</th>
+                <th>Оценка</th>
+                <th>Задание</th>
+            </tr>
+            </thead>
+            <tbody>
             @foreach($answers as $answer)
                 <tr>
                     <td>{{ $answer->user->name }} {{ $answer->user->surname }}</td>
@@ -32,8 +33,10 @@
                             <p class="m-0"><small class="text-danger">Пропущен срок сдачи</small></p>
                         @endif
                     </td>
+                    <td>{{ $answer->task->name }}</td>
                 </tr>
             @endforeach
-        </tbody>
-    </table>
+            </tbody>
+        </table>
+    </section>
 @endsection

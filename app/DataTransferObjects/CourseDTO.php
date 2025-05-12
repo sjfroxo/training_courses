@@ -5,18 +5,18 @@ namespace App\DataTransferObjects;
 use App\Contracts\ModelDTO;
 use App\Http\Requests\CourseRequest;
 
-class CourseDTO implements ModelDTO
+readonly class CourseDTO implements ModelDTO
 {
     /**
      * @param string $title
      * @param string $description
+     * @param string $image_url
      */
     public function __construct(
-        public readonly string $title,
-        public readonly string $description,
-    )
-    {
-    }
+        public string $title,
+        public string $description,
+        public string $image_url
+    ) {}
 
     /**
      * @return array
@@ -26,6 +26,7 @@ class CourseDTO implements ModelDTO
         return [
             'title' => $this->title,
             'description' => $this->description,
+            'image_url' => $this->image_url
         ];
     }
 }

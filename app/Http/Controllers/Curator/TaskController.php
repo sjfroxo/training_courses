@@ -75,7 +75,7 @@ class TaskController extends Controller
             $task->users()->attach($request->input('users'));
         }
 
-        return redirect()->route('curator.courses.tasks.index')->with('success', 'Задание успешно создано!');
+        return redirect()->route('curator.course.task.index')->with('success', 'Задание успешно создано!');
     }
 
     /**
@@ -115,6 +115,6 @@ class TaskController extends Controller
 
         $this->taskService->update($task, $taskDTO);
 
-        return redirect()->route('curator.courses.tasks.index')->with('success', 'Задача успешно обновлена!');
+        return redirect()->route('curator.course.task.index')->with('success', 'Задача успешно обновлена!');
     }
 }

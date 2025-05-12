@@ -28,9 +28,7 @@ class CourseController extends Controller
         protected CourseService              $service,
         protected UserCourseService          $userCourseService,
         protected CalculateAverageMarkAction $action,
-    )
-    {
-    }
+    ) {}
 
     /**
      * @return View
@@ -90,9 +88,14 @@ class CourseController extends Controller
 
         $validated = $request->validated();
 
+        if ($request->hasFile('avatar')) {
+            $path = $request->file('avatar')->store('course_avatars');
+        }
+
         $dto = new CourseDTO(
             $validated['title'],
             $validated['description'],
+            $path ?? null
         );
 
         $this->service->create($dto);

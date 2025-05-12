@@ -8,6 +8,6 @@ class CourseController extends Controller
 {
     public function index()
     {
-        return view('curator.courses.index');
+        return view('curator.courses.index', ['title' => 'Курсы']);
     }
 }

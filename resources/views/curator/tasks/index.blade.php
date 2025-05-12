@@ -50,7 +50,11 @@
                                 </form>
                             </div>
                         </div>
-                        <p>{{ $task->deadline_formatted }}</p>
+                        <p
+                            {{ \Carbon\Carbon::createFromDate($task->deadline)->lessThan(now()) ? 'class=text-danger' : '' }}
+                        >
+                            {{ $task->deadline_formatted }}
+                        </p>
                     </li>
                 @empty
                     <h1 class="alert-heading">У курса ещё нет практикантов!</h1>
