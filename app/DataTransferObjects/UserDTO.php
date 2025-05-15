@@ -7,13 +7,15 @@ use App\Http\Requests\UserRequest;
 
 class UserDTO implements ModelDTO
 {
-	/**
-	 * @param string $surname
-	 * @param string $name
-	 */
+    /**
+     * @param string $name
+     * @param string $surname
+     * @param string $image_path
+     */
 	public function __construct(
 		public readonly string $name,
 		public readonly string $surname,
+		public readonly string $image_path,
 	) {}
 
 	/**
@@ -24,6 +26,7 @@ class UserDTO implements ModelDTO
 		return [
 			'name' => $this->name,
 			'surname' => $this->surname,
+			'image_path' => $this->image_path,
 		];
 	}
 }

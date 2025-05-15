@@ -16,6 +16,7 @@ class UserRequest extends FormRequest
 		return [
 			'name' => ['required', 'string', 'between:2,255'],
 			'surname' => ['required', 'string', 'between:2,255'],
+            'avatar' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg']
 		];
 	}
 
@@ -43,6 +44,7 @@ class UserRequest extends FormRequest
 			'password.min' => 'Поле "Пароль" должно содержать не менее 8 символов.',
 			'user_role_id.required' => 'Поле "Роль пользователя" обязательно для заполнения.',
 			'user_role_id.exists' => 'Выбранная роль пользователя не существует.',
+			'avatar.mimes' => 'Изображение должно быть следующих типов: jpeg, png, jpg, gif, svg.',
 		];
 	}
 }

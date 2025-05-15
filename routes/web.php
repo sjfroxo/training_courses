@@ -135,9 +135,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
     Route::prefix('account-details')->group(function () {
-        Route::get('/{id}', [UserController::class, 'show'])->name("account.show");
-        Route::get('/{id}/edit', [UserController::class, 'edit'])->name("account.edit");
-        Route::patch('/{id}', [UserController::class, 'update'])->name("account.update");
+        Route::get('', [UserController::class, 'show'])->name("account.show");
+        Route::get('/edit', [UserController::class, 'edit'])->name("account.edit");
+        Route::patch('', [UserController::class, 'update'])->name("account.update");
     });
 
     Route::prefix('notifications')->group(function () {

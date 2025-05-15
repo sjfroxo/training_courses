@@ -23,6 +23,11 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
     protected $table = 'users';
 
     /**
+     * @var string
+     */
+    public static string $defaultManImage = 'default_man_avatar.png';
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
@@ -35,7 +40,8 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
         'user_role_id',
         'google_id',
         'email_verified_at',
-        'remember_token'
+        'remember_token',
+        'image_path'
     ];
 
     /**

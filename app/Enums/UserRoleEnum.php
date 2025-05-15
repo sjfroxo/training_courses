@@ -27,4 +27,15 @@ enum UserRoleEnum: int
             self::DECLINED => 'Отказано в доступе',
         };
     }
+
+    public function titleEn(): string
+    {
+        return match ($this) {
+            self::UNVERIFIED => 'unverified',
+            self::USER => 'user',
+            self::CURATOR => 'curator',
+            self::ADMIN => 'admin',
+            self::DECLINED => 'declined',
+        };
+    }
 }
