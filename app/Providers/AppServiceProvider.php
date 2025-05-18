@@ -61,7 +61,7 @@ class AppServiceProvider extends ServiceProvider
     {
         Paginator::useBootstrapFive();
         View::composer('layouts.navigation', function ($view) {
-            $view->with('courses', auth()->user()->courses());
+            $view->with('courses', auth()->user()->courses()->get());
         });
 
         VerifyEmail::toMailUsing(function (object $notifiable, string $url) {

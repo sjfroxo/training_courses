@@ -21,6 +21,15 @@ abstract class CoreRepository extends Repository implements CoreRepositoryInterf
 		parent::__construct($modelClass);
 	}
 
+    public function filter($query)
+    {
+        if (method_exists($this->model, 'filter')) {
+            $this->model->filter();
+        }
+
+        return $query;
+    }
+
 	/**
 	 * @return Collection
 	 */

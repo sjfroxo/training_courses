@@ -23,6 +23,11 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
     protected $table = 'users';
 
     /**
+     * @var string
+     */
+    public static string $defaultManImage = 'default_man_avatar.png';
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
@@ -35,7 +40,8 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
         'user_role_id',
         'google_id',
         'email_verified_at',
-        'remember_token'
+        'remember_token',
+        'image_path'
     ];
 
     /**
@@ -155,5 +161,13 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
         return $this->belongsToMany(StudentsClass::class, 'students_classes_users', 'user_id', 'students_class_id')
             ->withPivot('user_role_id')
             ->withTimestamps();
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function tasks(): BelongsToMany
+    {
+        return $this->belongsToMany(Task::class, 'tasks_users', 'user_id', 'task_id');
     }
 }

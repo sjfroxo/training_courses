@@ -16,6 +16,7 @@ class CourseRequest extends FormRequest
         return [
             'title' => ['required', 'string', 'between:3,255'],
             'description' => ['required', 'string'],
+            'avatar' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg']
         ];
     }
 
@@ -32,6 +33,7 @@ class CourseRequest extends FormRequest
             'title.max' => 'Поле "Название" не должно превышать 255 символов.',
             'description.required' => 'Поле "Описание" обязательно для заполнения.',
             'description.string' => 'Поле "Описание" должно быть строкой.',
+            'avatar.mimes' => 'Поле "Аватар" должно быть следующих типов: jpeg,png,jpg,gif,svg'
         ];
     }
 }

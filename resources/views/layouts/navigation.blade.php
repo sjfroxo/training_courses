@@ -69,10 +69,9 @@
 
                 @elseif(auth()->user()->isCurator())
                     <h5>Преподавание</h5>
-                    <li class="nav-item"><a class="nav-link" href="{{ route('curator.courses.index') }}">Курсы</a>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('curator.course.index') }}">Курсы</a>
                     </li>
-                    <li class="nav-item"><a class="nav-link" href="{{ route('courses.create') }}">Создать
-                            задание</a>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('curator.course.task.index') }}">Задания</a>
                     </li>
                     <li class="nav-item"><a class="nav-link" href="{{ route('notifications') }}">Уведомления</a>
                     </li>
@@ -89,7 +88,7 @@
                            role="button">
                             Курсы
                         </a>
-                        @if($courses->count() > 0)
+                        @if($courses->isNotEmpty())
                             <a class="nav-link dropdown-toggle d-flex align-items-center"
                                href="{{ route('courses') }}"
                                id="coursesDropdown"
@@ -107,7 +106,7 @@
                                     </li>
                                 @endforeach
                             </ul>
-                        @elseif ($courses = 0)
+                        @elseif ($courses->isEmpty())
                             <p></p>
                         @endif
                     </li>
@@ -132,7 +131,7 @@
 
     <div class="bottom-section mt-4">
         <div style="display: flex; align-items: center;">
-            <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Admin" class="rounded-circle" width="50">
+            <img src="{{ getUserImage() }}" alt="Admin" class="rounded-circle" width="50">
             <a class="nav-link dropdown-toggle"
                style="margin-left: 10px;"
                href="#"
@@ -151,7 +150,7 @@
             @endguest
             @auth
                 <ul class="dropdown-menu" aria-labelledby="profileDropdown">
-                    <li><a class="dropdown-item" href="{{ route('account.show', ['id' => auth()->id()]) }}">Личный
+                    <li><a class="dropdown-item" href="{{ route('account.show') }}">Личный
                             кабинет</a></li>
                     <li><a class="dropdown-item" href="{{ route('logout') }}">Выйти</a></li>
                 </ul>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\DataTransferObjects\UserDTO;
+use App\Enums\UserRoleEnum;
 use App\Http\Requests\UserRequest;
 use App\Services\UserService;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -23,53 +24,48 @@ class UserController extends Controller
 	{}
 
 	/**
-	 * @param string $id
-	 *
 	 * @return View
 	 */
-	public function show(string $id): View
+	public function show(): View
 	{
-		$user = $this->service->getUserProfile($id);
+        $user = auth()->user();
+        $user->user_role = UserRoleEnum::tryFrom($user->user_role_id)->titleEn();
 
 		return view('account', ['user' => $user]);
 	}
 
 	/**
-	 * @param string $id
-	 *
 	 * @return View
 	 */
-	public function edit(string $id): View
+	public function edit(): View
 	{
-		$user = $this->service->findById($id);
-
-		return view('account-edit', ['user' => $user]);
+		return view('account-edit', ['user' => auth()->user()]);
 	}
 
 	/**
 	 * @param UserRequest $request
-	 * @param string $id
 	 *
 	 * @return RedirectResponse
 	 * @throws AuthorizationException
 	 */
-	public function update(UserRequest $request, string $id): RedirectResponse
+	public function update(UserRequest $request): RedirectResponse
 	{
-        $user = $this->service->findById($id);
+        $user = auth()->user();
 
-        $this->authorize('update', $user);
+        $data = $request->validated();
 
-        $entity = $this->service->findById($id);
-
-        $validated = $request->validated();
+        if ($request->hasFile('avatar')) {
+            $path = $request->file('avatar')->store('profile_avatars');
+        }
 
         $dto = new UserDTO(
-            $validated['name'],
-            $validated['surname'],
+            data_get($data, 'name'),
+            data_get($data, 'surname'),
+            $path ?? null
         );
 
-        $this->service->update($entity, $dto);
+        $this->service->update($user, $dto);
 
-		return to_route('account.show', ['id' => $id]);
+		return to_route('account.show', ['id' => $user->id]);
 	}
 }
