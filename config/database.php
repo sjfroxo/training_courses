@@ -34,7 +34,7 @@ return [
         'sqlite' => [
             'driver' => 'sqlite',
 //            'url' => env('DB_URL'),
-            'database' => env('DB_DATABASE', ('/var/www/training-courses/database.sqlite')),
+            'database' => env('DB_DATABASE', ('/var/www/training_courses/database.sqlite')),
             'prefix' => '',
             'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true),
         ],

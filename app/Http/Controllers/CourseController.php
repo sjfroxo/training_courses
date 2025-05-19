@@ -150,9 +150,14 @@ class CourseController extends Controller
 
         $validated = $request->validated();
 
+        if ($request->hasFile('avatar')) {
+            $path = $request->file('avatar')->store('course_avatars');
+        }
+
         $dto = new CourseDTO(
             $validated['title'],
             $validated['description'],
+            $path ?? null,
         );
 
         $this->service->update($course, $dto);

@@ -3,7 +3,7 @@
 @section('main')
     <div class="container">
         <h1>Редактировать курс</h1>
-        <form action="{{route('courses.update', ['slug' => $course->slug])}}" method="POST">
+        <form action="{{route('courses.update', ['slug' => $course->slug])}}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PATCH')
             <div class="mb-3">
@@ -22,8 +22,24 @@
                 <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
             </div>
+            <div class="mb-3">
+                <label for="avatar" class="form-label">Аватар курса</label>
+                <input type="file" class="form-control @error('avatar') is-invalid @enderror" id="avatar" name="avatar" accept="image/*">
+                @error('avatar')
+                <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+                @if($course->image_url)
+                    <div class="mt-2">
+                        <p>Текущее изображение:</p>
+                        <img src="{{ asset('storage/' . $course->image_url) }}" alt="{{ $course->title }}"
+                             style="max-width: 150px; height: auto; border-radius: 5px;">
+                    </div>
+                @else
+                    <p class="text-muted mt-2">Изображение отсутствует</p>
+                @endif
+            </div>
             <button type="submit" class="btn btn-primary">Обновить</button>
         </form>
     </div>
 
-@endsection('main')
+@endsection

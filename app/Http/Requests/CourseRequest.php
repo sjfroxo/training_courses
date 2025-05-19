@@ -16,7 +16,7 @@ class CourseRequest extends FormRequest
         return [
             'title' => ['required', 'string', 'between:3,255'],
             'description' => ['required', 'string'],
-            'avatar' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg']
+            'avatar' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg,webp', 'max:8048'],
         ];
     }
 
