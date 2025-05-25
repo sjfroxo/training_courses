@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Curator;
 
 use App\DataTransferObjects\TaskDTO;
 use App\Models\Task;
+use App\Models\TaskUser;
 use App\Services\TaskService;
 use App\Services\UserService;
 use Illuminate\Contracts\View\Factory;
@@ -29,8 +30,12 @@ class TaskController extends Controller
      */
     public function index()
     {
+        if (! $course = auth()->user()->courses()->first()) {
+            return redirect()->back();
+        }
+
         $tasks = $this->taskService->where([
-            'course_id' => auth()->user()->courses()->first()->id
+            'course_id' => $course->id
         ]);
 
         return view('curator.tasks.index', [
@@ -50,6 +55,10 @@ class TaskController extends Controller
         ]);
     }
 
+    /**
+     * @param int $taskId
+     * @return View|RedirectResponse
+     */
     public function show(int $taskId)
     {
         if (! $task = $this->taskService->findById($taskId)) {
@@ -57,7 +66,7 @@ class TaskController extends Controller
                 ->withErrors(['no_task' => 'Задачи с данным ID не существует!']);
         }
 
-
+        return view('curator.tasks.show', ['task' => $task, 'title' => 'Задание ' . $task->title]);
     }
 
     public function store(Request $request)
@@ -116,5 +125,29 @@ class TaskController extends Controller
         $this->taskService->update($task, $taskDTO);
 
         return redirect()->route('curator.course.task.index')->with('success', 'Задача успешно обновлена!');
+    }
+
+    public function delete(int $id): RedirectResponse
+    {
+        $this->taskService->findById($id)->delete();
+
+        return redirect()->route('curator.course.task.index');
+    }
+
+    /**
+     * @param int $id
+     * @return RedirectResponse
+     */
+    public function destroy(int $id): RedirectResponse
+    {
+        $task = $this->taskService->findById($id);
+
+        $task->users()->detach();
+
+        TaskUser::query()->where('task_id', $task->id)->delete();
+
+        $task->delete();
+
+        return redirect()->route('curator.course.task.index')->with(['success' => 'Задача успешно удалена вместе с решениями!']);
     }
 }

@@ -53,11 +53,14 @@ class UserRepository extends CoreRepository implements RepositoryInterface
     /**
      * @param int $courseId
      * @param UserRoleEnum|null $userRoleEnum
+     * @param array $filters
      * @return Collection
      */
-    public function getCourseUsers(int $courseId, UserRoleEnum $userRoleEnum = null): Collection
+    public function getCourseUsers(int $courseId, UserRoleEnum $userRoleEnum = null, array $filters = []): Collection
     {
-        return $this->model->query()
+        $query = $this->filter($filters);
+
+        return $query
             ->whereHas('courses', fn ($query) => $query->where('courses.id', '=', $courseId))
             ->when($userRoleEnum, fn ($query) => $query->where('user_role_id', '=', $userRoleEnum->value))
             ->get();

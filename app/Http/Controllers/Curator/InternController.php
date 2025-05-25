@@ -12,9 +12,13 @@ class InternController extends Controller
 
     public function index(Request $request)
     {
-//        $interns = $this->userService->filter()->getCourseInterns(
+        if (! $course = auth()->user()->courses()->first()) {
+            return redirect()->back()->with(['error' => 'У вас, как куратора, ещё нет курсов!']);
+        }
+
         $interns = $this->userService->getCourseInterns(
-            auth()->user()->courses()->first()->id
+            $course->id,
+            filters: ['name', 'like', '%' . $request->input('intern') . '%']
         );
 
         return view('curator.intern.index', [

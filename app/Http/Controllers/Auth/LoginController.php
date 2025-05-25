@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\DataTransferObjects\LoginUserDTO;
+use App\Enums\UserRoleEnum;
 use App\Http\Requests\LoginUserRequest;
 use App\Services\AuthService;
 use Illuminate\Http\RedirectResponse;
@@ -42,6 +43,19 @@ class LoginController extends Controller
         if (Auth::attempt($credentials, $remember)) {
             $this->service->regenerateSession($request);
 
+            switch (UserRoleEnum::tryFrom(auth()->user()->user_role_id)) {
+                case UserRoleEnum::USER:
+                    return to_route('courses');
+                case UserRoleEnum::UNVERIFIED:
+                    return redirect()->back();
+                case UserRoleEnum::CURATOR:
+                    return to_route('curator.course.index');
+                case UserRoleEnum::ADMIN:
+                    throw new \Exception('To be implemented');
+                    break;
+                case UserRoleEnum::DECLINED:
+                    throw new \Exception('To be implemented');
+            }
             return to_route('courses');
         }
 

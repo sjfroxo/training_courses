@@ -46,10 +46,11 @@ class UserService extends CoreService
 
     /**
      * @param int $courseId
+     * @param array $filters
      * @return Collection
      */
-    public function getCourseInterns(int $courseId): Collection
+    public function getCourseInterns(int $courseId, array $filters = []): Collection
     {
-        return $this->repository->getCourseUsers($courseId, UserRoleEnum::USER);
+        return $this->repository->getCourseUsers($courseId, UserRoleEnum::USER, $filters);
     }
 }

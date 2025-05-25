@@ -6,8 +6,9 @@
         @include('components.curator.course-header', ['active' => 'interns'])
 
         <section>
-            <form action="{{ route('curator.course.intern.index') }}">
-                <input class="form-control w-50 mt-5" name="intern" type="text" placeholder="Поиск практикантов">
+            <form action="{{ route('curator.course.intern.index') }}" class="w-25 mb-5">
+                <input class="form-control mt-5" name="intern" type="text" placeholder="Поиск практикантов">
+                <a class="btn float-end" href="{{ route('curator.course.intern.index') }}">Сбросить фильтры</a>
             </form>
 
             <ul class="list-group mt-3 w-25">
@@ -30,7 +31,7 @@
                         </a>
                     </li>
                 @empty
-                    <h1 class="alert-heading">У курса ещё нет практикантов!</h1>
+                    <h1 class="alert-heading">Практиканты отсутствуют!</h1>
                 @endforelse
             </ul>
         </section>

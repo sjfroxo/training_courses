@@ -10,12 +10,12 @@ class UserDTO implements ModelDTO
     /**
      * @param string $name
      * @param string $surname
-     * @param string $image_path
+     * @param string|null $image_path
      */
 	public function __construct(
 		public readonly string $name,
 		public readonly string $surname,
-		public readonly string $image_path,
+		public readonly string|null $image_path,
 	) {}
 
 	/**
@@ -23,10 +23,9 @@ class UserDTO implements ModelDTO
 	 */
 	public function toArray(): array
 	{
-		return [
+		return array_merge([
 			'name' => $this->name,
 			'surname' => $this->surname,
-			'image_path' => $this->image_path,
-		];
+        ], $this->image_path ? ['image_path' => $this->image_path]  : []);
 	}
 }

@@ -8,6 +8,8 @@ class CourseController extends Controller
 {
     public function index()
     {
-        return view('curator.courses.index', ['title' => 'Курсы']);
+        $courses = auth()->user()->courses()->get();
+
+        return view('curator.courses.index', ['title' => 'Курсы', 'courses' => $courses]);
     }
 }

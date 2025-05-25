@@ -210,4 +210,29 @@ abstract class AbstractRepository implements AbstractRepositoryInterface
     {
         $this->params[$key] = $value;
     }
+
+    /**
+     * @param array $wheres
+     * @return Builder
+     */
+    public function filter(array ...$wheres): Builder
+    {
+        $query = $this->model->newQuery();
+
+        foreach ($wheres as $where) {
+            if (empty($where[count($where) - 1])) {
+                continue;
+            }
+
+            if (count($where) == 2) {
+                $query->where($where[0], $where[1]);
+
+                continue;
+            }
+
+            $query->where($where[0], $where[1], $where[2]);
+        }
+
+        return $query;
+    }
 }
