@@ -131,7 +131,7 @@
 
     <div class="bottom-section mt-4">
         <div style="display: flex; align-items: center;">
-            <img src="{{ getUserImage() }}" alt="Admin" class="rounded-circle" width="50">
+            <img src="{{ getUserImage() }}" alt="Admin" class="rounded-circle" width="50" height="50">
             <a class="nav-link dropdown-toggle"
                style="margin-left: 10px;"
                href="#"

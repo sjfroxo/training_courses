@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('main')
-    <div class="container d-flex flex-column" style="height: 100%; width: 60%; background-color: transparent; margin-top: 5%;">
+    <div class="container d-flex" style="height: 100%; background-color: transparent; margin-top: 5%;">
         <div class="content flex-grow-1">
             <div class="card-header rounded-top-4" style="background-color: transparent; border: none;"></div>
             <div class="card-body" style="margin: 0 auto; background-color: transparent;">
@@ -11,11 +11,11 @@
                         <x-add-button-invert route="{{ route('courses.create') }}"/>
                     </div>
                 @endcan
-                <div class="d-flex flex-column justify-content-center align-items-center">
+                <div class="d-flex justify-content-around align-items-center">
                     @if($courses->total() > 0)
                         @foreach($courses as $course)
                             @can('view', $course)
-                                <div class="mb-4" style="width: 100%; background-color: transparent;">
+                                <div class="mb-4 col-md-4 p-2" style="background-color: transparent;">
                                     @include('components.course-card', [
                                         'title' => $course->title,
                                         'description' => $course->description,

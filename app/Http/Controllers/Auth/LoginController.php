@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\DataTransferObjects\LoginUserDTO;
 use App\Enums\UserRoleEnum;
 use App\Http\Requests\LoginUserRequest;
+use App\Models\User;
 use App\Services\AuthService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
