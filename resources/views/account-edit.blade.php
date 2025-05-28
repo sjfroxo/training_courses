@@ -26,8 +26,8 @@
                 <input type="text" class="form-control" id="surname" name="surname" placeholder="Введите фамилию"
                        value="{{$user->surname}}">
             </div>
-            <button type="submit" class="btn btn-outline-primary">Подтвердить</button>
-            <button type="button" class="btn btn-outline-secondary">Отменить</button>
+            <button type="submit" class="btn btn-primary">Подтвердить</button>
+            <button type="button" class="btn btn-elprimary">Отменить</button>
         </form>
         <script>
             document.addEventListener('DOMContentLoaded', function () {
