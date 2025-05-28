@@ -11,7 +11,7 @@
                         <x-add-button-invert route="{{ route('courses.create') }}"/>
                     </div>
                 @endcan
-                <div class="d-flex justify-content-around align-items-center">
+                <div class="d-flex align-items-center">
                     @if($courses->total() > 0)
                         @foreach($courses as $course)
                             @can('view', $course)

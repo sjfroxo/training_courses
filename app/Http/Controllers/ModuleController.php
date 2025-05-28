@@ -13,6 +13,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Controller;
+use Throwable;
 
 class ModuleController extends Controller
 {
@@ -27,23 +28,37 @@ class ModuleController extends Controller
 	)
 	{}
 
-	/**
-	 * @param string $slug
-	 *
-	 * @return View
-	 * @throws AuthorizationException
-	 */
-	public function show(string $slug): View
-	{
-		$module = $this->service->findBySlug($slug);
+    /**
+     * @param Module $module
+     * @param ModuleRequest $request
+     * @return string
+     * @throws Throwable
+     */
+    public function show(Module $module, ModuleRequest $request)
+    {
+        // обязательно загрузили
+        $module->load(['moduleExams', 'comments.user', 'course']);
 
-		$this->authorize('view', $module);
+        if ($request->ajax()) {
+            return view('show-module', compact('module'))->render();
+        }
 
-		return view('show-module', [
-			'module' => $module,
-			'comments' => $module->moduleComments
-		]);
-	}
+        return redirect()->route('courses.show', ['course' => $module->course->slug]);
+    }
+
+
+
+    /**
+     * @throws Throwable
+     */
+    public function content(Module $module)
+    {
+        $module->load(['moduleExams', 'comments.user']);
+
+        return view('show-module', [
+            'module' => $module
+        ])->render();
+    }
 
 	/**
 	 * @return View

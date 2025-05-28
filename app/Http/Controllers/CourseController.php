@@ -73,6 +73,8 @@ class CourseController extends Controller
 
         $this->authorize('view', $course);
 
+        view()->share('course', $course);
+
         return view('show-courses', ['course' => $course, 'progress' => $progress]);
     }
 
@@ -148,15 +150,17 @@ class CourseController extends Controller
 
         $this->authorize('update', $course);
 
-        $validated = $request->validated();
+        $data = $request->validated();
 
         if ($request->hasFile('avatar')) {
             $path = $request->file('avatar')->store('course_avatars');
         }
 
+        $path = $path ?? $course->image_url;
+
         $dto = new CourseDTO(
-            $validated['title'],
-            $validated['description'],
+            data_get($data, 'title'),
+            data_get($data, 'description'),
             $path ?? null,
         );
 

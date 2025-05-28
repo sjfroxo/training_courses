@@ -58,6 +58,8 @@ class UserController extends Controller
             $path = $request->file('avatar')->store('profile_avatars');
         }
 
+        $path = $path ?? $user->image_path;
+
         $dto = new UserDTO(
             data_get($data, 'name'),
             data_get($data, 'surname'),

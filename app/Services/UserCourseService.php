@@ -28,6 +28,10 @@ class UserCourseService extends CoreService
 
         $countDoneUserCourses = $this->repository->getCurrentUserCourses();
 
+        if ($totalCountCourses == 0) {
+            return '0';
+        }
+
         return number_format(($countDoneUserCourses * 100 / $totalCountCourses), 1);
     }
 
