@@ -31,23 +31,23 @@
                                 style="max-height: 300px; overflow-y: auto;"
                                 aria-labelledby="coursesDropdown">
 
-                                @if($courses->count() > 0)
-                                    @foreach($courses as $course)
-                                        <li>
-                                            <div class="d-flex align-items-center m-2">
-                                                <img src="{{ asset($course->image_url) }}" alt="{{ $course->title }}"
-                                                     style="width: 20px; height: 20px; border-radius: 5px;">
-                                                <a class="dropdown-item text-truncate {{ request()->is('courses/'.$course->slug) ? 'active' : '' }}"
-                                                   href="{{ route('courses.show', ['slug' => $course->slug]) }}"
-                                                   title="{{ $course->title }}">
-                                                    {{ $course->title }}
-                                                </a>
-                                            </div>
-                                        </li>
-                                    @endforeach
-                                @else
-                                    <li><span class="dropdown-item text-muted">Нет курсов</span></li>
-                                @endif
+                                {{--                                @if(!\PHPUnit\Framework\isEmpty($courses))--}}
+                                @foreach($courses as $course)
+                                    <li>
+                                        <div class="d-flex align-items-center m-2">
+                                            <img src="{{ asset($course->image_url) }}" alt="{{ $course->title }}"
+                                                 style="width: 20px; height: 20px; border-radius: 5px;">
+                                            <a class="dropdown-item text-truncate {{ request()->is('courses/'.$course->slug) ? 'active' : '' }}"
+                                               href="{{ route('courses.show', ['slug' => $course->slug]) }}"
+                                               title="{{ $course->title }}">
+                                                {{ $course->title }}
+                                            </a>
+                                        </div>
+                                    </li>
+                                @endforeach
+                                {{--                                @else--}}
+                                {{--                                    <li><span class="dropdown-item text-muted">Нет курсов</span></li>--}}
+                                {{--                                @endif--}}
                             </ul>
                         </li>
 
@@ -81,49 +81,52 @@
                     </li>
 
                 @elseif(auth()->user()->isUser())
-                    <h5>Обучение</h5>
-                    <li class="nav-item dropdown d-flex">
-                        <a class="nav-link d-flex align-items-center" style="margin-right: 5px;"
-                           href="{{ route('courses') }}" id="coursesDropdown"
-                           role="button">
-                            Курсы
-                        </a>
-                        @if($courses->isNotEmpty())
-                            <a class="nav-link dropdown-toggle d-flex align-items-center"
-                               href="{{ route('courses') }}"
-                               id="coursesDropdown"
-                               role="button" data-bs-toggle="dropdown" aria-expanded="false"></a>
-                            <ul class="dropdown-menu w-100 border-0 shadow-none"
-                                style="max-height: 300px; overflow-y: auto;"
-                                aria-labelledby="coursesDropdown">
-                                @foreach($courses as $course)
-                                    <li>
-                                        <a class="dropdown-item text-truncate"
-                                           href="{{ route('userStudyMain.show', ['id' => $course->id]) }}"
-                                           title="{{ $course->title }}">
-                                            {{ $course->title }}
-                                        </a>
-                                    </li>
-                                @endforeach
-                            </ul>
-                        @elseif ($courses->isEmpty())
-                            <p></p>
-                        @endif
-                    </li>
+                    @if(request()->routeIs('courses.show'))
+                        {{ $course->title }}
+                        <a href="{{ route('userStudyMain.show', ['id' => $course->id]) }}" class="btn btn-elprimary">< Вернуться к курсу</a>
+                    @else
+                        <h5>Обучение</h5>
+                        <li class="nav-item dropdown d-flex">
+                            <a class="nav-link d-flex align-items-center" style="margin-right: 5px;"
+                               href="{{ route('courses') }}" id="coursesDropdown"
+                               role="button">
+                                Курсы
+                            </a>
+                            @if($courses->isNotEmpty())
+                                <a class="nav-link dropdown-toggle d-flex align-items-center"
+                                   href="{{ route('courses') }}"
+                                   id="coursesDropdown"
+                                   role="button" data-bs-toggle="dropdown" aria-expanded="false"></a>
+                                <ul class="dropdown-menu w-100 border-0 shadow-none"
+                                    style="max-height: 300px; overflow-y: auto;"
+                                    aria-labelledby="coursesDropdown">
+                                    @foreach($courses as $course)
+                                        <li>
+                                            <a class="dropdown-item text-truncate"
+                                               href="{{ route('userStudyMain.show', ['id' => $course->id]) }}"
+                                               title="{{ $course->title }}">
+                                                {{ $course->title }}
+                                            </a>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            @elseif ($courses->isEmpty())
+                                <p></p>
+                            @endif
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-truncate" href="{{ route('notifications') }}">Уведомления</a>
+                        </li>
 
+                        <h5>Общение</h5>
+                        <li class="nav-item">
+                            <a class="nav-link text-truncate" href="{{ route('chats.index') }}">Чат</a>
+                        </li>
+                    @endif
                     {{--                    <li class="nav-item">--}}
                     {{--                        <a class="nav-link text-truncate"--}}
                     {{--                           href="{{ route('userStudyTasks.show', ['id' => $course->id]) }}">Задания</a>--}}
                     {{--                    </li>--}}
-
-                    <li class="nav-item">
-                        <a class="nav-link text-truncate" href="{{ route('notifications') }}">Уведомления</a>
-                    </li>
-
-                    <h5>Общение</h5>
-                    <li class="nav-item">
-                        <a class="nav-link text-truncate" href="{{ route('chats.index') }}">Чат</a>
-                    </li>
                 @endif
             @endauth
         </ul>
