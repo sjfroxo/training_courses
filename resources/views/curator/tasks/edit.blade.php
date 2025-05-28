@@ -6,7 +6,7 @@
         @include('components.curator.course-header', ['active' => 'tasks'])
 
         <section class="mt-5">
-            <form method="POST" action="{{ route('curator.courses.tasks.update', $task->id) }}">
+            <form method="POST" action="{{ route('curator.course.task.update', $task->id) }}">
                 @csrf
                 @method('PUT')
 
