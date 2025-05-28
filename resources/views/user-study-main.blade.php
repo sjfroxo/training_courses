@@ -26,7 +26,13 @@
                     <div class="row g-3">
                         <div class="col-md-6">
                             <div class="card p-3" style="border: none;">
-                                <h5 class="card-title">{{ $course->title ?? 'Не указано' }}</h5>
+                                <div class="d-flex align-items-center mb-2">
+                                    <img
+                                        src="{{ $course->image_url ? asset('storage/' . $course->image_url) : asset('images/default_course.jpg') }}"
+                                        alt="{{ $course->title }}"
+                                        style="width: 40px; height: 40px; object-fit: cover; margin-right: 10px; border-radius: 10px;">
+                                    <h5 class="card-title mb-0">{{ $course->title ?? 'Не указано' }}</h5>
+                                </div>
                                 <a
                                     type="button"
                                     class="btn btn-primary"
@@ -41,8 +47,12 @@
                         <div class="col-md-6">
                             <div class="card p-3" style="border: none;">
                                 <h5 class="card-title">Куратор</h5>
-                                <p class="card-text">{{ $curator ? $curator->name : 'Куратор не назначен' }}</p>
-                                <button class="btn btn-elprimary" style="width: 40%;">Написать сообщение</button>
+                                <p class="card-text">{{ $curator ? $curator->name . ' ' . $curator->surname : 'Куратор не назначен' }}</p>
+                                @if ($chat)
+                                    <a href="{{ route('chats.index') }}?chat={{ $chat->slug }}" class="btn btn-elprimary" style="width: 40%;">Написать сообщение</a>
+                                @else
+                                    <p class="text-muted">Чат недоступен</p>
+                                @endif
                             </div>
                         </div>
                     </div>
