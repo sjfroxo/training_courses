@@ -27,12 +27,29 @@ class ChatController extends Controller
     {
         $user = Auth::user();
         $chats = $this->service->getChats($user->id);
-        $users = $this->userService->getUsers()->where('id', '!=', $user->id); // Исключаем текущего пользователя
+        $users = $this->userService->getUsers()->where('id', '!=', $user->id);
+
+        $selectedChat = null;
+        $messages = collect();
+        if ($slug = request()->query('chat')) {
+            $selectedChat = $this->service->findBySlug($slug);
+            if ($selectedChat && $selectedChat->users()->where('users.id', $user->id)->exists()) {
+                $messages = $selectedChat->chatMessages()
+                    ->with('user')
+                    ->orderBy('created_at', 'asc')
+                    ->take(25)
+                    ->get();
+            } else {
+                $selectedChat = null; // Сбрасываем, если чат не принадлежит пользователю
+            }
+        }
 
         return view('chats.chats', [
             'chats' => $chats,
             'users' => $users,
             'user' => $user,
+            'chat' => $selectedChat,
+            'messages' => $messages,
         ]);
     }
 
@@ -53,36 +70,43 @@ class ChatController extends Controller
     {
         $validated = $request->validate([
             'user_id' => 'required|exists:users,id',
+            'course_id' => 'nullable|exists:courses,id', // Добавляем course_id для чатов, связанных с курсом
         ]);
 
         $currentUser = Auth::user();
         $otherUserId = $validated['user_id'];
+        $courseId = $validated['course_id'] ?? null;
 
         // Проверяем, существует ли уже чат между этими пользователями
-        $existingChat = $this->service->getExistingChat($currentUser->id, $otherUserId);
+        $existingChat = $this->service->getExistingChat($currentUser->id, $otherUserId, $courseId);
 
         if ($existingChat) {
             return redirect()
-                ->route('chats.index')
+                ->route('chats.index', ['chat' => $existingChat->slug])
                 ->with('warning', 'Чат уже существует.');
         }
 
-        // Определяем, является ли это чатом с самим собой
+        // Определяем заголовок чата
         $isSelfChat = $currentUser->id === $otherUserId;
         $title = $isSelfChat ? 'Избранное' : $this->userService->getUserName($otherUserId);
+        if ($courseId) {
+            $course = \App\Models\Course::find($courseId);
+            $title = 'Чат для курса ' . ($course->title ?? 'Курс ' . $courseId) . ' с ' . $this->userService->getUserName($otherUserId);
+        }
         $slug = Str::slug($title) . '-' . Str::random(8);
 
         try {
             $chat = Chat::query()->create([
                 'title' => $title,
                 'slug' => $slug,
+                'course_id' => $courseId, // Сохраняем course_id, если есть
             ]);
 
             // Привязываем пользователей к чату
             $chat->users()->attach([$currentUser->id, $otherUserId]);
 
             return redirect()
-                ->route('chats.index')
+                ->route('chats.index', ['chat' => $chat->slug])
                 ->with('success', 'Чат успешно создан!');
         } catch (Exception $e) {
             return redirect()
