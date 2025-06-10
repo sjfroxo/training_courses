@@ -7,6 +7,35 @@
             @auth
                 @if(auth()->user()->isAdministrator())
                     @if(request()->routeIs('courses.show'))
+                        <div class="mb-3 fw-medium">Курс: {{ $course->title }}</div>
+                        <a href="{{ route('userStudyMain.show', ['id' => $course->id]) }}" class="btn btn-elprimary">< Вернуться к курсу</a>
+                        <div style="display: none">{{ $i = 0 }}</div>
+                        @foreach($course->modules as $module)
+                            <div style="display: none">{{ $ii = 0 }}</div>
+                            <ul class="nav-item" style="list-style: none; padding: 0;">
+                                <li>
+                                    <a href="#"
+                                       class="nav-link module-btn"
+                                       data-module-slug="{{ $module->slug }}"
+                                       style="padding-left: 0;">
+                                        {{ ++$i }}. {{ $module->title }}
+                                    </a>
+                                    @foreach($module->moduleExams as $moduleExam)
+                                        <ul style="list-style: none; padding-left: 20px;">
+                                            <li>
+                                                <a href="{{ route('moduleExams.show', ['moduleExam' => $moduleExam->id]) }}"
+                                                   class="nav-link module-btn"
+                                                   data-module-exam-id="{{ $moduleExam->id }}"
+                                                   style="font-weight: normal;">
+                                                    {{ $i . '.' . ++$ii }}. {{ $moduleExam->name }}
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    @endforeach
+                                </li>
+                            </ul>
+                        @endforeach
+{{--                        @dd($course->modules->pluck('slug'));--}}
 
                     @elseif(request()->routeIs('modules.create'))
                         <p>Текущий маршрут: {{ Route::currentRouteName() }}</p>
@@ -30,8 +59,6 @@
                             <ul class="dropdown-menu w-100 border-0 shadow-none bg-light"
                                 style="max-height: 300px; overflow-y: auto;"
                                 aria-labelledby="coursesDropdown">
-
-                                {{--                                @if(!\PHPUnit\Framework\isEmpty($courses))--}}
                                 @foreach($courses as $course)
                                     <li>
                                         <div class="d-flex align-items-center m-2">
@@ -45,9 +72,6 @@
                                         </div>
                                     </li>
                                 @endforeach
-                                {{--                                @else--}}
-                                {{--                                    <li><span class="dropdown-item text-muted">Нет курсов</span></li>--}}
-                                {{--                                @endif--}}
                             </ul>
                         </li>
 
@@ -83,7 +107,17 @@
                 @elseif(auth()->user()->isUser())
                     @if(request()->routeIs('courses.show'))
                         {{ $course->title }}
-                        <a href="{{ route('userStudyMain.show', ['id' => $course->id]) }}" class="btn btn-elprimary">< Вернуться к курсу</a>
+                        <a href="{{ route('userStudyMain.show', ['id' => $course->id]) }}" class="btn btn-elprimary"><
+                            Вернуться к курсу</a>
+                        @foreach($course->modules as $module)
+                            <li class="nav-item">
+                                <a href="#"
+                                   class="nav-link module-btn"
+                                   data-module-slug="{{ $module->slug }}">
+                                    {{ $module->title }}
+                                </a>
+                            </li>
+                        @endforeach
                     @else
                         <h5>Обучение</h5>
                         <li class="nav-item dropdown d-flex">
@@ -123,10 +157,6 @@
                             <a class="nav-link text-truncate" href="{{ route('chats.index') }}">Чат</a>
                         </li>
                     @endif
-                    {{--                    <li class="nav-item">--}}
-                    {{--                        <a class="nav-link text-truncate"--}}
-                    {{--                           href="{{ route('userStudyTasks.show', ['id' => $course->id]) }}">Задания</a>--}}
-                    {{--                    </li>--}}
                 @endif
             @endauth
         </ul>
