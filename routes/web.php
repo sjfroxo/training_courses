@@ -11,12 +11,8 @@ use App\Http\Controllers\CourseController;
 use App\Http\Controllers\Curator\GradeController;
 use App\Http\Controllers\Curator\InternController;
 use App\Http\Controllers\Curator\TaskController;
-use App\Http\Controllers\ExamUserResponseResultController;
 use App\Http\Controllers\ModuleCommentController;
 use App\Http\Controllers\ModuleController;
-use App\Http\Controllers\ModuleExamAnswerController;
-use App\Http\Controllers\ModuleExamController;
-use App\Http\Controllers\ModuleExamQuestionController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\StudentsClassController;
 use App\Http\Controllers\UserController;
@@ -28,7 +24,8 @@ use App\Http\Controllers\Curator\CourseController as CourseCuratorController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('courses', [CourseController::class, 'index'])->name('courses');
+    Route::get('/', [CourseController::class, 'index'])->name('courses');
+    Route::get('courses', [CourseController::class, 'index'])->name('courses.index');
     Route::prefix('courses')->group(function () {
 
         Route::get('/create', [CourseController::class, 'create'])->name('courses.create');
@@ -81,24 +78,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::delete('/{moduleExam}', [ModuleExamController::class, 'destroy'])->name('moduleExams.destroy');
         Route::get('/{moduleExam}/edit', [ModuleExamController::class, 'edit'])->name('moduleExams.edit');
         Route::patch('/{moduleExam}', [ModuleExamController::class, 'update'])->name('moduleExams.update');
-
         Route::get('/{moduleExam}', [ModuleExamController::class, 'show'])->name('moduleExams.show');
-    });
-
-    Route::prefix('moduleExamQuestions')->group(function () {
-        Route::post('/', [ModuleExamQuestionController::class, 'store'])->name('moduleExamQuestion.store');
-        Route::delete('/{moduleExamQuestion}', [ModuleExamQuestionController::class, 'destroy'])->name('moduleExamQuestion.destroy');
-        Route::patch('/{moduleExamQuestion}', [ModuleExamQuestionController::class, 'update'])->name('moduleExamQuestion.update');
-    });
-
-    Route::prefix('moduleExamAnswers')->group(function () {
-        Route::post('/', [ModuleExamAnswerController::class, 'store'])->name('moduleExamAnswers.store');
-        Route::delete('/{moduleExamAnswer}', [ModuleExamAnswerController::class, 'destroy'])->name('moduleExamAnswers.destroy');
-        Route::patch('/{moduleExamAnswer}', [ModuleExamAnswerController::class, 'update'])->name('moduleExamAnswers.update');
-    });
-
-    Route::prefix('ExamUserResponseResult')->group(function () {
-        Route::post('/', [ExamUserResponseResultController::class, 'store'])->name('examUserResponseResult.store');
     });
 
     Route::prefix('studentsClass')->group(function () {
