@@ -132,19 +132,19 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
             ->withTimestamps();
     }
 
-    public function moduleExams(): BelongsToMany
-    {
-        return $this->belongsToMany(ModuleExam::class, 'exam_user_results', 'user_id', 'module_exam_id')
-            ->withPivot('mark')
-            ->withTimestamps();
-    }
-
-    public function moduleExamAnswers(): BelongsToMany
-    {
-        return $this->belongsToMany(ModuleExamAnswer::class, 'module_exam_user_responses', 'user_id', 'module_exam_answer_id')
-            ->withPivot('module_exam_question_id')
-            ->withTimestamps();
-    }
+//    public function moduleSections(): BelongsToMany
+//    {
+//        return $this->belongsToMany(ModuleSection::class, 'exam_user_results', 'user_id', 'module_exam_id')
+//            ->withPivot('mark')
+//            ->withTimestamps();
+//    }
+//
+//    public function moduleExamAnswers(): BelongsToMany
+//    {
+//        return $this->belongsToMany(ModuleExamAnswer::class, 'module_exam_user_responses', 'user_id', 'module_exam_answer_id')
+//            ->withPivot('module_exam_question_id')
+//            ->withTimestamps();
+//    }
 
     public function moduleComments(): HasMany
     {

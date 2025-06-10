@@ -35,7 +35,6 @@
                                 </li>
                             </ul>
                         @endforeach
-{{--                        @dd($course->modules->pluck('slug'));--}}
 
                     @elseif(request()->routeIs('modules.create'))
                         <p>Текущий маршрут: {{ Route::currentRouteName() }}</p>

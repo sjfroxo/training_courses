@@ -2,7 +2,7 @@
 
 namespace Database\Seeders\CustomSeeder;
 
-use App\Models\ModuleExam;
+use App\Models\ModuleExamTheory;
 use Illuminate\Database\Seeder;
 
 return new class extends Seeder
@@ -14,6 +14,6 @@ return new class extends Seeder
      */
     public function run()
     {
-        ModuleExam::factory(20)->create();
+        ModuleExamTheory::factory(20)->create();
     }
 };

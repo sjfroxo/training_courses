@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('module_exam_theory', function (Blueprint $table) {
+        Schema::create('module_section_steps', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('module_exam_id')->constrained('module_exams')->onDelete('cascade')->onUpdate('cascade');
-            $table->string('content');
-            $table->string('video_url')->nullable();
+            $table->foreignId('module_section_id')->constrained('module_sections')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->string('type');
+            $table->json('content')->nullable();
             $table->timestamps();
         });
     }
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('module_exam_theory');
+        Schema::dropIfExists('module_section_steps');
     }
 };

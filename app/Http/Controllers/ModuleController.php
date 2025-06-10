@@ -7,7 +7,7 @@ use App\Http\Requests\ModuleRequest;
 use App\Models\Course;
 use App\Models\Module;
 use App\Services\CourseService;
-use App\Traits\ModuleService;
+use App\Services\ModuleService;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -29,21 +29,24 @@ class ModuleController extends Controller
 	{}
 
     /**
-     * @param Module $module
-     * @param ModuleRequest $request
+     * @param $slug
      * @return string
      * @throws Throwable
      */
-    public function show(Module $module, ModuleRequest $request)
+    public function show($slug)
     {
-        // обязательно загрузили
-        $module->load(['moduleExams', 'comments.user', 'course']);
-
-        if ($request->ajax()) {
-            return view('show-module', compact('module'))->render();
+        $module = Module::with([
+            'comments',
+            'moduleExams.examTheory',
+            'moduleExams.moduleExamQuestions',
+            'moduleExams.users' => function ($query) {
+                $query->where('user_id', auth()->id());
+            }
+        ])->where('slug', $slug)->firstOrFail();
+        if (request()->ajax()) {
+            return view('show-module', ['module' => $module])->render();
         }
-
-        return redirect()->route('courses.show', ['course' => $module->course->slug]);
+        return view('show-module', compact('module'));
     }
 
 

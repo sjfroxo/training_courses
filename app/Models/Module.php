@@ -36,7 +36,7 @@ class Module extends Model
 	/**
 	 * @return HasMany
 	 */
-	public function moduleComments(): HasMany
+	public function comments(): HasMany
 	{
 		return $this->hasMany(ModuleComment::class, 'module_id');
 	}
@@ -44,9 +44,9 @@ class Module extends Model
 	/**
 	 * @return HasMany
 	 */
-	public function moduleExams(): HasMany
+	public function moduleSections(): HasMany
 	{
-		return $this->hasMany(ModuleExam::class, 'module_id');
+		return $this->hasMany(ModuleSection::class, 'module_id');
 	}
 
 	public function sluggable(): array

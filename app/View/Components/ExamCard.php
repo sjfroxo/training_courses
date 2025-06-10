@@ -2,7 +2,7 @@
 
 namespace App\View\Components;
 
-use App\Models\ModuleExam;
+use App\Models\ModuleExamTheory;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
@@ -13,8 +13,8 @@ class ExamCard extends Component
      * Create a new component instance.
      */
     public function __construct(
-        public ModuleExam $exam,
-        public int $iteration
+        public ModuleExamTheory $exam,
+        public int              $iteration
     )
     {
     }

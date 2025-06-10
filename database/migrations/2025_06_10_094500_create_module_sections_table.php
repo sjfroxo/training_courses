@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('module_id')->constrained('modules')->cascadeOnDelete()->cascadeOnUpdate();
             $table->string('title');
+            $table->json('content')->nullable();
             $table->integer('count_finished_steps')->nullable();
             $table->timestamps();
         });

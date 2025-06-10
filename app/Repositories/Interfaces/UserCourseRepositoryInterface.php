@@ -14,7 +14,7 @@ interface UserCourseRepositoryInterface extends AbstractRepositoryInterface
     /**
      * @return int
      */
-    public function getModuleExams(): int;
+    public function getModuleSections(): int;
 
     /**
      * @return string

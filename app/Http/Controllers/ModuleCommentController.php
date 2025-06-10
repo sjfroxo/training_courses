@@ -6,7 +6,7 @@ use App\DataTransferObjects\ModuleCommentDTO;
 use App\Http\Requests\ModuleCommentRequest;
 use App\Models\ModuleComment;
 use App\Services\ModuleCommentService;
-use App\Traits\ModuleService;
+use App\Services\ModuleService;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;

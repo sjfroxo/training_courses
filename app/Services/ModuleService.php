@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Traits;
+namespace App\Services;
 
 use App\Repositories\ModuleRepository;
-use App\Services\CoreService;
 use Illuminate\Database\Eloquent\Model;
 
 class ModuleService extends CoreService

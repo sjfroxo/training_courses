@@ -3,7 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\ModuleComment;
-use App\Models\ModuleExam;
+use App\Models\ModuleExamTheory;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -21,7 +21,7 @@ class ModuleCommentFactory extends Factory
     {
         return [
             'user_id' => User::query()->inRandomOrder()->first() ?? User::factory(),
-            'module_id' => ModuleExam::query()->inRandomOrder()->first() ?? ModuleExam::factory(),
+            'module_id' => ModuleExamTheory::query()->inRandomOrder()->first() ?? ModuleExamTheory::factory(),
             'text' => fake()->text(),
         ];
     }

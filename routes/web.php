@@ -13,6 +13,7 @@ use App\Http\Controllers\Curator\InternController;
 use App\Http\Controllers\Curator\TaskController;
 use App\Http\Controllers\ModuleCommentController;
 use App\Http\Controllers\ModuleController;
+use App\Http\Controllers\ModuleSectionsController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\StudentsClassController;
 use App\Http\Controllers\UserController;
@@ -71,14 +72,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::delete('/users/{user}/courses/{userCourse}', [UserCourseController::class, 'destroy'])->name('userCourses.destroy');
     });
 
-    Route::prefix('moduleExams')->group(function () {
-        Route::get('/', [ModuleExamController::class, 'index'])->name('moduleExams');
-        Route::get('/create', [ModuleExamController::class, 'create'])->name('moduleExams.create');
-        Route::post('/', [ModuleExamController::class, 'store'])->name('moduleExams.store');
-        Route::delete('/{moduleExam}', [ModuleExamController::class, 'destroy'])->name('moduleExams.destroy');
-        Route::get('/{moduleExam}/edit', [ModuleExamController::class, 'edit'])->name('moduleExams.edit');
-        Route::patch('/{moduleExam}', [ModuleExamController::class, 'update'])->name('moduleExams.update');
-        Route::get('/{moduleExam}', [ModuleExamController::class, 'show'])->name('moduleExams.show');
+    Route::prefix('moduleSections')->group(function () {
+        Route::get('/', [ModuleSectionsController::class, 'index'])->name('moduleSections');
+        Route::get('/create', [ModuleSectionsController::class, 'create'])->name('moduleSections.create');
+        Route::post('/', [ModuleSectionsController::class, 'store'])->name('moduleSections.store');
+        Route::delete('/{slug}', [ModuleSectionsController::class, 'delete'])->name('moduleSections.delete');
+        Route::get('/{slug}/edit', [ModuleSectionsController::class, 'edit'])->name('moduleSections.edit');
+        Route::patch('/{slug}', [ModuleSectionsController::class, 'update'])->name('moduleSections.update');
+        Route::get('/{slug}', [ModuleSectionsController::class, 'show'])->name('moduleSections.show');
     });
 
     Route::prefix('studentsClass')->group(function () {
