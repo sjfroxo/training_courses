@@ -11,8 +11,12 @@ use App\Http\Controllers\CourseController;
 use App\Http\Controllers\Curator\GradeController;
 use App\Http\Controllers\Curator\InternController;
 use App\Http\Controllers\Curator\TaskController;
+use App\Http\Controllers\ExamUserResponseResultController;
 use App\Http\Controllers\ModuleCommentController;
 use App\Http\Controllers\ModuleController;
+use App\Http\Controllers\ModuleExamAnswerController;
+use App\Http\Controllers\ModuleExamController;
+use App\Http\Controllers\ModuleExamQuestionController;
 use App\Http\Controllers\ModuleSectionsController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\StudentsClassController;
@@ -72,93 +76,119 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::delete('/users/{user}/courses/{userCourse}', [UserCourseController::class, 'destroy'])->name('userCourses.destroy');
     });
 
-    Route::prefix('moduleSections')->group(function () {
-        Route::get('/', [ModuleSectionsController::class, 'index'])->name('moduleSections');
-        Route::get('/create', [ModuleSectionsController::class, 'create'])->name('moduleSections.create');
-        Route::post('/', [ModuleSectionsController::class, 'store'])->name('moduleSections.store');
-        Route::delete('/{slug}', [ModuleSectionsController::class, 'delete'])->name('moduleSections.delete');
-        Route::get('/{slug}/edit', [ModuleSectionsController::class, 'edit'])->name('moduleSections.edit');
-        Route::patch('/{slug}', [ModuleSectionsController::class, 'update'])->name('moduleSections.update');
-        Route::get('/{slug}', [ModuleSectionsController::class, 'show'])->name('moduleSections.show');
-    });
+    Route::prefix('moduleExams')->group(function () {
+        Route::get('/', [ModuleExamController::class, 'index'])->name('moduleExams');
+        Route::get('/create', [ModuleExamController::class, 'create'])->name('moduleExams.create');
+        Route::post('/', [ModuleExamController::class, 'store'])->name('moduleExams.store');
+        Route::delete('/{moduleExam}', [ModuleExamController::class, 'destroy'])->name('moduleExams.destroy');
+        Route::get('/{moduleExam}/edit', [ModuleExamController::class, 'edit'])->name('moduleExams.edit');
+        Route::patch('/{moduleExam}', [ModuleExamController::class, 'update'])->name('moduleExams.update');
 
-    Route::prefix('studentsClass')->group(function () {
-        Route::get('/', [StudentsClassController::class, 'index'])->name('studentsClass.index');
+        Route::get('/{moduleExam}', [ModuleExamController::class, 'show'])->name('moduleExams.show');
+        Route::prefix('moduleSections')->group(function () {
+            Route::get('/', [ModuleSectionsController::class, 'index'])->name('moduleSections');
+            Route::get('/create', [ModuleSectionsController::class, 'create'])->name('moduleSections.create');
+            Route::post('/', [ModuleSectionsController::class, 'store'])->name('moduleSections.store');
+            Route::delete('/{slug}', [ModuleSectionsController::class, 'delete'])->name('moduleSections.delete');
+            Route::get('/{slug}/edit', [ModuleSectionsController::class, 'edit'])->name('moduleSections.edit');
+            Route::patch('/{slug}', [ModuleSectionsController::class, 'update'])->name('moduleSections.update');
+            Route::get('/{slug}', [ModuleSectionsController::class, 'show'])->name('moduleSections.show');
+        });
 
-        Route::get('/create', [StudentsClassController::class, 'create'])->name('studentsClass.create');
-        Route::post('/', [StudentsClassController::class, 'store'])->name('studentsClass.store');
+        Route::prefix('moduleExamQuestions')->group(function () {
+            Route::post('/', [ModuleExamQuestionController::class, 'store'])->name('moduleExamQuestion.store');
+            Route::delete('/{moduleExamQuestion}', [ModuleExamQuestionController::class, 'destroy'])->name('moduleExamQuestion.destroy');
+            Route::patch('/{moduleExamQuestion}', [ModuleExamQuestionController::class, 'update'])->name('moduleExamQuestion.update');
+        });
 
-        Route::delete('/{studentsClass}', [StudentsClassController::class, 'destroy'])->name('studentsClass.destroy');
-        Route::get('/{studentsClass}/edit', [StudentsClassController::class, 'edit'])->name('studentsClass.edit');
-        Route::put('/{studentsClass}', [StudentsClassController::class, 'update'])->name('studentsClass.update');
+        Route::prefix('moduleExamAnswers')->group(function () {
+            Route::post('/', [ModuleExamAnswerController::class, 'store'])->name('moduleExamAnswers.store');
+            Route::delete('/{moduleExamAnswer}', [ModuleExamAnswerController::class, 'destroy'])->name('moduleExamAnswers.destroy');
+            Route::patch('/{moduleExamAnswer}', [ModuleExamAnswerController::class, 'update'])->name('moduleExamAnswers.update');
+        });
 
-        Route::get('/{studentsClass}', [StudentsClassController::class, 'show'])->name('studentsClass.show');
+        Route::prefix('ExamUserResponseResult')->group(function () {
+            Route::post('/', [ExamUserResponseResultController::class, 'store'])->name('examUserResponseResult.store');
+        });
 
-        Route::post('/{studentsClass}/add-students', [StudentsClassController::class, 'addStudents'])->name('studentsClass.addStudents');
-        Route::post('/{studentsClass}/add-curator', [StudentsClassController::class, 'addCurator'])->name('studentsClass.addCurator');
-        Route::delete('/{studentsClass}/delete-user/{userId}', [StudentsClassController::class, 'deleteUser'])->name('studentsClass.deleteUser');
-    });
+        Route::prefix('studentsClass')->group(function () {
+            Route::get('/', [StudentsClassController::class, 'index'])->name('studentsClass.index');
 
-    Route::get('/userStudyMain/{id}', [UserStudyMainController::class, 'show'])->name('userStudyMain.show');
-    Route::get('/userStudyProgress/{id}', [UserStudyProgressController::class, 'show'])->name('userStudyProgress.show');
-    Route::get('/userStudyTasks/{id}', [UserStudyTasksController::class, 'show'])->name('userStudyTasks.show');
+            Route::get('/create', [StudentsClassController::class, 'create'])->name('studentsClass.create');
+            Route::post('/', [StudentsClassController::class, 'store'])->name('studentsClass.store');
 
-    Route::get('/chats', [ChatController::class, 'index'])->name('chats.index');
+            Route::delete('/{studentsClass}', [StudentsClassController::class, 'destroy'])->name('studentsClass.destroy');
+            Route::get('/{studentsClass}/edit', [StudentsClassController::class, 'edit'])->name('studentsClass.edit');
+            Route::put('/{studentsClass}', [StudentsClassController::class, 'update'])->name('studentsClass.update');
 
-    Route::prefix('chat')->group(function () {
-        Route::get('/messages-load', [ChatController::class, 'loadMessages'])->name('chat.loadMessages');
-        Route::post('/create', [ChatController::class, 'store'])->name('chat.store');
-        Route::get('/{slug}', [ChatController::class, 'show'])->name('chat.show');
+            Route::get('/{studentsClass}', [StudentsClassController::class, 'show'])->name('studentsClass.show');
 
-        Route::post('/message-send', [ChatMessageController::class, 'store'])->name('message.store');
-        Route::put('/message/{message}', [ChatMessageController::class, 'update'])->name('message.update');
-        Route::delete('/message/{message}', [ChatMessageController::class, 'delete'])->name('message.delete');
-    });
+            Route::post('/{studentsClass}/add-students', [StudentsClassController::class, 'addStudents'])->name('studentsClass.addStudents');
+            Route::post('/{studentsClass}/add-curator', [StudentsClassController::class, 'addCurator'])->name('studentsClass.addCurator');
+            Route::delete('/{studentsClass}/delete-user/{userId}', [StudentsClassController::class, 'deleteUser'])->name('studentsClass.deleteUser');
+        });
 
-    Route::prefix('account-details')->group(function () {
-        Route::get('', [UserController::class, 'show'])->name("account.show");
-        Route::get('/edit', [UserController::class, 'edit'])->name("account.edit");
-        Route::patch('', [UserController::class, 'update'])->name("account.update");
-    });
+        Route::get('/userStudyMain/{id}', [UserStudyMainController::class, 'show'])->name('userStudyMain.show');
+        Route::get('/userStudyProgress/{id}', [UserStudyProgressController::class, 'show'])->name('userStudyProgress.show');
+        Route::get('/userStudyTasks/{id}', [UserStudyTasksController::class, 'show'])->name('userStudyTasks.show');
 
-    Route::prefix('notifications')->group(function () {
-        Route::get('/', [NotificationController::class, 'index'])->name('notifications');
-    });
+        Route::get('/chats', [ChatController::class, 'index'])->name('chats.index');
 
-    Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
+        Route::prefix('chat')->group(function () {
+            Route::get('/messages-load', [ChatController::class, 'loadMessages'])->name('chat.loadMessages');
+            Route::post('/create', [ChatController::class, 'store'])->name('chat.store');
+            Route::get('/{slug}', [ChatController::class, 'show'])->name('chat.show');
 
-    Route::prefix('curator')->group(function () {
-        Route::prefix('course')->name('curator.course.')->group(function () {
-            Route::get('/', [CourseCuratorController::class, 'index'])->name('index');
-            Route::post('/', [CourseCuratorController::class, 'store']);
+            Route::post('/message-send', [ChatMessageController::class, 'store'])->name('message.store');
+            Route::put('/message/{message}', [ChatMessageController::class, 'update'])->name('message.update');
+            Route::delete('/message/{message}', [ChatMessageController::class, 'delete'])->name('message.delete');
+        });
 
-            Route::resource('intern', InternController::class)->names('intern');
-            Route::resource('task', TaskController::class)->names('task');
+        Route::prefix('account-details')->group(function () {
+            Route::get('', [UserController::class, 'show'])->name("account.show");
+            Route::get('/edit', [UserController::class, 'edit'])->name("account.edit");
+            Route::patch('', [UserController::class, 'update'])->name("account.update");
+        });
+
+        Route::prefix('notifications')->group(function () {
+            Route::get('/', [NotificationController::class, 'index'])->name('notifications');
+        });
+
+        Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
+
+        Route::prefix('curator')->group(function () {
+            Route::prefix('course')->name('curator.course.')->group(function () {
+                Route::get('/', [CourseCuratorController::class, 'index'])->name('index');
+                Route::post('/', [CourseCuratorController::class, 'store']);
+
+                Route::resource('intern', InternController::class)->names('intern');
+                Route::resource('task', TaskController::class)->names('task');
 //            Route::get('tasks', [TaskController::class, 'index'])->name('curator.courses.tasks.index');
 //            Route::get('tasks/edit', [TaskController::class, 'edit'])->name('curator.courses.tasks.edit');
 //            Route::patch('tasks', [TaskController::class, 'update'])->name('curator.courses.tasks.update');
-            Route::get('grade', [GradeController::class, 'index'])->name('grade.index');
+                Route::get('grade', [GradeController::class, 'index'])->name('grade.index');
+            });
         });
     });
+
+    Route::middleware('guest')->group(function () {
+        Route::get('/auth/{provider}', [LoginWithGoogleController::class, 'redirect'])->name('social.redirect');
+        Route::get('/auth/{provider}/callback', [LoginWithGoogleController::class, 'callback'])->name('social.callback');
+
+        Route::get('/forgot-password', [ResetPasswordController::class, 'showForgotPasswordForm'])->name('password.request');
+        Route::post('/forgot-password', [ResetPasswordController::class, 'passwordEmail'])->name('password.email');
+        Route::get('/reset-password/{token}', [ResetPasswordController::class, 'passwordReset'])->name('password.reset');
+        Route::post('/reset-password', [ResetPasswordController::class, 'passwordUpdate'])->name('password.update');
+    });
+
+    Route::view('/register', 'auth.register')->name('register');
+    Route::post('/register', [RegisterController::class, 'create'])->name('register.create');
+    Route::post('/register', [RegisterController::class, 'store'])->name('register.store');
+
+    Route::view('/login', 'auth.login')->name('login');
+    Route::post('/login', [LoginController::class, 'authenticate'])->name('login.store');
+
+    Route::get('/verify-email', [RegisterController::class, 'verifyNotice'])->name('verification.notice');
+    Route::get('/verify-email/{id}/{hash}', [RegisterController::class, 'verifyEmail'])->middleware('signed')->name('verification.verify');
+    Route::post('/email/verification-notification', [RegisterController::class, 'verifyHandler'])->middleware('throttle:6,1')->name('verification.send');
 });
-
-Route::middleware('guest')->group(function () {
-    Route::get('/auth/{provider}', [LoginWithGoogleController::class, 'redirect'])->name('social.redirect');
-    Route::get('/auth/{provider}/callback', [LoginWithGoogleController::class, 'callback'])->name('social.callback');
-
-    Route::get('/forgot-password', [ResetPasswordController::class, 'showForgotPasswordForm'])->name('password.request');
-    Route::post('/forgot-password', [ResetPasswordController::class, 'passwordEmail'])->name('password.email');
-    Route::get('/reset-password/{token}', [ResetPasswordController::class, 'passwordReset'])->name('password.reset');
-    Route::post('/reset-password', [ResetPasswordController::class, 'passwordUpdate'])->name('password.update');
-});
-
-Route::view('/register', 'auth.register')->name('register');
-Route::post('/register', [RegisterController::class, 'create'])->name('register.create');
-Route::post('/register', [RegisterController::class, 'store'])->name('register.store');
-
-Route::view('/login', 'auth.login')->name('login');
-Route::post('/login', [LoginController::class, 'authenticate'])->name('login.store');
-
-Route::get('/verify-email', [RegisterController::class, 'verifyNotice'])->name('verification.notice');
-Route::get('/verify-email/{id}/{hash}', [RegisterController::class, 'verifyEmail'])->middleware('signed')->name('verification.verify');
-Route::post('/email/verification-notification', [RegisterController::class, 'verifyHandler'])->middleware('throttle:6,1')->name('verification.send');
